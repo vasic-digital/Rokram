@@ -181,8 +181,8 @@ work. If not, see <https://creativecommons.org/publicdomain/zero/1.0/>.
     <string name="unordered_list_char_dash">대시 (-)</string>
     <string name="unordered_list_char_asterisk">별표 (*)</string>
     <string name="unordered_list_char_plus">더하기 부호 (+)</string>
-    <string name="filemanager_doesnot_supply_required_data__appspecific">Markor는 클라우드가 아닌 기기 내부의 오프라인 파일만 편집하며, 파일 경로 전체를 온전하게 제공하지 않는 파일 관리자는 지원하지 않습니다.</string>
-    <string name="sync_to_local_folder_notice">참고사항: 동기화 앱들은 파일을 자체적인 임의의 폴더에 저장할 때가 있습니다. 이런 파일을 열고자 할 때는 Markor의 문서 폴더를 이에 맞게 변경해서 설정하거나 다른 파일 관리자를 사용하세요.</string>
+    <string name="filemanager_doesnot_supply_required_data__appspecific">Yole는 클라우드가 아닌 기기 내부의 오프라인 파일만 편집하며, 파일 경로 전체를 온전하게 제공하지 않는 파일 관리자는 지원하지 않습니다.</string>
+    <string name="sync_to_local_folder_notice">참고사항: 동기화 앱들은 파일을 자체적인 임의의 폴더에 저장할 때가 있습니다. 이런 파일을 열고자 할 때는 Yole의 문서 폴더를 이에 맞게 변경해서 설정하거나 다른 파일 관리자를 사용하세요.</string>
     <string name="vertical_alignment">세로 정렬</string>
     <string name="horizontal_alignment">가로 정렬</string>
     <string name="default_">기본값</string>
@@ -269,8 +269,8 @@ work. If not, see <https://creativecommons.org/publicdomain/zero/1.0/>.
     <string name="appdata_private">AppData (개인)</string>
     <string name="appdata_sdcard">AppData (SD 카드)</string>
     <string name="internal_storage">내부 저장소</string>
-    <string name="open_the_document_from_main_view">기본 보기 모드의 하단, 파일 탐색기, 또는 런처에서 문서를 열 수 있습니다. Markor에 공유된 텍스트를 추가할 수 있는 옵션도 있습니다.</string>
-    <string name="notebook_is_the_home_of_your_files">\'노트북\'은 앱이 시작될 때 Markor가 파일 탐색기에서 불러오는 폴더입니다. 노트북은 파일과 문서의 보금자리(최상위) 폴더입니다.</string>
+    <string name="open_the_document_from_main_view">기본 보기 모드의 하단, 파일 탐색기, 또는 런처에서 문서를 열 수 있습니다. Yole에 공유된 텍스트를 추가할 수 있는 옵션도 있습니다.</string>
+    <string name="notebook_is_the_home_of_your_files">\'노트북\'은 앱이 시작될 때 Yole가 파일 탐색기에서 불러오는 폴더입니다. 노트북은 파일과 문서의 보금자리(최상위) 폴더입니다.</string>
     <string name="quicknote_is_the_fastest_option_to_write_down_notes">\'퀵노트\'는 노트를 작성할 수 있는 가장 빠른 옵션입니다. 퀵노트는 마크다운 형식의 파일이며 &gt;Notebook/QuickNote.md&lt;가 기본 위치입니다. 설정에서 이 기본 위치를 임의로 변경할 수 있습니다.</string>
     <string name="todo_is_the_easiest_way_">\'할 일\'을 활용해 일정을 관리해보세요. 할 일은 todo.txt 형식의 파일이며 &gt;Notebook/todo.txt&lt;가 기본 위치입니다. 설정에서 이 기본 위치를 임의로 변경할 수 있습니다.</string>
     <string name="navigationbar_color">탐색 버튼 색상</string>
@@ -288,7 +288,7 @@ work. If not, see <https://creativecommons.org/publicdomain/zero/1.0/>.
     <string name="app_start_folder">앱 시작 폴더</string>
     <string name="tab_width">탭 간격</string>
     <string name="amount_of_space_for_tab">탭을 표시할 글자의 간격을 지정</string>
-    <string name="selected_file_may_be_a_textfile_want_to_open_in_editor">해당 파일은 평문 파일일 가능성이 있습니다. Markor 편집기에서 열까요, 아니면 다른 앱에서 열까요?\n\n이진(binary) 파일은 가급적 Markor로 열지 마세요. 확실하지 않다면 다른 앱에서 여는 것이 좋습니다.</string>
+    <string name="selected_file_may_be_a_textfile_want_to_open_in_editor">해당 파일은 평문 파일일 가능성이 있습니다. Yole 편집기에서 열까요, 아니면 다른 앱에서 열까요?\n\n이진(binary) 파일은 가급적 Yole로 열지 마세요. 확실하지 않다면 다른 앱에서 여는 것이 좋습니다.</string>
     <string name="list_in_recent_files">최근 파일 목록</string>
     <string name="reload">새로고침</string>
     <string name="wrap_words">자동 줄바꿈(word wrap)</string>

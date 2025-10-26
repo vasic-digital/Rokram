@@ -23,8 +23,8 @@ android {
     compileSdkVersion rootProject.ext.version_compileSdk
 
     defaultConfig {
-        resValue "string", "manifest_package_id", "net.gsantner.markor"
-        applicationId "net.gsantner.markor"
+        resValue "string", "manifest_package_id", "digital.vasic.yole"
+        applicationId "digital.vasic.yole"
         versionName "2.15.1"
         versionCode 160
 
@@ -43,7 +43,7 @@ android {
     flavorDimensions "default"
     productFlavors {
         flavorAtest {
-            applicationId "net.gsantner.markor_test"
+            applicationId "digital.vasic.yole_test"
             versionCode = Integer.parseInt(new Date().format('yyMMdd'))
             versionName = defaultConfig.versionName + "-" + new Date().format('HHmm')
             buildConfigField "boolean", "IS_TEST_BUILD", "true"
@@ -83,7 +83,7 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-    namespace 'net.gsantner.markor'
+    namespace 'digital.vasic.yole'
     lint {
         abortOnError false
         disable 'MissingTranslation', 'InvalidPackage', 'ObsoleteLintCustomCheck', 'DefaultLocale', 'UnusedAttribute', 'VectorRaster', 'InflateParams', 'IconLocation', 'UnusedResources', 'TypographyEllipsis'

@@ -9,7 +9,7 @@
 ###########################################################*/
 package other.writeily.format.asciidoc;
 
-import net.gsantner.opoc.wrapper.GsCallback;
+import digital.vasic.opoc.wrapper.GsCallback;
 
 import java.util.regex.Matcher;
 

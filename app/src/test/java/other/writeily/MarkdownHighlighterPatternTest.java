@@ -11,7 +11,7 @@ package other.writeily;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import net.gsantner.markor.format.markdown.MarkdownSyntaxHighlighter;
+import digital.vasic.yole.format.markdown.MarkdownSyntaxHighlighter;
 
 import org.junit.Test;
 

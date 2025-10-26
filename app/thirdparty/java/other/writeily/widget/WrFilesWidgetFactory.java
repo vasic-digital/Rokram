@@ -15,12 +15,12 @@ import android.content.Intent;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
-import net.gsantner.markor.ApplicationObject;
-import net.gsantner.markor.R;
-import net.gsantner.markor.model.AppSettings;
-import net.gsantner.markor.model.Document;
-import net.gsantner.opoc.frontend.filebrowser.GsFileBrowserListAdapter;
-import net.gsantner.opoc.util.GsFileUtils;
+import digital.vasic.yole.ApplicationObject;
+import digital.vasic.yole.R;
+import digital.vasic.yole.model.AppSettings;
+import digital.vasic.yole.model.Document;
+import digital.vasic.opoc.frontend.filebrowser.GsFileBrowserListAdapter;
+import digital.vasic.opoc.util.GsFileUtils;
 
 import java.io.File;
 import java.util.ArrayList;

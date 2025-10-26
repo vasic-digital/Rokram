@@ -16,17 +16,17 @@ import android.os.Bundle;
 
 import androidx.fragment.app.FragmentManager;
 
-import net.gsantner.markor.ApplicationObject;
-import net.gsantner.markor.R;
-import net.gsantner.markor.activity.MarkorBaseActivity;
-import net.gsantner.markor.frontend.filebrowser.MarkorFileBrowserFactory;
-import net.gsantner.markor.model.AppSettings;
-import net.gsantner.opoc.frontend.filebrowser.GsFileBrowserListAdapter;
-import net.gsantner.opoc.frontend.filebrowser.GsFileBrowserOptions;
+import digital.vasic.yole.ApplicationObject;
+import digital.vasic.yole.R;
+import digital.vasic.yole.activity.YoleBaseActivity;
+import digital.vasic.yole.frontend.filebrowser.YoleFileBrowserFactory;
+import digital.vasic.yole.model.AppSettings;
+import digital.vasic.opoc.frontend.filebrowser.GsFileBrowserListAdapter;
+import digital.vasic.opoc.frontend.filebrowser.GsFileBrowserOptions;
 
 import java.io.File;
 
-public class WrWidgetConfigure extends MarkorBaseActivity {
+public class WrWidgetConfigure extends YoleBaseActivity {
     private int _appWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
 
     private static final String WIDGET_PREF_NAME = "MARKOR_WIDGET_PREF";
@@ -49,14 +49,14 @@ public class WrWidgetConfigure extends MarkorBaseActivity {
     @Override
     protected void onStop() {
         // Update when done
-        WrMarkorWidgetProvider.updateLauncherWidgets();
+        WrYoleWidgetProvider.updateLauncherWidgets();
         super.onStop();
     }
 
     // only runs for a valid id
     private void showWidgetSelectFolderDialog() {
         final FragmentManager fragManager = getSupportFragmentManager();
-        MarkorFileBrowserFactory.showFolderDialog(new GsFileBrowserOptions.SelectionListenerAdapter() {
+        YoleFileBrowserFactory.showFolderDialog(new GsFileBrowserOptions.SelectionListenerAdapter() {
             @Override
             public void onFsViewerSelected(String request, File file, final Integer lineNumber) {
                 setWidgetDirectory(WrWidgetConfigure.this, _appWidgetId, file);

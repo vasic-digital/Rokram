@@ -25,11 +25,11 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.documentfile.provider.DocumentFile;
 import androidx.fragment.app.DialogFragment;
 
-import net.gsantner.markor.R;
-import net.gsantner.markor.util.MarkorContextUtils;
-import net.gsantner.opoc.util.GsContextUtils;
-import net.gsantner.opoc.util.GsFileUtils;
-import net.gsantner.opoc.wrapper.GsCallback;
+import digital.vasic.yole.R;
+import digital.vasic.yole.util.YoleContextUtils;
+import digital.vasic.opoc.util.GsContextUtils;
+import digital.vasic.opoc.util.GsFileUtils;
+import digital.vasic.opoc.wrapper.GsCallback;
 
 import java.io.File;
 
@@ -72,7 +72,7 @@ public class WrRenameDialog extends DialogFragment {
         _dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(view -> {
             View root = inflater.inflate(R.layout.rename__dialog, null);
             String newFileName = newNameField.getText().toString();
-            MarkorContextUtils cu = new MarkorContextUtils(root.getContext());
+            YoleContextUtils cu = new YoleContextUtils(root.getContext());
             boolean renamed = false;
             boolean filenameChanged = !file.getName().equals(newFileName);
             if (filenameChanged) {

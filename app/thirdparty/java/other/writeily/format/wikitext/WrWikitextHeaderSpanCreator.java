@@ -7,7 +7,7 @@
 #########################################################*/
 package other.writeily.format.wikitext;
 
-import net.gsantner.opoc.wrapper.GsCallback;
+import digital.vasic.opoc.wrapper.GsCallback;
 
 import java.util.regex.Matcher;
 

@@ -16,7 +16,7 @@
     android:background="@color/background"
     android:orientation="vertical"
     android:theme="@style/AppTheme.Unified"
-    tools:context="net.gsantner.markor.activity.DocumentActivity">
+    tools:context="digital.vasic.yole.activity.DocumentActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
