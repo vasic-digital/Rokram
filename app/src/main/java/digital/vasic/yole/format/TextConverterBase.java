@@ -16,6 +16,7 @@ import android.webkit.WebView;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 
+// App-specific imports
 import digital.vasic.yole.R;
 import digital.vasic.yole.model.AppSettings;
 import digital.vasic.yole.model.Document;
@@ -50,6 +51,10 @@ public abstract class TextConverterBase {
     protected static final String TOKEN_COLOR_GREY_OF_THEME = "{{ app.token_color_grey_inverse_of_theme }}";
     protected static final String TOKEN_LINK_COLOR = "{{ app.token_link_color }}";
     protected static final String TOKEN_ACCENT_COLOR = "{{ app.token_accent_color }}";
+
+    // Default colors for when R is not available
+    protected static final int DEFAULT_LIGHTER_GREY = 0xFFD3D3D3; // light grey
+    protected static final int DEFAULT_ACCENT = 0xFF1976D2; // blue
     protected static final String TOKEN_TEXT_CONVERTER_CSS_CLASS = "{{ post.text_converter_name }}";
     protected static final String TOKEN_TEXT_CONVERTER_MAX_ZOOM_OUT_BY_DEFAULT = "{{ app.webview_max_zoom_out_by_default }}";
     protected static final String TOKEN_POST_TODAY_DATE = "{{ post.date_today }}";

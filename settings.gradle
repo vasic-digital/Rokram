@@ -1,1 +1,39 @@
+pluginManagement {
+    repositories {
+        mavenCentral()
+        maven { url 'https://maven.google.com' }
+        maven { url "https://jitpack.io" }
+        google()
+    }
+}
+
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        mavenCentral()
+        maven { url 'https://maven.google.com' }
+        maven { url "https://jitpack.io" }
+        google()
+    }
+}
+
+rootProject.name = 'Markor'
 include ':app'
+include ':core'
+include ':commons'
+include ':format-markdown'
+include ':format-todotxt'
+include ':format-csv'
+include ':format-wikitext'
+include ':format-keyvalue'
+include ':format-asciidoc'
+include ':format-orgmode'
+include ':format-plaintext'
+include ':format-latex'
+include ':format-restructuredtext'
+include ':format-taskpaper'
+include ':format-textile'
+include ':format-creole'
+include ':format-tiddlywiki'
+include ':format-jupyter'
+include ':format-rmarkdown'

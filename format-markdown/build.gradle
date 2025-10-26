@@ -1,0 +1,74 @@
+/*#######################################################
+ *
+ *   Maintained 2017-2025 by Gregor Santner <gsantner AT mailbox DOT org>
+ *
+ *   License of this file: Apache 2.0
+ *     https://www.apache.org/licenses/LICENSE-2.0
+ *
+ #########################################################*/
+apply plugin: 'com.android.library'
+
+ext.version_library_flexmark = "0.42.14"
+
+android {
+    buildToolsVersion rootProject.ext.version_buildTools
+    compileSdkVersion rootProject.ext.version_compileSdk
+
+    defaultConfig {
+        minSdkVersion rootProject.ext.version_minSdk
+        targetSdkVersion rootProject.ext.version_compileSdk
+        buildConfigField "boolean", "IS_TEST_BUILD", "false"
+        buildConfigField "boolean", "IS_GPLAY_BUILD", "false"
+        buildConfigField "String", "BUILD_DATE", "\"${getBuildDate()}\""
+        buildConfigField "String", "GITHASH", "\"${getGitHash}\""
+        buildConfigField "String", "GITMSG", "\"${getGitLastCommitMessage}\""
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    compileOptions {
+        encoding = 'UTF-8'
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    namespace 'digital.vasic.yole.format.markdown'
+
+    lint {
+        abortOnError false
+        disable 'MissingTranslation', 'InvalidPackage', 'ObsoleteLintCustomCheck', 'DefaultLocale', 'UnusedAttribute', 'VectorRaster', 'InflateParams', 'IconLocation', 'UnusedResources', 'TypographyEllipsis'
+    }
+}
+
+dependencies {
+    implementation project(':commons')
+    implementation project(':core')
+
+    // Testing
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'org.assertj:assertj-core:3.13.1'
+
+    // Markdown convertor (Flexmark)
+    implementation "com.vladsch.flexmark:flexmark:${version_library_flexmark}"
+    implementation "com.vladsch.flexmark:flexmark-util:${version_library_flexmark}"
+    implementation "com.vladsch.flexmark:flexmark-ext-emoji:${version_library_flexmark}"
+    implementation "com.vladsch.flexmark:flexmark-ext-gfm-tasklist:${version_library_flexmark}"
+    implementation "com.vladsch.flexmark:flexmark-ext-superscript:${version_library_flexmark}"
+    implementation "com.vladsch.flexmark:flexmark-ext-autolink:${version_library_flexmark}"
+    implementation "com.vladsch.flexmark:flexmark-ext-toc:${version_library_flexmark}"
+    implementation "com.vladsch.flexmark:flexmark-ext-tables:${version_library_flexmark}"
+    implementation "com.vladsch.flexmark:flexmark-ext-jekyll-front-matter:${version_library_flexmark}"
+    implementation "com.vladsch.flexmark:flexmark-ext-jekyll-tag:${version_library_flexmark}"
+    implementation "com.vladsch.flexmark:flexmark-ext-anchorlink:${version_library_flexmark}"
+    implementation "com.vladsch.flexmark:flexmark-ext-gfm-strikethrough:${version_library_flexmark}"
+    implementation "com.vladsch.flexmark:flexmark-ext-yaml-front-matter:${version_library_flexmark}"
+    implementation "com.vladsch.flexmark:flexmark-ext-footnotes:${version_library_flexmark}"
+    implementation "com.vladsch.flexmark:flexmark-ext-gitlab:${version_library_flexmark}"
+    implementation "com.vladsch.flexmark:flexmark-ext-typographic:${version_library_flexmark}"
+    implementation "com.vladsch.flexmark:flexmark-ext-admonition:${version_library_flexmark}"
+}

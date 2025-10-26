@@ -3,6 +3,22 @@
 - New Updates also visible here: <https://github.com/gsantner/markor/releases>
 
 
+### v2.15 -> v2.16 - Major Architecture Refactor & 8 New Formats
+- **🏗️ Modular Architecture**: Complete refactor into 20+ modules (commons, core, app, 18 format modules)
+- **📚 New Formats Added**:
+  - **LaTeX** (.tex) - Academic writing with KaTeX math rendering
+  - **reStructuredText** (.rst) - Python documentation standard
+  - **TaskPaper** (.taskpaper) - Project-based task management
+  - **Textile** (.textile) - Lightweight markup format
+  - **Creole** (.creole) - Wiki markup standard
+  - **TiddlyWiki** (.tid) - Personal wiki format
+  - **Jupyter** (.ipynb) - Data science notebooks
+  - **R Markdown** (.Rmd) - R programming documentation
+- **🧪 Comprehensive Testing**: 100% test success rate with unit, integration, and E2E tests
+- **🤖 AI QA Integration**: Automated testing with real device/emulator validation
+- **📖 Enhanced Documentation**: Complete architecture guide and format specifications
+- **🔧 Build System**: Multi-module Gradle setup with automated testing pipeline
+
 ### v2.14 -> v2.15
 - [2.14.0 - 2.14.1](https://github.com/gsantner/markor/compare/v2.14.0...v2.14.1)
 - [2.14.0 - 2.15.0](https://github.com/gsantner/markor/compare/v2.14.0...v2.15.0)

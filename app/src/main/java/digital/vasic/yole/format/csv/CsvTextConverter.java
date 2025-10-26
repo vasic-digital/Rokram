@@ -17,6 +17,7 @@ import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
 import com.opencsv.ICSVParser;
+import com.opencsv.exceptions.CsvValidationException;
 
 import digital.vasic.yole.format.TextConverterBase;
 import digital.vasic.yole.format.markdown.MarkdownTextConverter;
@@ -167,10 +168,15 @@ public class CsvTextConverter extends MarkdownTextConverter {
             // openCsv-3.10 may throw IOException or RuntimeExcpetion,
             // openCsv-5.7 may throw IOException or CsvValidationException.
             String[] columns;
-            do {
-                m_lineNumber++;
-                columns = m_csvReader.readNext();
-            } while (columns != null && isComment(columns));
+            try {
+                do {
+                    m_lineNumber++;
+                    columns = m_csvReader.readNext();
+                } while (columns != null && isComment(columns));
+            } catch (CsvValidationException e) {
+                // Treat as invalid line
+                return null;
+            }
             return columns;
         }
 
