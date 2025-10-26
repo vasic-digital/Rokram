@@ -46,7 +46,6 @@ android {
 dependencies {
     implementation project(':commons')
     implementation project(':core')
-    implementation project(':format-base')
 
     // Testing
     testImplementation 'junit:junit:4.13.2'
