@@ -67,10 +67,11 @@ include(":format-tiddlywiki")
 include(":format-jupyter")
 include(":format-rmarkdown")
 
-// Kotlin Multiplatform shared module (to be created)
-// include(":shared")
+// Kotlin Multiplatform modules
+include(":shared")
 
-// Platform-specific apps (to be created)
-// include(":androidApp")
-// include(":desktopApp")
-// include(":webApp")
+// Platform-specific apps
+include(":androidApp")
+include(":desktopApp")
+include(":webApp")
+include(":iosApp")

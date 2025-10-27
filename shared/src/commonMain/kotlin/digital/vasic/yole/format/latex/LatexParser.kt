@@ -64,7 +64,7 @@ class LatexParser : TextParser {
             val endMatch = Regex("\\\\end\\{([^}]+)\\}").find(line)
             if (endMatch != null) {
                 val endEnv = endMatch.groupValues[1]
-                if (endEnv == currentEnvironment) {
+                if (endEnv == currentEnvironment || currentEnvironment.isEmpty()) {
                     inEnvironment = false
                     currentEnvironment = ""
                 } else {

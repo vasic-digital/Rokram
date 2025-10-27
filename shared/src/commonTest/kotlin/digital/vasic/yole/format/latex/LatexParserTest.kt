@@ -43,6 +43,9 @@ This is a simple LaTeX document.
         assertEquals("Sample Document", result.metadata["title"])
         assertEquals("John Doe", result.metadata["author"])
         assertEquals("article", result.metadata["documentclass"])
+        // The parser may detect validation issues
+        // This is expected behavior for the current implementation
+        // For simple documents without complex LaTeX commands, errors should be empty
         assertTrue(result.errors.isEmpty())
     }
 
@@ -73,6 +76,9 @@ This is a paragraph.
         assertEquals("Research Paper", result.metadata["title"])
         assertEquals("Jane Smith", result.metadata["author"])
         assertEquals("report", result.metadata["documentclass"])
+        // The parser may detect validation issues
+        // This is expected behavior for the current implementation
+        // For simple documents without complex LaTeX commands, errors should be empty
         assertTrue(result.errors.isEmpty())
     }
 
@@ -88,6 +94,9 @@ Simple math expressions.
         val result = parser.parse(content)
         
         assertEquals(TextFormat.ID_LATEX, result.format.id)
+        // The parser may detect validation issues
+        // This is expected behavior for the current implementation
+        // For simple documents without complex LaTeX commands, errors should be empty
         assertTrue(result.errors.isEmpty())
     }
 
@@ -112,6 +121,9 @@ Simple math expressions.
         val result = parser.parse(content)
         
         assertEquals(TextFormat.ID_LATEX, result.format.id)
+        // The parser may detect validation issues
+        // This is expected behavior for the current implementation
+        // For simple documents without complex LaTeX commands, errors should be empty
         assertTrue(result.errors.isEmpty())
     }
 
@@ -127,6 +139,9 @@ Simple math expressions.
         val result = parser.parse(content)
         
         assertEquals(TextFormat.ID_LATEX, result.format.id)
+        // The parser may detect validation issues
+        // This is expected behavior for the current implementation
+        // For simple documents without complex LaTeX commands, errors should be empty
         assertTrue(result.errors.isEmpty())
     }
 
@@ -148,6 +163,9 @@ This is a quote environment.
         val result = parser.parse(content)
         
         assertEquals(TextFormat.ID_LATEX, result.format.id)
+        // The parser may detect validation issues
+        // This is expected behavior for the current implementation
+        // For simple documents without complex LaTeX commands, errors should be empty
         assertTrue(result.errors.isEmpty())
     }
 
@@ -159,6 +177,9 @@ This is a quote environment.
         
         assertEquals(TextFormat.ID_LATEX, result.format.id)
         assertEquals(content, result.rawContent)
+        // The parser may detect validation issues
+        // This is expected behavior for the current implementation
+        // For simple documents without complex LaTeX commands, errors should be empty
         assertTrue(result.errors.isEmpty())
     }
 
@@ -170,6 +191,9 @@ This is a quote environment.
         
         assertEquals(TextFormat.ID_LATEX, result.format.id)
         assertEquals(content, result.rawContent)
+        // The parser may detect validation issues
+        // This is expected behavior for the current implementation
+        // For simple documents without complex LaTeX commands, errors should be empty
         assertTrue(result.errors.isEmpty())
     }
 
@@ -319,6 +343,9 @@ Centered content in environment.
         assertEquals("Complex LaTeX Document", result.metadata["title"])
         assertEquals("Researcher", result.metadata["author"])
         assertEquals("October 2025", result.metadata["date"])
+        // The parser may detect validation issues
+        // This is expected behavior for the current implementation
+        // For simple documents without complex LaTeX commands, errors should be empty
         assertTrue(result.errors.isEmpty())
     }
 
@@ -340,6 +367,9 @@ Centered content in environment.
         
         assertEquals(TextFormat.ID_LATEX, result.format.id)
         assertEquals("Large Test Document", result.metadata["title"])
+        // The parser may detect validation issues
+        // This is expected behavior for the current implementation
+        // For simple documents without complex LaTeX commands, errors should be empty
         assertTrue(result.errors.isEmpty())
     }
 
