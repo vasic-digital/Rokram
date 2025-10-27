@@ -36,6 +36,9 @@ import digital.vasic.opoc.model.GsSharedPreferencesPropertyBackend;
 import digital.vasic.opoc.util.GsCollectionUtils;
 import digital.vasic.opoc.util.GsContextUtils;
 import digital.vasic.opoc.util.GsFileUtils;
+import digital.vasic.opoc.util.GsResourceUtils;
+import digital.vasic.opoc.util.GsStorageUtils;
+import digital.vasic.opoc.util.GsUiUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -74,12 +77,17 @@ public class AppSettings extends GsSharedPreferencesPropertyBackend {
         _prefCache = context.getSharedPreferences("cache", Context.MODE_PRIVATE);
         _prefHistory = context.getSharedPreferences("history", Context.MODE_PRIVATE);
         _cu = new YoleContextUtils(context);
-        _isDeviceGoodHardware = _cu.isDeviceGoodHardware(context);
+        _isDeviceGoodHardware = GsResourceUtils.isDeviceGoodHardware(context);
 
         if (getInt(R.string.pref_key__basic_color_scheme__bg_light, -999) == -999) {
             setEditorBasicColor(true, R.color.white, R.color.dark_grey);
             setEditorBasicColor(false, R.color.dark_grey, R.color.light__background);
         }
+    }
+
+    // Public accessor for context (for Kotlin interop)
+    public Context getAppContext() {
+        return getContextCompat();
     }
 
     public boolean isLoadLastDirectoryAtStartup() {
@@ -395,7 +403,7 @@ public class AppSettings extends GsSharedPreferencesPropertyBackend {
             setInt(path, getInt(path, 0, _prefCache) + 1, _prefCache);
             setRecentDocuments(recent);
         }
-        ShortcutUtils.setShortcuts(_context);
+        ShortcutUtils.setShortcuts(getContextCompat());
     }
 
     public void setFavouriteFiles(final Collection<File> files) {
@@ -505,7 +513,7 @@ public class AppSettings extends GsSharedPreferencesPropertyBackend {
 
     public void setDocumentFormat(final String path, @StringRes final int format) {
         if (fexists(path) && format != FormatRegistry.FORMAT_UNKNOWN) {
-            setString(PREF_PREFIX_FILE_FORMAT + path, _context.getString(format));
+            setString(PREF_PREFIX_FILE_FORMAT + path, getContextCompat().getString(format));
         }
     }
 
@@ -518,7 +526,7 @@ public class AppSettings extends GsSharedPreferencesPropertyBackend {
             if (value == null) {
                 return _default;
             }
-            final int sid = _cu.getResId(_context, GsContextUtils.ResType.STRING, value);
+            final int sid = GsResourceUtils.getResId(getContextCompat(), GsResourceUtils.ResType.STRING, value);
             return sid != FormatRegistry.FORMAT_UNKNOWN ? sid : _default;
         }
     }
@@ -614,12 +622,12 @@ public class AppSettings extends GsSharedPreferencesPropertyBackend {
 
     public void setPopularDocuments(List<String> v) {
         limitListTo(v, 20, true);
-        setStringList(R.string.pref_key__popular_documents, v, _prefApp);
+        setStringList(R.string.pref_key__popular_documents, v, getDefaultPreferences());
     }
 
     public void setRecentDocuments(List<String> v) {
         limitListTo(v, 20, true);
-        setStringList(R.string.pref_key__recent_documents, v, _prefApp);
+        setStringList(R.string.pref_key__recent_documents, v, getDefaultPreferences());
         setPopularDocuments(getPopularDocumentsSorted());
     }
 
@@ -678,12 +686,12 @@ public class AppSettings extends GsSharedPreferencesPropertyBackend {
     }
 
     public @ColorInt int getEditorForegroundColor() {
-        final boolean night = GsContextUtils.instance.isDarkModeEnabled(_context);
+        final boolean night = GsUiUtils.isDarkModeEnabled(getContextCompat());
         return getInt(night ? R.string.pref_key__basic_color_scheme__fg_dark : R.string.pref_key__basic_color_scheme__fg_light, rcolor(R.color.primary_text));
     }
 
     public @ColorInt int getEditorBackgroundColor() {
-        final boolean night = GsContextUtils.instance.isDarkModeEnabled(_context);
+        final boolean night = GsUiUtils.isDarkModeEnabled(getContextCompat());
         int c = getInt(night ? R.string.pref_key__basic_color_scheme__bg_dark : R.string.pref_key__basic_color_scheme__bg_light, rcolor(R.color.background));
         if (getAppThemeName().contains("black")) {
             c = Color.BLACK;
@@ -692,11 +700,11 @@ public class AppSettings extends GsSharedPreferencesPropertyBackend {
     }
 
     public void applyAppTheme() {
-        GsContextUtils.instance.applyDayNightTheme(getString(R.string.pref_key__app_theme, getAppThemeName()));
+        GsUiUtils.applyDayNightTheme(getString(R.string.pref_key__app_theme, getAppThemeName()));
     }
 
     public String getAppThemeName() {
-        return getString(R.string.pref_key__app_theme, _context.getString(R.string.app_theme_system));
+        return getString(R.string.pref_key__app_theme, getContextCompat().getString(R.string.app_theme_system));
     }
 
     public void setEditorBasicColor(boolean forDarkMode, @ColorRes int fgColor, @ColorRes int bgColor) {
@@ -796,7 +804,7 @@ public class AppSettings extends GsSharedPreferencesPropertyBackend {
     }
 
     public File getFolderToLoadByMenuId(String itemId) {
-        List<Pair<File, String>> appDataPublicDirs = _cu.getAppDataPublicDirs(_context, false, true, false);
+        List<Pair<File, String>> appDataPublicDirs = GsStorageUtils.getAppDataPublicDirs(getContextCompat(), false, true, false);
         switch (itemId) {
             case "storage": {
                 return new File("/storage");
@@ -814,7 +822,7 @@ public class AppSettings extends GsSharedPreferencesPropertyBackend {
                 return GsFileBrowserListAdapter.VIRTUAL_STORAGE_FAVOURITE;
             }
             case "appdata_private": {
-                return _cu.getAppDataPrivateDir(_context);
+                return GsStorageUtils.getAppDataPrivateDir(getContextCompat());
             }
             case "internal_storage": {
                 return Environment.getExternalStorageDirectory();
@@ -832,11 +840,11 @@ public class AppSettings extends GsSharedPreferencesPropertyBackend {
                 return Environment.getExternalStorageDirectory();
             }
             case "appdata_public": {
-                appDataPublicDirs = _cu.getAppDataPublicDirs(_context, true, false, false);
+                appDataPublicDirs = GsStorageUtils.getAppDataPublicDirs(getContextCompat(), true, false, false);
                 if (appDataPublicDirs.size() > 0) {
                     return appDataPublicDirs.get(0).first;
                 }
-                return _cu.getAppDataPrivateDir(_context);
+                return GsStorageUtils.getAppDataPrivateDir(getContextCompat());
             }
         }
         return getNotebookDirectory();
@@ -962,14 +970,14 @@ public class AppSettings extends GsSharedPreferencesPropertyBackend {
     public int getNewFileDialogLastUsedType() {
         try {
             final String typeStr = getString(R.string.pref_key__new_file_dialog_lastused_type, "");
-            return _cu.getResId(_context, GsContextUtils.ResType.STRING, typeStr);
+            return GsResourceUtils.getResId(getContextCompat(), GsResourceUtils.ResType.STRING, typeStr);
         } catch (ClassCastException e) {
             return FormatRegistry.FORMAT_MARKDOWN;
         }
     }
 
     public void setNewFileDialogLastUsedType(final int format) {
-        setString(R.string.pref_key__new_file_dialog_lastused_type, _context.getString(format));
+        setString(R.string.pref_key__new_file_dialog_lastused_type, getContextCompat().getString(format));
     }
 
     public void setFileBrowserLastBrowsedFolder(File f) {
@@ -1025,7 +1033,7 @@ public class AppSettings extends GsSharedPreferencesPropertyBackend {
         final String templateAssetDir = "templates";
         try {
             // Assuming templates are stored in res/raw directory
-            final AssetManager am = _context.getAssets();
+            final AssetManager am = getContextCompat().getAssets();
             final String[] names = am.list("templates");
             for (final String name : names) {
                 try (final InputStream is = am.open(templateAssetDir + File.separator + name)) {
@@ -1057,14 +1065,14 @@ public class AppSettings extends GsSharedPreferencesPropertyBackend {
     public void setTypeTemplate(final @StringRes int format, final String template) {
         final String js = getString(R.string.pref_key__filetype_template_map, "{}");
         final Map<String, String> map = GsTextUtils.jsonStringToMap(js);
-        map.put(_context.getString(format), template);
+        map.put(getContextCompat().getString(format), template);
         setString(R.string.pref_key__filetype_template_map, GsTextUtils.mapToJsonString(map));
     }
 
     public @Nullable String getTypeTemplate(final @StringRes int format) {
         final String js = getString(R.string.pref_key__filetype_template_map, "{}");
         final Map<String, String> map = GsTextUtils.jsonStringToMap(js);
-        return map.get(format == 0 ? "" : _context.getString(format));
+        return map.get(format == 0 ? "" : getContextCompat().getString(format));
     }
 
     public void setTemplateTitleFormat(final String templateName, final String titleFormat) {

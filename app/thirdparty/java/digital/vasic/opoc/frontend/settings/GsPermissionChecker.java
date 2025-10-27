@@ -12,13 +12,13 @@ package digital.vasic.opoc.frontend.settings;
 import android.app.Activity;
 import android.content.pm.PackageManager;
 
-import digital.vasic.opoc.util.GsContextUtils;
+import digital.vasic.opoc.util.GsStorageUtils;
 
 import java.io.File;
 
 @SuppressWarnings({"unused", "WeakerAccess"})
 public class GsPermissionChecker {
-    protected static final int CODE_PERMISSION_EXTERNAL_STORAGE = GsContextUtils.REQUEST_STORAGE_PERMISSION_M;
+    protected static final int CODE_PERMISSION_EXTERNAL_STORAGE = GsStorageUtils.REQUEST_STORAGE_PERMISSION_M;
 
     protected Activity _activity;
 
@@ -31,8 +31,8 @@ public class GsPermissionChecker {
     }
 
     public boolean doIfExtStoragePermissionGranted(final String whyNeeded) {
-        if (!GsContextUtils.instance.checkExternalStoragePermission(_activity)) {
-            GsContextUtils.instance.requestExternalStoragePermission(_activity, whyNeeded);
+        if (!GsStorageUtils.checkExternalStoragePermission(_activity)) {
+            GsStorageUtils.requestExternalStoragePermission(_activity, whyNeeded);
             return false;
         }
         return true;

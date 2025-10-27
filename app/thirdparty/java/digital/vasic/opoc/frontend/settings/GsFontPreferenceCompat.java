@@ -10,7 +10,7 @@
 
 /*
  * Define element in Preferences-XML:
-    <net.gsantner.opoc.preference.FontPreferenceCompat
+    <digital.vasic.opoc.preference.FontPreferenceCompat
         android:icon="@drawable/ic_title_black_24dp"
         android:defaultValue="@string/default_font_family"
         android:key="@string/pref_key__font_family"

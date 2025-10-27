@@ -14,6 +14,7 @@ import digital.vasic.yole.format.markdown.MarkdownSyntaxHighlighter;
 import digital.vasic.yole.model.AppSettings;
 import digital.vasic.opoc.format.GsTextUtils;
 import digital.vasic.opoc.util.GsContextUtils;
+import digital.vasic.opoc.util.GsResourceUtils;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -26,7 +27,7 @@ public class CsvSyntaxHighlighter extends MarkdownSyntaxHighlighter {
     // dkgray is not much different from black and not readable with black background
     // blue is difficuilt to read on black background
     private static final int[] COLUMN_COLORS = {
-            Color.RED, GsContextUtils.rgb(150, 150, 255), Color.MAGENTA,
+            Color.RED, GsResourceUtils.rgb(150, 150, 255), Color.MAGENTA,
             0xff00b04c, // dark green,
             0xffdaa500}; // brown
     private static final String TAG = CsvSyntaxHighlighter.class.getSimpleName();

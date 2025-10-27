@@ -47,6 +47,10 @@ import digital.vasic.opoc.frontend.filebrowser.GsFileBrowserListAdapter;
 import digital.vasic.opoc.frontend.filebrowser.GsFileBrowserOptions;
 import digital.vasic.opoc.util.GsContextUtils;
 import digital.vasic.opoc.util.GsFileUtils;
+import digital.vasic.opoc.util.GsIntentUtils;
+import digital.vasic.opoc.util.GsResourceUtils;
+import digital.vasic.opoc.util.GsStorageUtils;
+import digital.vasic.opoc.util.GsUiUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -222,7 +226,7 @@ public class MainActivity extends YoleBaseActivity implements GsFileBrowserFragm
             final Intent intent = new Intent(activity, MainActivity.class);
             intent.putExtra(Document.EXTRA_FILE, file);
             // intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-            GsContextUtils.instance.animateToActivity(activity, intent, finishfromActivity, null);
+            GsIntentUtils.animateToActivity(activity, intent, finishfromActivity, null);
         }
     }
 
@@ -231,7 +235,10 @@ public class MainActivity extends YoleBaseActivity implements GsFileBrowserFragm
             new com.pixplicity.generate.Rate.Builder(this)
                     .setTriggerCount(4)
                     .setMinimumInstallTime((int) TimeUnit.MINUTES.toMillis(30))
-                    .setFeedbackAction(() -> _cu.showGooglePlayEntryForThisApp(MainActivity.this))
+                    .setFeedbackAction(() -> {
+                        String url = "https://play.google.com/store/apps/details?id=" + GsResourceUtils.getAppIdFlavorSpecific(MainActivity.this);
+                        GsIntentUtils.openWebpageInExternalBrowser(MainActivity.this, url);
+                    })
                     .build().count().showRequest();
         } catch (Exception ignored) {
         }
@@ -241,7 +248,7 @@ public class MainActivity extends YoleBaseActivity implements GsFileBrowserFragm
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         super.onOptionsItemSelected(item);
         if (item.getItemId() == R.id.action_settings) {
-            _cu.animateToActivity(this, SettingsActivity.class, false, null);
+            GsIntentUtils.animateToActivity(this, new Intent(this, SettingsActivity.class), false, null);
             return true;
         }
         return false;
@@ -252,8 +259,8 @@ public class MainActivity extends YoleBaseActivity implements GsFileBrowserFragm
         getMenuInflater().inflate(R.menu.main__menu, menu);
         menu.findItem(R.id.action_settings).setVisible(_appSettings.isShowSettingsOptionInMainToolbar());
 
-        _cu.tintMenuItems(menu, true, Color.WHITE);
-        _cu.setSubMenuIconsVisibility(menu, true);
+        GsUiUtils.tintMenuItems(menu, true, Color.WHITE);
+        GsUiUtils.setSubMenuIconsVisibility(menu, true);
         return true;
     }
 
@@ -274,7 +281,7 @@ public class MainActivity extends YoleBaseActivity implements GsFileBrowserFragm
             startActivity(intent);
         }
 
-        _cu.setKeepScreenOn(this, _appSettings.isKeepScreenOn());
+        GsUiUtils.setKeepScreenOn(this, _appSettings.isKeepScreenOn());
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && _appSettings.isMultiWindowEnabled()) {
             setTaskDescription(new ActivityManager.TaskDescription(getString(R.string.app_name)));
         }
@@ -288,7 +295,7 @@ public class MainActivity extends YoleBaseActivity implements GsFileBrowserFragm
                 html += smp.parse(getString(R.string.copyright_license_text_official).replace("\n", "  \n"), "").getHtml();
                 html += "<br/><br/><br/><big><big>" + getString(R.string.changelog) + "</big></big><br/>" + smp.parse(getResources().openRawResource(R.raw.changelog), "", GsSimpleMarkdownParser.FILTER_ANDROID_TEXTVIEW);
                 html += "<br/><br/><br/><big><big>" + getString(R.string.licenses) + "</big></big><br/>" + smp.parse(getResources().openRawResource(R.raw.licenses_3rd_party), "").getHtml();
-                _cu.showDialogWithHtmlTextView(this, 0, html);
+                GsUiUtils.showDialogWithHtmlTextView(this, 0, html);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -333,7 +340,7 @@ public class MainActivity extends YoleBaseActivity implements GsFileBrowserFragm
         }
 
         if (view.getId() == R.id.fab_add_new_item) {
-            if (_cu.isUnderStorageAccessFolder(this, _notebook.getCurrentFolder(), true) && _cu.getStorageAccessFrameworkTreeUri(this) == null) {
+            if (GsStorageUtils.isUnderStorageAccessFolder(this, _notebook.getCurrentFolder(), true) && GsStorageUtils.getStorageAccessFrameworkTreeUri(this) == null) {
                 _cu.showMountSdDialog(this);
                 return;
             }
@@ -412,8 +419,8 @@ public class MainActivity extends YoleBaseActivity implements GsFileBrowserFragm
     }
 
     public void hideKeyboard() {
-        _cu.showSoftKeyboard(this, false, _quicknote.getEditor());
-        _cu.showSoftKeyboard(this, false, _todo.getEditor());
+        GsUiUtils.showSoftKeyboard(this, false, _quicknote.getEditor());
+        GsUiUtils.showSoftKeyboard(this, false, _todo.getEditor());
     }
 
     public void onViewPagerPageSelected(final int pos) {
@@ -440,7 +447,7 @@ public class MainActivity extends YoleBaseActivity implements GsFileBrowserFragm
                     dopt.rootFolder = _appSettings.getNotebookDirectory();
                     dopt.startFolder = _startFolder;
                     dopt.doSelectMultiple = dopt.doSelectFolder = dopt.doSelectFile = true;
-                    dopt.mountedStorageFolder = _cu.getStorageAccessFolder(MainActivity.this);
+                    dopt.mountedStorageFolder = GsStorageUtils.getStorageAccessFolder(MainActivity.this);
                 }
 
                 @Override
@@ -520,7 +527,7 @@ public class MainActivity extends YoleBaseActivity implements GsFileBrowserFragm
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        _cu.extractResultFromActivityResult(this, requestCode, resultCode, data);
+        GsStorageUtils.extractResultFromActivityResult(this, requestCode, resultCode, data);
     }
 
     @Override

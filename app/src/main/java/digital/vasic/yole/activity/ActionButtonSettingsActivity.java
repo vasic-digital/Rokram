@@ -37,6 +37,7 @@ import digital.vasic.yole.format.plaintext.PlaintextActionButtons;
 import digital.vasic.yole.format.todotxt.TodoTxtActionButtons;
 import digital.vasic.yole.format.wikitext.WikitextActionButtons;
 import digital.vasic.opoc.util.GsCollectionUtils;
+import digital.vasic.opoc.util.GsUiUtils;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -86,7 +87,7 @@ public class ActionButtonSettingsActivity extends YoleBaseActivity {
         final MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.action_order__menu, menu);
 
-        _cu.tintMenuItems(menu, true, Color.WHITE);
+        GsUiUtils.tintMenuItems(menu, true, Color.WHITE);
         return true;
     }
 

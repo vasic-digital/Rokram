@@ -40,6 +40,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.TreeSet;
 import java.util.UUID;
+import digital.vasic.opoc.util.GsResourceUtils;
 
 @SuppressWarnings({"WeakerAccess", "unused"})
 public final class TextViewUtils {
@@ -393,9 +394,9 @@ public final class TextViewUtils {
      */
     public static String interpolateSnippet(String text, final CharSequence title, final CharSequence selectedText) {
         final long current = System.currentTimeMillis();
-        final String time = GsContextUtils.instance.formatDateTime((Locale) null, "HH:mm", current);
-        final String date = GsContextUtils.instance.formatDateTime((Locale) null, "yyyy-MM-dd", current);
-        final String weekday = GsContextUtils.instance.formatDateTime((Locale) null, "EEEE", current);
+        final String time = GsResourceUtils.formatDateTime((Locale) null, "HH:mm", current);
+        final String date = GsResourceUtils.formatDateTime((Locale) null, "yyyy-MM-dd", current);
+        final String weekday = GsResourceUtils.formatDateTime((Locale) null, "EEEE", current);
 
         // Replace placeholders
         text = text
@@ -429,7 +430,7 @@ public final class TextViewUtils {
                 temp.append(c);
             } else if (c == '`' && inDate) { // Ending a date region
                 inDate = false;
-                interpolated.append(GsContextUtils.instance.formatDateTime((Locale) null, temp.toString(), System.currentTimeMillis()));
+                interpolated.append(GsResourceUtils.formatDateTime((Locale) null, temp.toString(), System.currentTimeMillis()));
                 temp.setLength(0); // clear
             } else if (c == '`') { // Starting a date region
                 inDate = true;

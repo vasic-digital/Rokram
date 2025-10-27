@@ -9,7 +9,7 @@
 apply plugin: 'com.android.application'
 if (enable_plugin_kotlin) {
     apply plugin: 'kotlin-android'
-    apply plugin: 'kotlin-android-extensions'
+    // apply plugin: 'kotlin-android-extensions'  // Deprecated - use View Binding instead
     apply plugin: 'kotlin-kapt'
 }
 
@@ -83,6 +83,11 @@ android {
         sourceCompatibility JavaVersion.VERSION_11
         targetCompatibility JavaVersion.VERSION_11
     }
+
+    kotlinOptions {
+        jvmTarget = '11'
+    }
+
     namespace 'digital.vasic.yole'
     lint {
         abortOnError false
@@ -94,6 +99,7 @@ android {
 dependencies {
     implementation project(':commons')
     implementation project(':core')
+    // Temporarily disabled format modules
     // implementation project(':format-markdown')
     // implementation project(':format-todotxt')
     // implementation project(':format-csv')

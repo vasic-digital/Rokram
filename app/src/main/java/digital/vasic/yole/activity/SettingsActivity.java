@@ -37,6 +37,7 @@ import digital.vasic.opoc.frontend.base.GsPreferenceFragmentBase;
 import digital.vasic.opoc.frontend.filebrowser.GsFileBrowserOptions;
 import digital.vasic.opoc.frontend.settings.GsFontPreferenceCompat;
 import digital.vasic.opoc.util.GsContextUtils;
+import digital.vasic.opoc.util.GsResourceUtils;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -69,7 +70,7 @@ public class SettingsActivity extends YoleBaseActivity {
 
         // Custom code
         GsFontPreferenceCompat.additionalyCheckedFolder = new File(_appSettings.getNotebookDirectory(), ".app/fonts");
-        iconColor = _cu.rcolor(this, R.color.primary_text);
+        iconColor = GsResourceUtils.rcolor(this, R.color.primary_text);
         toolbar.setTitle(R.string.settings);
         setSupportActionBar(findViewById(R.id.toolbar));
         toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_arrow_back_white_24dp));
@@ -154,13 +155,13 @@ public class SettingsActivity extends YoleBaseActivity {
         public void doUpdatePreferences() {
             String remove = "/storage/emulated/0/";
             updateSummary(R.string.pref_key__notebook_directory,
-                    _cu.htmlToSpanned("<small><small>" + _appSettings.getNotebookDirectory().getAbsolutePath().replace(remove, "") + "</small></small>")
+                    GsResourceUtils.htmlToSpanned("<small><small>" + _appSettings.getNotebookDirectory().getAbsolutePath().replace(remove, "") + "</small></small>")
             );
             updateSummary(R.string.pref_key__quicknote_filepath,
-                    _cu.htmlToSpanned("<small><small>" + _appSettings.getQuickNoteFile().getAbsolutePath().replace(remove, "") + "</small></small>")
+                    GsResourceUtils.htmlToSpanned("<small><small>" + _appSettings.getQuickNoteFile().getAbsolutePath().replace(remove, "") + "</small></small>")
             );
             updateSummary(R.string.pref_key__todo_filepath,
-                    _cu.htmlToSpanned("<small><small>" + _appSettings.getTodoFile().getAbsolutePath().replace(remove, "") + "</small></small>")
+                    GsResourceUtils.htmlToSpanned("<small><small>" + _appSettings.getTodoFile().getAbsolutePath().replace(remove, "") + "</small></small>")
             );
             updatePreference(R.string.pref_key__is_launcher_for_special_files_enabled, null,
                     ("Launcher (" + getString(R.string.special_documents) + ")"),
@@ -227,7 +228,7 @@ public class SettingsActivity extends YoleBaseActivity {
                 }
             } else if (eq(key, R.string.pref_key__share_into_format)) {
                 try {
-                    Toast.makeText(context, GsContextUtils.instance.formatDateTime(context, prefs.getString(key, ""), System.currentTimeMillis()), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, GsResourceUtils.formatDateTime(context, prefs.getString(key, ""), System.currentTimeMillis()), Toast.LENGTH_SHORT).show();
                 } catch (IllegalArgumentException e) {
                     Toast.makeText(context, e.getLocalizedMessage() + "\n\n" + getString(R.string.loading_default_value), Toast.LENGTH_SHORT).show();
                 }

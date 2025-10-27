@@ -53,6 +53,9 @@ import digital.vasic.opoc.model.GsSharedPreferencesPropertyBackend;
 import digital.vasic.opoc.util.GsCollectionUtils;
 import digital.vasic.opoc.util.GsContextUtils;
 import digital.vasic.opoc.util.GsFileUtils;
+import digital.vasic.opoc.util.GsImageUtils;
+import digital.vasic.opoc.util.GsStorageUtils;
+import digital.vasic.opoc.util.GsUiUtils;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
@@ -65,6 +68,7 @@ import java.util.Set;
 
 import other.writeily.model.WrYoleSingleton;
 import other.writeily.ui.WrRenameDialog;
+import digital.vasic.opoc.util.GsIntentUtils;
 
 public class GsFileBrowserFragment extends GsFragmentBase<GsSharedPreferencesPropertyBackend, GsContextUtils> implements GsFileBrowserOptions.SelectionListener {
     //########################
@@ -270,9 +274,9 @@ public class GsFileBrowserFragment extends GsFragmentBase<GsSharedPreferencesPro
             _fragmentMenu.findItem(R.id.action_delete_selected_items).setVisible((selMulti1 || selMultiMore) && selWritable);
             _fragmentMenu.findItem(R.id.action_rename_selected_item).setVisible(selMulti1 && selWritable & !selInVirtualDirectory);
             _fragmentMenu.findItem(R.id.action_info_selected_item).setVisible(selMulti1);
-            _fragmentMenu.findItem(R.id.action_move_selected_items).setVisible((selMulti1 || selMultiMore) && selWritable && !selInVirtualDirectory && !_cu.isUnderStorageAccessFolder(getContext(), getCurrentFolder(), true));
-            _fragmentMenu.findItem(R.id.action_copy_selected_items).setVisible((selMulti1 || selMultiMore) && selWritable && !_cu.isUnderStorageAccessFolder(getContext(), getCurrentFolder(), true));
-            _fragmentMenu.findItem(R.id.action_share_files).setVisible(selFilesOnly && (selMulti1 || selMultiMore) && !_cu.isUnderStorageAccessFolder(getContext(), getCurrentFolder(), true));
+            _fragmentMenu.findItem(R.id.action_move_selected_items).setVisible((selMulti1 || selMultiMore) && selWritable && !selInVirtualDirectory && !GsStorageUtils.isUnderStorageAccessFolder(getContext(), getCurrentFolder(), true));
+            _fragmentMenu.findItem(R.id.action_copy_selected_items).setVisible((selMulti1 || selMultiMore) && selWritable && !GsStorageUtils.isUnderStorageAccessFolder(getContext(), getCurrentFolder(), true));
+            _fragmentMenu.findItem(R.id.action_share_files).setVisible(selFilesOnly && (selMulti1 || selMultiMore) && !GsStorageUtils.isUnderStorageAccessFolder(getContext(), getCurrentFolder(), true));
             _fragmentMenu.findItem(R.id.action_go_to).setVisible(!_filesystemViewerAdapter.areItemsSelected());
             _fragmentMenu.findItem(R.id.action_sort).setVisible(_filesystemViewerAdapter.isCurrentFolderSortable() && !_filesystemViewerAdapter.areItemsSelected());
             _fragmentMenu.findItem(R.id.action_import).setVisible(!_filesystemViewerAdapter.areItemsSelected() && !_filesystemViewerAdapter.isCurrentFolderVirtual());
@@ -286,7 +290,7 @@ public class GsFileBrowserFragment extends GsFragmentBase<GsSharedPreferencesPro
 
             final MenuItem sortItem = _fragmentMenu.findItem(R.id.action_sort);
             if (sortItem != null) {
-                _cu.tintDrawable(sortItem.getIcon(), _dopt.sortOrder.isFolderLocal ? GsFileBrowserListAdapter.FAVOURITE_COLOR : Color.WHITE);
+                GsImageUtils.tintDrawable(sortItem.getIcon(), _dopt.sortOrder.isFolderLocal ? GsFileBrowserListAdapter.FAVOURITE_COLOR : Color.WHITE);
             }
         }
 
@@ -355,10 +359,10 @@ public class GsFileBrowserFragment extends GsFragmentBase<GsSharedPreferencesPro
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.filesystem__menu, menu);
-        _cu.tintMenuItems(menu, true, Color.WHITE);
-        _cu.setSubMenuIconsVisibility(menu, true);
+        GsUiUtils.tintMenuItems(menu, true, Color.WHITE);
+        GsUiUtils.setSubMenuIconsVisibility(menu, true);
 
-        List<Pair<File, String>> sdcardFolders = _cu.getAppDataPublicDirs(getContext(), false, true, true);
+        List<Pair<File, String>> sdcardFolders = GsStorageUtils.getAppDataPublicDirs(getContext(), false, true, true);
         int[] sdcardResIds = {};
         for (int i = 0; i < sdcardResIds.length && i < sdcardFolders.size(); i++) {
             final MenuItem item = menu.findItem(sdcardResIds[i]);
@@ -382,7 +386,7 @@ public class GsFileBrowserFragment extends GsFragmentBase<GsSharedPreferencesPro
         switch (_id) {
             case R.id.action_create_shortcut: {
                 final File file = currentSelection.iterator().next();
-                _cu.createLauncherDesktopShortcut(getContext(), file);
+                new digital.vasic.yole.util.YoleContextUtils(getContext()).createLauncherDesktopShortcut(getContext(), file);
                 return true;
             }
             case R.id.action_sort: {
@@ -445,8 +449,7 @@ public class GsFileBrowserFragment extends GsFragmentBase<GsSharedPreferencesPro
                 return true;
             }
             case R.id.action_share_files: {
-                YoleContextUtils s = new YoleContextUtils(getContext());
-                s.shareStreamMultiple(getContext(), currentSelection, "*/*");
+                GsStorageUtils.shareStreamMultiple(getContext(), currentSelection, "*/*");
                 _filesystemViewerAdapter.reloadCurrentFolder();
                 return true;
             }
@@ -469,7 +472,7 @@ public class GsFileBrowserFragment extends GsFragmentBase<GsSharedPreferencesPro
                 if (_filesystemViewerAdapter.areItemsSelected()) {
                     final File file = new ArrayList<>(currentSelection).get(0);
                     if (FormatRegistry.isFileSupported(file, true)) {
-                        _cu.setClipboard(getContext(), GsFileUtils.readTextFileFast(file).first);
+                        GsUiUtils.setClipboard(getContext(), GsFileUtils.readTextFileFast(file).first);
                         Toast.makeText(getContext(), R.string.clipboard, Toast.LENGTH_SHORT).show();
                     }
                 }

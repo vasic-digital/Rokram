@@ -33,6 +33,7 @@ import digital.vasic.opoc.util.GsFileUtils;
 import java.io.File;
 import java.util.Locale;
 import java.util.concurrent.atomic.AtomicInteger;
+import digital.vasic.opoc.util.GsUiUtils;
 
 public class FileInfoDialog extends DialogFragment {
     public static final String EXTRA_FILEPATH = "EXTRA_FILEPATH";
@@ -87,12 +88,12 @@ public class FileInfoDialog extends DialogFragment {
         tv(root, R.id.ui__fileinfodialog__mimetype_description).setText(GsFileUtils.getMimeType(file));
         tv(root, R.id.ui__fileinfodialog__sha_256).setText(GsFileUtils.sha256(file));
         tv(root, R.id.ui__fileinfodialog__location).setOnLongClickListener(v -> {
-            GsContextUtils.instance.setClipboard(v.getContext(), file.getAbsolutePath());
+            GsUiUtils.setClipboard(v.getContext(), file.getAbsolutePath());
             Toast.makeText(v.getContext(), R.string.clipboard, Toast.LENGTH_SHORT).show();
             return true;}
         );
         tv(root, R.id.ui__fileinfodialog__sha_256).setOnLongClickListener(v -> {
-            GsContextUtils.instance.setClipboard(v.getContext(), GsFileUtils.sha256(file));
+            GsUiUtils.setClipboard(v.getContext(), GsFileUtils.sha256(file));
             Toast.makeText(v.getContext(), R.string.clipboard, Toast.LENGTH_SHORT).show();
             return true;}
         );

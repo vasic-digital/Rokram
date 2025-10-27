@@ -28,6 +28,7 @@ import androidx.fragment.app.Fragment;
 
 import digital.vasic.opoc.model.GsSharedPreferencesPropertyBackend;
 import digital.vasic.opoc.util.GsContextUtils;
+import digital.vasic.opoc.util.GsResourceUtils;
 import digital.vasic.opoc.wrapper.GsMenuItemDummy;
 
 import java.util.LinkedList;
@@ -65,7 +66,7 @@ public abstract class GsFragmentBase<AS extends GsSharedPreferencesPropertyBacke
         _cu = createContextUtilsInstance(activity);
         _appSettings = createAppSettingsInstance(activity);
 
-        _cu.setAppLanguage(activity, getAppLanguage());
+        GsResourceUtils.setAppLanguage(activity, getAppLanguage());
         _savedInstanceState = savedInstanceState;
 
         if (getLayoutResId() == 0) {

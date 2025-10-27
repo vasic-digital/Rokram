@@ -14,6 +14,7 @@ import android.webkit.WebView;
 import digital.vasic.yole.activity.DocumentActivity;
 import digital.vasic.yole.model.AppSettings;
 import digital.vasic.yole.util.YoleContextUtils;
+import digital.vasic.opoc.util.GsIntentUtils;
 import digital.vasic.opoc.web.GsWebViewClient;
 
 import java.io.File;
@@ -50,10 +51,9 @@ public class YoleWebViewClient extends GsWebViewClient {
                 }
                 DocumentActivity.launch(_activity, file, null, null);
             } else {
-                YoleContextUtils su = new YoleContextUtils(_activity);
                 AppSettings settings = AppSettings.get(_activity);
-                if (!settings.isOpenLinksWithChromeCustomTabs() || (settings.isOpenLinksWithChromeCustomTabs() && !su.openWebpageInChromeCustomTab(context, url))) {
-                    su.openWebpageInExternalBrowser(context, url);
+                if (!settings.isOpenLinksWithChromeCustomTabs() || (settings.isOpenLinksWithChromeCustomTabs() && !GsIntentUtils.openWebpageInChromeCustomTab(context, url))) {
+                    GsIntentUtils.openWebpageInExternalBrowser(context, url);
                     return true;
                 }
             }

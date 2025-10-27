@@ -29,6 +29,8 @@ import digital.vasic.yole.R;
 import digital.vasic.yole.util.YoleContextUtils;
 import digital.vasic.opoc.util.GsContextUtils;
 import digital.vasic.opoc.util.GsFileUtils;
+import digital.vasic.opoc.util.GsStorageUtils;
+import digital.vasic.opoc.util.GsUiUtils;
 import digital.vasic.opoc.wrapper.GsCallback;
 
 import java.io.File;
@@ -67,7 +69,7 @@ public class WrRenameDialog extends DialogFragment {
 
         EditText newNameField = _dialog.findViewById(R.id.new_name);
         addFilenameClashTextWatcher(newNameField);
-        newNameField.setFilters(new InputFilter[]{GsContextUtils.instance.makeFilenameInputFilter()});
+        newNameField.setFilters(new InputFilter[]{GsUiUtils.makeFilenameInputFilter()});
 
         _dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(view -> {
             View root = inflater.inflate(R.layout.rename__dialog, null);
@@ -78,8 +80,8 @@ public class WrRenameDialog extends DialogFragment {
             if (filenameChanged) {
                 _filenameClash = optShowFilenameClashDialog(file, newFileName);
             }
-            if (cu.isUnderStorageAccessFolder(getContext(), file, file.isDirectory())) {
-                DocumentFile dof = cu.getDocumentFile(getContext(), file, file.isDirectory());
+            if (GsStorageUtils.isUnderStorageAccessFolder(getContext(), file, file.isDirectory())) {
+                DocumentFile dof = GsStorageUtils.getDocumentFile(getContext(), file, file.isDirectory());
                 if (dof != null) {
                     if (!_filenameClash) {
                         renamed = dof.renameTo(newFileName);
@@ -115,7 +117,7 @@ public class WrRenameDialog extends DialogFragment {
         dialogBuilder.setView(root);
 
         EditText editText = root.findViewById(R.id.new_name);
-        editText.setFilters(new InputFilter[]{GsContextUtils.instance.makeFilenameInputFilter()});
+        editText.setFilters(new InputFilter[]{GsUiUtils.makeFilenameInputFilter()});
         editText.requestFocus();
         editText.setText(file.getName());
 

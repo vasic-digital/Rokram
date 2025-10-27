@@ -36,7 +36,7 @@ static String getUsedAndroidLanguages() {
  * Summary: Change language of this app. Restart app for changes to take effect
 
  * Define element in Preferences-XML:
-    <net.gsantner.opoc.preference.LanguagePreferenceCompat
+    <digital.vasic.opoc.preference.LanguagePreferenceCompat
         android:icon="@drawable/ic_language_black_24dp"
         android:key="@string/pref_key__language"
         android:summary="@string/pref_desc__language"
@@ -56,6 +56,7 @@ import androidx.core.os.ConfigurationCompat;
 import androidx.preference.ListPreference;
 
 import digital.vasic.opoc.util.GsContextUtils;
+import digital.vasic.opoc.util.GsResourceUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -99,7 +100,7 @@ public class GsLanguagePreferenceCompat extends ListPreference {
     public boolean callChangeListener(Object newValue) {
         if (newValue instanceof String) {
             // Does not apply to existing UI, use recreate()
-            GsContextUtils.instance.setAppLanguage(getContext(), (String) newValue);
+            GsResourceUtils.setAppLanguage(getContext(), (String) newValue);
         }
         return super.callChangeListener(newValue);
     }
@@ -113,12 +114,11 @@ public class GsLanguagePreferenceCompat extends ListPreference {
         setDefaultValue(SYSTEM_LANGUAGE_CODE);
 
         // Fetch readable details
-        GsContextUtils contextUtils = GsContextUtils.instance;
         List<String> languages = new ArrayList<>();
-        Object bcof = contextUtils.getBuildConfigValue(getContext(), "DETECTED_ANDROID_LOCALES");
+        Object bcof = GsResourceUtils.getBuildConfigValue(getContext(), "DETECTED_ANDROID_LOCALES");
         if (bcof instanceof String[]) {
             for (String langId : (String[]) bcof) {
-                Locale locale = contextUtils.getLocaleByAndroidCode(langId);
+                Locale locale = GsResourceUtils.getLocaleByAndroidCode(langId);
                 languages.add(summarizeLocale(locale, langId) + ";" + langId);
             }
         }
@@ -136,7 +136,7 @@ public class GsLanguagePreferenceCompat extends ListPreference {
         entryval[0] = SYSTEM_LANGUAGE_CODE;
         entries[0] = _systemLanguageName + " » " + summarizeLocale(ConfigurationCompat.getLocales(Resources.getSystem().getConfiguration()).get(0), "");
         entryval[1] = _defaultLanguageCode;
-        entries[1] = summarizeLocale(contextUtils.getLocaleByAndroidCode(_defaultLanguageCode), _defaultLanguageCode);
+        entries[1] = summarizeLocale(GsResourceUtils.getLocaleByAndroidCode(_defaultLanguageCode), _defaultLanguageCode);
 
         setEntries(entries);
         setEntryValues(entryval);
@@ -174,7 +174,7 @@ public class GsLanguagePreferenceCompat extends ListPreference {
     // Add current language to summary
     @Override
     public CharSequence getSummary() {
-        Locale locale = GsContextUtils.instance.getLocaleByAndroidCode(getValue());
+        Locale locale = GsResourceUtils.getLocaleByAndroidCode(getValue());
         String prefix = TextUtils.isEmpty(super.getSummary())
                 ? "" : super.getSummary() + "\n\n";
         return prefix + summarizeLocale(locale, getValue());

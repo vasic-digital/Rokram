@@ -55,6 +55,7 @@ import androidx.core.widget.TextViewCompat;
 
 import digital.vasic.opoc.util.GsCollectionUtils;
 import digital.vasic.opoc.util.GsContextUtils;
+import digital.vasic.opoc.util.GsResourceUtils;
 import digital.vasic.opoc.wrapper.GsCallback;
 import digital.vasic.opoc.wrapper.GsTextWatcherAdapter;
 
@@ -293,8 +294,8 @@ public class GsSearchOrCustomTextDialog {
     }
 
     public static void showMultiChoiceDialogWithSearchFilterUI(final Activity activity, final DialogOptions dopt) {
-        final int dialogStyle = dopt.dialogStyle != 0 ? dopt.dialogStyle : GsContextUtils.instance.getResId(activity,
-                GsContextUtils.ResType.STYLE, dopt.isDarkDialog ? "Theme_AppCompat_Dialog" : "Theme_AppCompat_Light_Dialog");
+        final int dialogStyle = dopt.dialogStyle != 0 ? dopt.dialogStyle : GsResourceUtils.getResId(activity,
+                GsResourceUtils.ResType.STYLE, dopt.isDarkDialog ? "Theme_AppCompat_Dialog" : "Theme_AppCompat_Light_Dialog");
         final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(activity, dialogStyle);
 
         final Adapter listAdapter = new Adapter(activity, dopt);

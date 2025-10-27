@@ -44,6 +44,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import digital.vasic.yole.R;
 import digital.vasic.opoc.frontend.GsSearchOrCustomTextDialog;
 import digital.vasic.opoc.util.GsContextUtils;
+import digital.vasic.opoc.util.GsUiUtils;
 import digital.vasic.opoc.wrapper.GsTextWatcherAdapter;
 
 import java.io.File;
@@ -170,7 +171,7 @@ public class GsFileBrowserDialog extends DialogFragment implements GsFileBrowser
         _searchEdit.setTextColor(rcolor(_dopt.primaryTextColor));
         _searchEdit.setHintTextColor(rcolor(_dopt.secondaryTextColor));
         _searchEdit.setOnFocusChangeListener((v, isFocussed) -> {
-            GsContextUtils.instance.showSoftKeyboard(getActivity(), isFocussed, _searchEdit);
+            GsUiUtils.showSoftKeyboard(getActivity(), isFocussed, _searchEdit);
         });
 
         root.setBackgroundColor(rcolor(_dopt.backgroundColor));
@@ -244,7 +245,7 @@ public class GsFileBrowserDialog extends DialogFragment implements GsFileBrowser
     @Override
     public void onDismiss(final DialogInterface dialog) {
         super.onDismiss(dialog);
-        GsContextUtils.instance.showSoftKeyboard(getActivity(), false, _searchEdit);
+        GsUiUtils.showSoftKeyboard(getActivity(), false, _searchEdit);
     }
 
     private void showNewDirDialog() {
@@ -255,11 +256,11 @@ public class GsFileBrowserDialog extends DialogFragment implements GsFileBrowser
         }
 
         final GsSearchOrCustomTextDialog.DialogOptions dopt = new GsSearchOrCustomTextDialog.DialogOptions();
-        dopt.isDarkDialog = GsContextUtils.instance.isDarkModeEnabled(activity);
+        dopt.isDarkDialog = GsUiUtils.isDarkModeEnabled(activity);
         dopt.titleText = _dopt.newDirButtonText;
         dopt.textColor = rcolor(_dopt.primaryTextColor);
         dopt.searchHintText = android.R.string.untitled;
-        dopt.searchInputFilter = GsContextUtils.instance.makeFilenameInputFilter();
+        dopt.searchInputFilter = GsUiUtils.makeFilenameInputFilter();
         dopt.isSearchEnabled = true;
         dopt.isSoftInputVisible = true;
         dopt.callback = name -> _filesystemViewerAdapter.createDirectoryHere(name);

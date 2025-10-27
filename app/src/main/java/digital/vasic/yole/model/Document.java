@@ -22,13 +22,13 @@ import androidx.annotation.RequiresApi;
 import androidx.annotation.StringRes;
 
 import digital.vasic.yole.ApplicationObject;
+import digital.vasic.yole.BuildConfig;
 import digital.vasic.yole.R;
-import digital.vasic.yole.activity.MainActivity;
 import digital.vasic.yole.format.FormatRegistry;
-import digital.vasic.yole.format.markdown.MarkdownTextConverter;
 import digital.vasic.yole.util.YoleContextUtils;
-import digital.vasic.opoc.util.GsContextUtils;
 import digital.vasic.opoc.util.GsFileUtils;
+import digital.vasic.opoc.util.GsStorageUtils;
+import digital.vasic.opoc.util.GsContextUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -218,7 +218,7 @@ public class Document implements Serializable {
             _fileInfo = result.second;
         }
 
-        if (MainActivity.IS_DEBUG_ENABLED) {
+        if (BuildConfig.DEBUG) {
             AppSettings.appendDebugLog(
                     "\n\n\n--------------\nLoaded document, filepattern "
                             + title.replaceAll(".*\\.", "-")
@@ -278,7 +278,7 @@ public class Document implements Serializable {
             return true;
         }
 
-        if (!isManualSave && TextUtils.getTrimmedLength(content) < GsContextUtils.TEXTFILE_OVERWRITE_MIN_TEXT_LENGTH) {
+        if (!isManualSave && TextUtils.getTrimmedLength(content) < GsStorageUtils.TEXTFILE_OVERWRITE_MIN_TEXT_LENGTH) {
             return false;
         }
 
@@ -302,9 +302,9 @@ public class Document implements Serializable {
             }
 
             cu = cu != null ? cu : new YoleContextUtils(context);
-            final boolean isContentResolverProxyFile = cu.isContentResolverProxyFile(file);
-            if (cu.isUnderStorageAccessFolder(context, file, false) || isContentResolverProxyFile) {
-                cu.writeFile(context, file, false, (fileOpened, fos) -> {
+            final boolean isContentResolverProxyFile = GsStorageUtils.isContentResolverProxyFile(file);
+            if (GsStorageUtils.isUnderStorageAccessFolder(context, file, false) || isContentResolverProxyFile) {
+                GsStorageUtils.writeFile(context, file, false, (fileOpened, fos) -> {
                     try {
                         if (_fileInfo != null && _fileInfo.hasBom) {
                             fos.write(0xEF);
@@ -386,7 +386,7 @@ public class Document implements Serializable {
 
     // Convenient wrapper
     private static String getFileNameWithTimestamp(final boolean includeExt) {
-        final String ext = includeExt ? MarkdownTextConverter.EXT_MARKDOWN__TXT : "";
+        final String ext = includeExt ? ".txt" : "";
         return GsFileUtils.getFilenameWithTimestamp("", "", ext);
     }
 }

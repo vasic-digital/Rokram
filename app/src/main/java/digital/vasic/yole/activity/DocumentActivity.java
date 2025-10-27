@@ -35,6 +35,9 @@ import digital.vasic.opoc.format.GsTextUtils;
 import digital.vasic.opoc.frontend.base.GsFragmentBase;
 import digital.vasic.opoc.util.GsContextUtils;
 import digital.vasic.opoc.util.GsFileUtils;
+import digital.vasic.opoc.util.GsIntentUtils;
+import digital.vasic.opoc.util.GsStorageUtils;
+import digital.vasic.opoc.util.GsUiUtils;
 
 import java.io.File;
 
@@ -73,7 +76,7 @@ public class DocumentActivity extends YoleBaseActivity {
         }
 
         if (GsFileUtils.getFilenameExtension(file).equals(".apk")) {
-            GsContextUtils.instance.requestApkInstallation(activity, file);
+            GsIntentUtils.requestApkInstallation(activity, file);
             return;
         }
 
@@ -113,7 +116,7 @@ public class DocumentActivity extends YoleBaseActivity {
 
         intent.putExtra(Document.EXTRA_FILE, file);
 
-        GsContextUtils.instance.animateToActivity(activity, intent, false, null);
+        GsIntentUtils.animateToActivity(activity, intent, false, null);
     }
 
     public static void askUserIfWantsToOpenFileInThisApp(final Activity activity, final File file) {
@@ -123,11 +126,11 @@ public class DocumentActivity extends YoleBaseActivity {
                     .setMessage(R.string.selected_file_may_be_a_textfile_want_to_open_in_editor)
                     .setIcon(R.drawable.ic_open_in_browser_black_24dp)
                     .setPositiveButton(R.string.app_name, (dialog1, which) -> DocumentActivity.launch(activity, file, null, null, true))
-                    .setNegativeButton(R.string.other, (dialog1, which) -> new YoleContextUtils(activity).viewFileInOtherApp(activity, file, null))
+                    .setNegativeButton(R.string.other, (dialog1, which) -> GsStorageUtils.viewFileInOtherApp(activity, file, null))
                     .create()
                     .show();
         } else {
-            new YoleContextUtils(activity).viewFileInOtherApp(activity, file, null);
+            GsStorageUtils.viewFileInOtherApp(activity, file, null);
         }
     }
 
@@ -180,7 +183,7 @@ public class DocumentActivity extends YoleBaseActivity {
 
         // Decide what to do with the file
         // -----------------------------------------------------------------------
-        if (file == null || !_cu.canWriteFile(this, file, false, true)) {
+        if (file == null || !GsStorageUtils.canWriteFile(this, file, false, true)) {
             showNotSupportedMessage();
         } else {
             // Open in editor/viewer
@@ -243,7 +246,7 @@ public class DocumentActivity extends YoleBaseActivity {
         final String notSupportedMessage = (getString(R.string.filemanager_doesnot_supply_required_data__appspecific) + "\n\n" + getString(R.string.sync_to_local_folder_notice)).replace("\n", "<br/>");
         new AlertDialog.Builder(this, R.style.Theme_AppCompat_DayNight_Dialog_Rounded)
                 .setMessage(Html.fromHtml(notSupportedMessage))
-                .setNegativeButton(R.string.more_info, (di, i) -> _cu.openWebpageInExternalBrowser(this, getString(R.string.sync_client_support_issue_url)))
+                .setNegativeButton(R.string.more_info, (di, i) -> GsIntentUtils.openWebpageInExternalBrowser(this, getString(R.string.sync_client_support_issue_url)))
                 .setPositiveButton(android.R.string.ok, null)
                 .setOnDismissListener((dialogInterface) -> finish())
                 .create().show();
@@ -283,7 +286,7 @@ public class DocumentActivity extends YoleBaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        _cu.extractResultFromActivityResult(this, requestCode, resultCode, data);
+        GsStorageUtils.extractResultFromActivityResult(this, requestCode, resultCode, data);
     }
 
     public void setTitle(final CharSequence title) {
@@ -308,7 +311,7 @@ public class DocumentActivity extends YoleBaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        _cu.setKeepScreenOn(this, _appSettings.isKeepScreenOn());
+        GsUiUtils.setKeepScreenOn(this, _appSettings.isKeepScreenOn());
     }
 
     @Override

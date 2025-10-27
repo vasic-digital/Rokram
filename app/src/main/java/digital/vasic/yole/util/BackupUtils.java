@@ -13,9 +13,10 @@ import digital.vasic.opoc.frontend.filebrowser.GsFileBrowserOptions;
 import digital.vasic.opoc.util.GsBackupUtils;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
-public class BackupUtils extends GsBackupUtils {
+public class BackupUtils {
 
     public static void showBackupSelectFromDialog(final Context context, final FragmentManager manager) {
         if (context instanceof Activity) {
@@ -31,7 +32,7 @@ public class BackupUtils extends GsBackupUtils {
 
                         @Override
                         public void onFsViewerSelected(String request, File file, final Integer lineNumber) {
-                            loadBackup(context, file);
+                            GsBackupUtils.loadBackup(context, file);
                         }
                     }, manager, activity,
                     (c, file) -> file != null && file.exists() && file.toString().trim().toLowerCase().endsWith(".json")
@@ -53,7 +54,7 @@ public class BackupUtils extends GsBackupUtils {
 
                         @Override
                         public void onFsViewerSelected(String request, File dir, final Integer lineNumber) {
-                            makeBackup(context, getPrefNamesToBackup(), generateBackupFilepath(context, dir));
+                            GsBackupUtils.makeBackup(context, getPrefNamesToBackup(), GsBackupUtils.generateBackupFilepath(context, dir));
                         }
                     }, manager, activity
             );
@@ -61,7 +62,7 @@ public class BackupUtils extends GsBackupUtils {
     }
 
     public static List<String> getPrefNamesToBackup() {
-        List<String> prefs = GsBackupUtils.getPrefNamesToBackup();
+        List<String> prefs = new ArrayList<>(GsBackupUtils.getPrefNamesToBackup());
         prefs.add(ActionButtonBase.ACTION_ORDER_PREF_NAME);
         return prefs;
     }

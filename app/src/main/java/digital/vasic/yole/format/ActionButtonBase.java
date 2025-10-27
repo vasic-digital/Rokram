@@ -49,6 +49,9 @@ import digital.vasic.opoc.frontend.GsSearchOrCustomTextDialog;
 import digital.vasic.opoc.util.GsCollectionUtils;
 import digital.vasic.opoc.util.GsContextUtils;
 import digital.vasic.opoc.util.GsFileUtils;
+import digital.vasic.opoc.util.GsIntentUtils;
+import digital.vasic.opoc.util.GsStorageUtils;
+import digital.vasic.opoc.util.GsUiUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -599,7 +602,7 @@ public abstract class ActionButtonBase {
     }
 
     public Context getContext() {
-        return _activity != null ? _activity : _appSettings.getContext();
+        return _activity != null ? _activity : _appSettings.getContextCompat();
     }
 
     public YoleContextUtils getCu() {
@@ -713,7 +716,7 @@ public abstract class ActionButtonBase {
                     if (url.endsWith(")")) {
                         url = url.substring(0, url.length() - 1);
                     }
-                    _cu.openWebpageInExternalBrowser(getContext(), url);
+                    GsIntentUtils.openWebpageInExternalBrowser(getContext(), url);
                 }
 
                 return true;
@@ -758,11 +761,11 @@ public abstract class ActionButtonBase {
                 return true;
             }
             case R.string.abid_common_view_file_in_other_app: {
-                _cu.viewFileInOtherApp(getContext(), _document.file, GsFileUtils.getMimeType(_document.file));
+                GsStorageUtils.viewFileInOtherApp(getContext(), _document.file, GsFileUtils.getMimeType(_document.file));
                 return true;
             }
             case R.string.abid_common_rotate_screen: {
-                _cu.nextScreenRotationSetting(_activity);
+                GsUiUtils.nextScreenRotationSetting(_activity);
                 return true;
             }
             case R.string.abid_common_change_case: {

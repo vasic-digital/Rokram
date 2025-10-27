@@ -12,6 +12,8 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 
+import digital.vasic.opoc.util.GsIntentUtils;
+
 public class OpenShareIntoActivity extends OpenEditorActivity {
 
     @Override
@@ -22,6 +24,6 @@ public class OpenShareIntoActivity extends OpenEditorActivity {
                 .setAction(Intent.ACTION_SEND)
                 .putExtra(Intent.EXTRA_TEXT, "");
 
-        _cu.animateToActivity(this, openShare, true, 1);
+        GsIntentUtils.animateToActivity(this, openShare, true, 1);
     }
 }

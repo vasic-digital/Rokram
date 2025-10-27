@@ -131,6 +131,9 @@ work. If not, see <https://creativecommons.org/publicdomain/zero/1.0/>.
     <string name="pref_key__orgmode__action_keys" translatable="false">pref_key__orgmode__action_keys</string>
     <string name="pref_key__plaintext__action_keys" translatable="false">pref_key__plaintext__action_keys</string>
     <string name="pref_key__asciidoc__action_keys" translatable="false">pref_key__asciidoc__action_keys</string>
+    <string name="pref_key__taskpaper__action_keys" translatable="false">pref_key__taskpaper__action_keys</string>
+    <string name="pref_key__textile__action_keys" translatable="false">pref_key__textile__action_keys</string>
+    <string name="pref_key__creole__action_keys" translatable="false">pref_key__creole__action_keys</string>
     <string name="pref_key__todotxt__hl_delay" translatable="false">pref_key__todotxt__hl_delay</string>
     <string name="pref_key__todo_filepath" translatable="false">pref_key__todo_filepath</string>
     <string name="pref_key__todotxt__add_completion_date_for_todos" translatable="false">pref_key__todotxt__add_completion_date_for_todos</string>

@@ -46,6 +46,8 @@ import digital.vasic.yole.util.YoleContextUtils;
 import digital.vasic.opoc.util.GsCollectionUtils;
 import digital.vasic.opoc.util.GsContextUtils;
 import digital.vasic.opoc.util.GsFileUtils;
+import digital.vasic.opoc.util.GsStorageUtils;
+import digital.vasic.opoc.util.GsUiUtils;
 import digital.vasic.opoc.wrapper.GsAndroidSpinnerOnItemSelectedAdapter;
 import digital.vasic.opoc.wrapper.GsCallback;
 import digital.vasic.opoc.wrapper.GsTextWatcherAdapter;
@@ -123,9 +125,9 @@ public class NewFileDialog extends DialogFragment {
         utf8BomCheckbox.setChecked(appSettings.getNewFileDialogLastUsedUtf8Bom());
         utf8BomCheckbox.setVisibility(appSettings.isExperimentalFeaturesEnabled() ? View.VISIBLE : View.GONE);
         titleEdit.requestFocus();
-        new Handler().postDelayed(new GsContextUtils.DoTouchView(titleEdit), 200);
+        new Handler().postDelayed(new GsUiUtils.DoTouchView(titleEdit), 200);
 
-        titleEdit.setFilters(new InputFilter[]{GsContextUtils.instance.makeFilenameInputFilter()});
+        titleEdit.setFilters(new InputFilter[]{GsUiUtils.makeFilenameInputFilter()});
         extEdit.setFilters(titleEdit.getFilters());
 
         // Build a list of available formats
@@ -297,7 +299,7 @@ public class NewFileDialog extends DialogFragment {
                 appSettings.saveTitleFormat(titleFormat, MAX_TITLE_FORMATS);
             }
 
-            if (!file.exists() || file.length() <= GsContextUtils.TEXTFILE_OVERWRITE_MIN_TEXT_LENGTH) {
+            if (!file.exists() || file.length() <= GsStorageUtils.TEXTFILE_OVERWRITE_MIN_TEXT_LENGTH) {
                 document.saveContent(activity, content.first, cu, true);
 
                 // We only make these changes if the file did not already exist
@@ -326,8 +328,8 @@ public class NewFileDialog extends DialogFragment {
                 appSettings.saveTitleFormat(titleFormat, MAX_TITLE_FORMATS);
             }
 
-            if (cu.isUnderStorageAccessFolder(getContext(), f, true)) {
-                DocumentFile dof = cu.getDocumentFile(getContext(), f, true);
+            if (GsStorageUtils.isUnderStorageAccessFolder(getContext(), f, true)) {
+                DocumentFile dof = GsStorageUtils.getDocumentFile(getContext(), f, true);
                 if (dof != null && dof.exists()) {
                     callback(f);
                 }

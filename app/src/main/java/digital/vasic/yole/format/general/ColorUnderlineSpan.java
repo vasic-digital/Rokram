@@ -7,11 +7,10 @@
 #########################################################*/
 package digital.vasic.yole.format.general;
 
+import android.graphics.Color;
 import android.text.TextPaint;
 import android.text.style.UnderlineSpan;
 import android.text.style.UpdateAppearance;
-
-import digital.vasic.opoc.util.GsContextUtils;
 
 import java.lang.reflect.Method;
 import java.util.regex.Pattern;
@@ -23,7 +22,8 @@ public class ColorUnderlineSpan extends UnderlineSpan implements UpdateAppearanc
     private final float _thickness;
 
     public ColorUnderlineSpan(String colorHexString, Float thickness) {
-        this(GsContextUtils.instance.parseHexColorString(colorHexString), thickness);
+        _color = Color.parseColor(colorHexString);
+        _thickness = thickness == null ? 1.0f : thickness;
     }
 
     public ColorUnderlineSpan(int color, Float thickness) {

@@ -64,6 +64,11 @@ import digital.vasic.opoc.frontend.settings.GsFontPreferenceCompat;
 import digital.vasic.opoc.frontend.textview.TextViewUndoRedo;
 import digital.vasic.opoc.util.GsContextUtils;
 import digital.vasic.opoc.util.GsCoolExperimentalStuff;
+import digital.vasic.opoc.util.GsImageUtils;
+import digital.vasic.opoc.util.GsIntentUtils;
+import digital.vasic.opoc.util.GsResourceUtils;
+import digital.vasic.opoc.util.GsStorageUtils;
+import digital.vasic.opoc.util.GsUiUtils;
 import digital.vasic.opoc.web.GsWebViewChromeClient;
 import digital.vasic.opoc.wrapper.GsTextWatcherAdapter;
 
@@ -321,8 +326,8 @@ public class DocumentEditAndViewFragment extends YoleBaseFragment implements For
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.document__edit__menu, menu);
-        _cu.tintMenuItems(menu, true, Color.WHITE);
-        _cu.setSubMenuIconsVisibility(menu, true);
+        GsUiUtils.tintMenuItems(menu, true, Color.WHITE);
+        GsUiUtils.setSubMenuIconsVisibility(menu, true);
 
         final boolean isExperimentalFeaturesEnabled = _appSettings.isExperimentalFeaturesEnabled();
         final boolean isText = !_document.isBinaryFileNoTextLoading();
@@ -509,18 +514,18 @@ public class DocumentEditAndViewFragment extends YoleBaseFragment implements For
                 return true;
             }
             case R.id.action_share_path: {
-                _cu.shareText(getActivity(), _document.file.getAbsolutePath(), GsContextUtils.MIME_TEXT_PLAIN);
+                GsIntentUtils.shareText(getActivity(), _document.file.getAbsolutePath(), GsResourceUtils.MIME_TEXT_PLAIN);
                 return true;
             }
             case R.id.action_share_text: {
                 if (saveDocument(false)) {
-                    _cu.shareText(getActivity(), getTextString(), GsContextUtils.MIME_TEXT_PLAIN);
+                    GsIntentUtils.shareText(getActivity(), getTextString(), GsResourceUtils.MIME_TEXT_PLAIN);
                 }
                 return true;
             }
             case R.id.action_share_file: {
                 if (saveDocument(false)) {
-                    _cu.shareStream(getActivity(), _document.file, GsContextUtils.MIME_TEXT_PLAIN);
+                    GsStorageUtils.shareStream(getActivity(), _document.file, GsResourceUtils.MIME_TEXT_PLAIN);
                 }
                 return true;
             }
@@ -528,7 +533,7 @@ public class DocumentEditAndViewFragment extends YoleBaseFragment implements For
             case R.id.action_share_html_source: {
                 if (saveDocument(false)) {
                     TextConverterBase converter = FormatRegistry.getFormat(_document.getFormat(), activity, _document).getConverter();
-                    _cu.shareText(getActivity(),
+                    GsIntentUtils.shareText(getActivity(),
                             converter.convertMarkup(getTextString(), getActivity(), false, _lineNumbersView.isLineNumbersEnabled(), _document.file),
                             "text/" + (item.getItemId() == R.id.action_share_html ? "html" : "plain")
                     );
@@ -537,7 +542,7 @@ public class DocumentEditAndViewFragment extends YoleBaseFragment implements For
             }
             case R.id.action_share_calendar_event: {
                 if (saveDocument(false)) {
-                    if (!_cu.createCalendarAppointment(getActivity(), _document.title, getTextString(), null)) {
+                    if (!GsIntentUtils.createCalendarAppointment(getActivity(), _document.title, getTextString(), null)) {
                         Toast.makeText(activity, R.string.no_calendar_app_is_installed, Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -557,8 +562,8 @@ public class DocumentEditAndViewFragment extends YoleBaseFragment implements For
                                 _cu.printOrCreatePdfFromWebview(_webView, _document, getTextString().contains("beamer\n"));
                             }
                         } else {
-                            Bitmap bmp = _cu.getBitmapFromWebView(_webView, itemId == R.id.action_share_image);
-                            _cu.shareImage(getContext(), bmp, null);
+                            Bitmap bmp = GsImageUtils.getBitmapFromWebView(_webView, itemId == R.id.action_share_image);
+                            GsImageUtils.shareImage(getContext(), bmp, null);
                         }
                     }, 7000);
                 }
@@ -587,7 +592,7 @@ public class DocumentEditAndViewFragment extends YoleBaseFragment implements For
             }
             case R.id.action_send_debug_log: {
                 final String text = AppSettings.getDebugLog() + "\n\n------------------------\n\n\n\n" + Document.getMaskedContent(getTextString());
-                _cu.draftEmail(getActivity(), "Debug Log " + getString(R.string.app_name_real), text, "debug@localhost.lan");
+                GsIntentUtils.draftEmail(getActivity(), "Debug Log " + getString(R.string.app_name_real), text, "debug@localhost.lan");
                 return true;
             }
             case R.id.action_load_epub: {
@@ -807,7 +812,7 @@ public class DocumentEditAndViewFragment extends YoleBaseFragment implements For
         if (!TextUtils.isEmpty(text)) {
             Context context = getContext();
             context = context == null ? ApplicationObject.get().getApplicationContext() : context;
-            new YoleContextUtils(context).setClipboard(getContext(), text);
+            GsUiUtils.setClipboard(context, text);
         }
         // Always show error message
         Toast.makeText(getContext(), R.string.error_could_not_open_file, Toast.LENGTH_LONG).show();
@@ -815,8 +820,8 @@ public class DocumentEditAndViewFragment extends YoleBaseFragment implements For
     }
 
     public boolean isSdStatusBad() {
-        if (_cu.isUnderStorageAccessFolder(getContext(), _document.file, false) &&
-                _cu.getStorageAccessFrameworkTreeUri(getContext()) == null) {
+        if (GsStorageUtils.isUnderStorageAccessFolder(getContext(), _document.file, false) &&
+                GsStorageUtils.getStorageAccessFrameworkTreeUri(getContext()) == null) {
             _cu.showMountSdDialog(getActivity());
             return true;
         }
@@ -828,7 +833,7 @@ public class DocumentEditAndViewFragment extends YoleBaseFragment implements For
         return (_document == null ||
                 _hlEditor == null ||
                 _appSettings == null ||
-                !_cu.canWriteFile(getContext(), _document.file, false, true));
+                !GsStorageUtils.canWriteFile(getContext(), _document.file, false, true));
     }
 
     // Save the file
@@ -842,7 +847,7 @@ public class DocumentEditAndViewFragment extends YoleBaseFragment implements For
         // Document is written iff writeable && content has changed
         final CharSequence text = _hlEditor.getText();
         if (!_document.isContentSame(text)) {
-            final int minLength = GsContextUtils.TEXTFILE_OVERWRITE_MIN_TEXT_LENGTH;
+            final int minLength = GsStorageUtils.TEXTFILE_OVERWRITE_MIN_TEXT_LENGTH;
             if (!forceSaveEmpty && text != null && text.length() < minLength) {
                 final String message = activity.getString(R.string.wont_save_min_length, minLength);
                 Toast.makeText(activity, message, Toast.LENGTH_SHORT).show();
@@ -888,13 +893,13 @@ public class DocumentEditAndViewFragment extends YoleBaseFragment implements For
         showHideActionBar();
         if (show) {
             updateViewModeText();
-            _cu.showSoftKeyboard(activity, false, _hlEditor);
+            GsUiUtils.showSoftKeyboard(activity, false, _hlEditor);
             _hlEditor.clearFocus();
-            _hlEditor.postDelayed(() -> _cu.showSoftKeyboard(activity, false, _hlEditor), 300);
-            GsContextUtils.fadeInOut(_webView, _verticalScrollView, animate);
+            _hlEditor.postDelayed(() -> GsUiUtils.showSoftKeyboard(activity, false, _hlEditor), 300);
+            GsUiUtils.fadeInOut(_webView, _verticalScrollView, animate);
         } else {
             _webViewClient.setRestoreScrollY(_webView.getScrollY());
-            GsContextUtils.fadeInOut(_verticalScrollView, _webView, animate);
+            GsUiUtils.fadeInOut(_verticalScrollView, _webView, animate);
         }
 
         _nextConvertToPrintMode = false;

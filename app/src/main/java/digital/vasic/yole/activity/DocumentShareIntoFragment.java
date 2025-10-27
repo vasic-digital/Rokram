@@ -51,6 +51,9 @@ import digital.vasic.opoc.frontend.base.GsPreferenceFragmentBase;
 import digital.vasic.opoc.frontend.filebrowser.GsFileBrowserListAdapter;
 import digital.vasic.opoc.frontend.filebrowser.GsFileBrowserOptions;
 import digital.vasic.opoc.util.GsFileUtils;
+import digital.vasic.opoc.util.GsIntentUtils;
+import digital.vasic.opoc.util.GsResourceUtils;
+import digital.vasic.opoc.util.GsUiUtils;
 import digital.vasic.opoc.wrapper.GsCallback;
 import digital.vasic.opoc.wrapper.GsTextWatcherAdapter;
 
@@ -418,7 +421,7 @@ public class DocumentShareIntoFragment extends YoleBaseFragment {
             // Interpolate parts
             final long time = System.currentTimeMillis();
             for (int i = 0; i < parts.size(); i++) {
-                parts.set(i, _cu.formatDateTime(context, parts.get(i), time));
+                parts.set(i, GsResourceUtils.formatDateTime(context, parts.get(i), time));
             }
 
             // Put the shared text in the right place
@@ -502,7 +505,7 @@ public class DocumentShareIntoFragment extends YoleBaseFragment {
             boolean close = false;
             switch (keyId) {
                 case R.string.pref_key__share_into__clipboard: {
-                    shu.setClipboard(getContext(), text);
+                    GsUiUtils.setClipboard(getContext(), text);
                     close = true;
                     break;
                 }
@@ -528,18 +531,18 @@ public class DocumentShareIntoFragment extends YoleBaseFragment {
                 }
                 case R.string.pref_key__share_into__open_in_browser: {
                     if ((tmps = GsTextUtils.tryExtractUrlAroundPos(text, text.length())) != null) {
-                        _cu.openWebpageInExternalBrowser(getActivity(), tmps);
+                        GsIntentUtils.openWebpageInExternalBrowser(getActivity(), tmps);
                         close = true;
                     }
                     break;
                 }
                 case R.string.pref_key__share_into__reshare: {
-                    shu.shareText(getActivity(), text, null);
+                    GsIntentUtils.shareText(getActivity(), text, null);
                     close = true;
                     break;
                 }
                 case R.string.pref_key__share_into__calendar_event: {
-                    if (shu.createCalendarAppointment(getActivity(), null, text, null)) {
+                    if (GsIntentUtils.createCalendarAppointment(getActivity(), null, text, null)) {
                         close = true;
                     } else {
                         Toast.makeText(getContext(), R.string.no_calendar_app_is_installed, Toast.LENGTH_SHORT).show();

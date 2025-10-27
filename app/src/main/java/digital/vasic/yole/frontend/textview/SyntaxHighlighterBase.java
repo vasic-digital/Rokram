@@ -34,7 +34,7 @@ import digital.vasic.yole.format.general.ColorUnderlineSpan;
 import digital.vasic.yole.format.plaintext.PlaintextSyntaxHighlighter;
 import digital.vasic.yole.model.AppSettings;
 import digital.vasic.opoc.format.GsTextUtils;
-import digital.vasic.opoc.util.GsContextUtils;
+import digital.vasic.opoc.util.GsUiUtils;
 import digital.vasic.opoc.wrapper.GsCallback;
 
 import java.util.ArrayList;
@@ -135,7 +135,7 @@ public abstract class SyntaxHighlighterBase {
      * @return Highlighter
      */
     public SyntaxHighlighterBase configure(@Nullable final Paint paint) {
-        _isDarkMode = GsContextUtils.instance.isDarkModeEnabled(_appSettings.getContext());
+        _isDarkMode = GsUiUtils.isDarkModeEnabled(_appSettings.getContextCompat());
         _fontFamily = _appSettings.getFontFamily();
         _textColor = _appSettings.getEditorForegroundColor();
         if (paint != null) {

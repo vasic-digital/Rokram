@@ -12,6 +12,7 @@ import digital.vasic.yole.model.AppSettings;
 import digital.vasic.yole.util.YoleContextUtils;
 import digital.vasic.opoc.frontend.base.GsActivityBase;
 import digital.vasic.opoc.frontend.base.GsFragmentBase;
+import digital.vasic.opoc.util.GsResourceUtils;
 
 public abstract class YoleBaseActivity extends GsActivityBase<AppSettings, YoleContextUtils> {
 
@@ -24,7 +25,7 @@ public abstract class YoleBaseActivity extends GsActivityBase<AppSettings, YoleC
             getWindow().setEnterTransition(null);
             getWindow().setExitTransition(null);
         }
-        _cu.setAppLanguage(this, _appSettings.getLanguage());
+        GsResourceUtils.setAppLanguage(this, _appSettings.getLanguage());
         if (_appSettings.isHideSystemStatusbar()) {
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         }

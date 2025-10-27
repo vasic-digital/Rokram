@@ -78,6 +78,9 @@ import com.rarepebble.colorpicker.ColorPreference;
 
 import digital.vasic.opoc.model.GsSharedPreferencesPropertyBackend;
 import digital.vasic.opoc.util.GsContextUtils;
+import digital.vasic.opoc.util.GsImageUtils;
+import digital.vasic.opoc.util.GsResourceUtils;
+import digital.vasic.opoc.util.GsUiUtils;
 import digital.vasic.opoc.wrapper.GsCallback;
 
 import java.util.ArrayList;
@@ -157,7 +160,7 @@ public abstract class GsPreferenceFragmentBase<AS extends GsSharedPreferencesPro
         if (activity != null && activity.getTheme() != null) {
             TypedArray array = activity.getTheme().obtainStyledAttributes(new int[]{android.R.attr.colorBackground});
             int bgcolor = array.getColor(0, 0xFFFFFF);
-            _defaultIconTintColor = _cu.shouldColorOnTopBeLight(bgcolor) ? Color.WHITE : Color.BLACK;
+            _defaultIconTintColor = GsResourceUtils.shouldColorOnTopBeLight(bgcolor) ? Color.WHITE : Color.BLACK;
         }
 
         // on bottom
@@ -189,7 +192,7 @@ public abstract class GsPreferenceFragmentBase<AS extends GsSharedPreferencesPro
                 Preference pref = prefGroup.getPreference(i);
                 if (pref != null) {
                     if (isAllowedToTint(pref)) {
-                        pref.setIcon(_cu.tintDrawable(pref.getIcon(), iconColor));
+                        pref.setIcon(GsImageUtils.tintDrawable(pref.getIcon(), iconColor));
                     }
                     if (pref instanceof PreferenceGroup) {
                         tintPrefIconsRecursive((PreferenceGroup) pref, iconColor);
@@ -209,7 +212,7 @@ public abstract class GsPreferenceFragmentBase<AS extends GsSharedPreferencesPro
      */
     protected int keyToStringResId(Preference preference) {
         if (preference != null && !TextUtils.isEmpty(preference.getKey())) {
-            return _cu.getResId(getContext(), GsContextUtils.ResType.STRING, preference.getKey());
+            return GsResourceUtils.getResId(getContext(), GsResourceUtils.ResType.STRING, preference.getKey());
         }
         return 0;
     }
@@ -219,7 +222,7 @@ public abstract class GsPreferenceFragmentBase<AS extends GsSharedPreferencesPro
      * This only works if the key is only defined once and value=key
      */
     protected int keyToStringResId(String keyAsString) {
-        return _cu.getResId(getContext(), GsContextUtils.ResType.STRING, keyAsString);
+        return GsResourceUtils.getResId(getContext(), GsResourceUtils.ResType.STRING, keyAsString);
     }
 
 
@@ -251,12 +254,12 @@ public abstract class GsPreferenceFragmentBase<AS extends GsSharedPreferencesPro
     private synchronized void updatePreferenceChangedListeners(boolean shouldListen) {
         String tprefname = getSharedPreferencesName();
         if (shouldListen && tprefname != null && !_registeredPrefs.contains(tprefname)) {
-            SharedPreferences preferences = _appSettings.getContext().getSharedPreferences(tprefname, Context.MODE_PRIVATE);
+            SharedPreferences preferences = _appSettings.getContextCompat().getSharedPreferences(tprefname, Context.MODE_PRIVATE);
             _appSettings.registerPreferenceChangedListener(preferences, this);
             _registeredPrefs.add(tprefname);
         } else if (!shouldListen) {
             for (String prefname : _registeredPrefs) {
-                SharedPreferences preferences = _appSettings.getContext().getSharedPreferences(tprefname, Context.MODE_PRIVATE);
+                SharedPreferences preferences = _appSettings.getContextCompat().getSharedPreferences(tprefname, Context.MODE_PRIVATE);
                 _appSettings.unregisterPreferenceChangedListener(preferences, this);
             }
         }
@@ -402,7 +405,7 @@ public abstract class GsPreferenceFragmentBase<AS extends GsSharedPreferencesPro
             }
             if (iconRes != null && iconRes != 0) {
                 if (isAllowedToTint(pref)) {
-                    pref.setIcon(_cu.tintDrawable(getContext(), iconRes, getIconTintColor()));
+                    pref.setIcon(GsImageUtils.tintDrawable(getContext(), iconRes, getIconTintColor()));
                 } else {
                     pref.setIcon(iconRes);
                 }
@@ -527,7 +530,7 @@ public abstract class GsPreferenceFragmentBase<AS extends GsSharedPreferencesPro
             }
         }
         if (getIconTintColor() != null && pref.getIcon() != null && isAllowedToTint(pref)) {
-            pref.setIcon(_cu.tintDrawable(pref.getIcon(), getIconTintColor()));
+            pref.setIcon(GsImageUtils.tintDrawable(pref.getIcon(), getIconTintColor()));
         }
         return target.addPreference(pref);
     }
@@ -553,7 +556,7 @@ public abstract class GsPreferenceFragmentBase<AS extends GsSharedPreferencesPro
     }
 
     public Integer getDividerColor() {
-        return _cu.getListDividerColor(getActivity());
+        return GsUiUtils.getListDividerColor(getActivity());
     }
 
     GsCallback.b1<Integer> _flatPosIsPreferenceCategoryCallback = position -> {

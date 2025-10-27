@@ -17,6 +17,7 @@ import androidx.documentfile.provider.DocumentFile;
 import digital.vasic.yole.frontend.YoleDialogFactory;
 import digital.vasic.yole.util.YoleContextUtils;
 import digital.vasic.opoc.util.GsFileUtils;
+import digital.vasic.opoc.util.GsStorageUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -96,8 +97,8 @@ public class WrYoleSingleton {
         }
 
         final YoleContextUtils cu = new YoleContextUtils(context);
-        if (context != null && cu.isUnderStorageAccessFolder(context, file, file.isDirectory())) {
-            final DocumentFile dof = cu.getDocumentFile(context, file, file.isDirectory());
+        if (context != null && GsStorageUtils.isUnderStorageAccessFolder(context, file, file.isDirectory())) {
+            final DocumentFile dof = GsStorageUtils.getDocumentFile(context, file, file.isDirectory());
             return dof == null ? false : (dof.delete() || !dof.exists());
         } else {
             return file.delete();

@@ -15,6 +15,7 @@ import androidx.annotation.Nullable;
 import digital.vasic.yole.activity.YoleBaseActivity;
 import digital.vasic.yole.activity.StoragePermissionActivity;
 import digital.vasic.yole.model.Document;
+import digital.vasic.opoc.util.GsIntentUtils;
 
 import java.io.File;
 
@@ -35,6 +36,6 @@ public class OpenEditorActivity extends YoleBaseActivity {
             openIntent.putExtra(Document.EXTRA_FILE_LINE_NUMBER, line);
         }
 
-        _cu.animateToActivity(this, openIntent, true, 1);
+        GsIntentUtils.animateToActivity(this, openIntent, true, 1);
     }
 }

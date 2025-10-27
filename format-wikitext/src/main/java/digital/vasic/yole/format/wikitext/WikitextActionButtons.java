@@ -21,6 +21,7 @@ import digital.vasic.yole.frontend.YoleDialogFactory;
 import digital.vasic.yole.frontend.textview.AutoTextFormatter;
 import digital.vasic.yole.frontend.textview.TextViewUtils;
 import digital.vasic.yole.model.Document;
+import digital.vasic.opoc.util.GsIntentUtils;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -189,7 +190,7 @@ public class WikitextActionButtons extends ActionButtonBase {
         }
 
         if (resolver.isWebLink()) {
-            getCu().openWebpageInExternalBrowser(getContext(), resolvedLink);
+            GsIntentUtils.openWebpageInExternalBrowser(getContext(), resolvedLink);
         } else {
             DocumentActivity.launch(getActivity(), new File(resolvedLink), false, null);
         }

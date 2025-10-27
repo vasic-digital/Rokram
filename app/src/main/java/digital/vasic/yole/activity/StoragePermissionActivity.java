@@ -8,6 +8,8 @@ import androidx.appcompat.app.AlertDialog;
 
 import digital.vasic.yole.R;
 import digital.vasic.opoc.util.GsContextUtils;
+import digital.vasic.opoc.util.GsStorageUtils;
+import digital.vasic.opoc.util.GsIntentUtils;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -16,7 +18,7 @@ public class StoragePermissionActivity extends YoleBaseActivity {
 
     // Check whether we require permissions and setup appropriate conditions
     public static void requestPermissions(final YoleBaseActivity activity) {
-        if (!GsContextUtils.instance.checkExternalStoragePermission(activity)) {
+        if (!GsStorageUtils.checkExternalStoragePermission(activity)) {
             activity.startActivity(new Intent(activity, StoragePermissionActivity.class));
             activity.finish();
         }
@@ -35,7 +37,7 @@ public class StoragePermissionActivity extends YoleBaseActivity {
                 .setNegativeButton(R.string.exit, (dialog, which) -> finish())
                 .setPositiveButton(android.R.string.yes, (dialog, which) -> {
                     _responseProcessed.set(false);
-                    GsContextUtils.instance.requestExternalStoragePermission(this);
+                    GsStorageUtils.requestExternalStoragePermission(this);
                 })
                 .show();
         d.setCanceledOnTouchOutside(false);
@@ -48,8 +50,8 @@ public class StoragePermissionActivity extends YoleBaseActivity {
             return;
         }
 
-        if (_cu.checkExternalStoragePermission(this)) {
-            GsContextUtils.instance.animateToActivity(this, MainActivity.class, true, 0);
+        if (GsStorageUtils.checkExternalStoragePermission(this)) {
+            GsIntentUtils.animateToActivity(this, new Intent(this, MainActivity.class), true, 0);
         } else {
             Toast.makeText(this, R.string.permission_not_granted, Toast.LENGTH_SHORT).show();
             askForPermissions();

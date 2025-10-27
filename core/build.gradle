@@ -22,6 +22,12 @@ android {
         buildConfigField "String", "GITMSG", "\"${getGitLastCommitMessage}\""
     }
 
+    sourceSets {
+        main {
+            java.srcDirs += 'thirdparty/java'
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled true

@@ -43,6 +43,9 @@ import digital.vasic.yole.R;
 import digital.vasic.opoc.util.GsCollectionUtils;
 import digital.vasic.opoc.util.GsContextUtils;
 import digital.vasic.opoc.util.GsFileUtils;
+import digital.vasic.opoc.util.GsResourceUtils;
+import digital.vasic.opoc.util.GsStorageUtils;
+import digital.vasic.opoc.util.GsUiUtils;
 import digital.vasic.opoc.wrapper.GsCallback;
 
 import java.io.File;
@@ -112,32 +115,32 @@ public class GsFileBrowserListAdapter extends RecyclerView.Adapter<GsFileBrowser
         _adapterDataFiltered = new ArrayList<>();
         _currentSelection = new HashSet<>();
         _context = context;
-        GsContextUtils.instance.setAppLocale(_context, Locale.getDefault());
+        GsResourceUtils.setAppLocale(_context, Locale.getDefault());
 
         // Prevents view flicker - https://stackoverflow.com/a/32488059
         setHasStableIds(true);
 
         GsContextUtils cu = GsContextUtils.instance;
         if (_dopt.primaryColor == 0) {
-            _dopt.primaryColor = cu.getResId(context, GsContextUtils.ResType.COLOR, "primary");
+            _dopt.primaryColor = GsResourceUtils.getResId(context, GsResourceUtils.ResType.COLOR, "primary");
         }
         if (_dopt.accentColor == 0) {
-            _dopt.accentColor = cu.getResId(context, GsContextUtils.ResType.COLOR, "accent");
+            _dopt.accentColor = GsResourceUtils.getResId(context, GsResourceUtils.ResType.COLOR, "accent");
         }
         if (_dopt.primaryTextColor == 0) {
-            _dopt.primaryTextColor = cu.getResId(context, GsContextUtils.ResType.COLOR, "primary_text");
+            _dopt.primaryTextColor = GsResourceUtils.getResId(context, GsResourceUtils.ResType.COLOR, "primary_text");
         }
         if (_dopt.secondaryTextColor == 0) {
-            _dopt.secondaryTextColor = cu.getResId(context, GsContextUtils.ResType.COLOR, "secondary_text");
+            _dopt.secondaryTextColor = GsResourceUtils.getResId(context, GsResourceUtils.ResType.COLOR, "secondary_text");
         }
         if (_dopt.titleTextColor == 0) {
             _dopt.titleTextColor = _dopt.primaryTextColor;
         }
         if (_dopt.fileColor == 0) {
-            _dopt.fileColor = cu.getResId(context, GsContextUtils.ResType.COLOR, "file");
+            _dopt.fileColor = GsResourceUtils.getResId(context, GsResourceUtils.ResType.COLOR, "file");
         }
         if (_dopt.folderColor == 0) {
-            _dopt.folderColor = cu.getResId(context, GsContextUtils.ResType.COLOR, "folder");
+            _dopt.folderColor = GsResourceUtils.getResId(context, GsResourceUtils.ResType.COLOR, "folder");
         }
 
         updateVirtualFolders();
@@ -406,7 +409,7 @@ public class GsFileBrowserListAdapter extends RecyclerView.Adapter<GsFileBrowser
 
         if (!_currentSelection.isEmpty()) {
             // Blink in multi-select
-            GsContextUtils.blinkView(view);
+            GsUiUtils.blinkView(view);
         }
 
         switch (view.getId()) {
@@ -556,7 +559,7 @@ public class GsFileBrowserListAdapter extends RecyclerView.Adapter<GsFileBrowser
 
     @Override
     public boolean onLongClick(final View view) {
-        GsContextUtils.blinkView(view);
+        GsUiUtils.blinkView(view);
         if (view.getId() == R.id.opoc_filesystem_item__root) {
             final TagContainer data = (TagContainer) view.getTag();
             toggleSelection(data);
@@ -631,7 +634,7 @@ public class GsFileBrowserListAdapter extends RecyclerView.Adapter<GsFileBrowser
                     _recyclerView.postDelayed(() -> {
                         final RecyclerView.ViewHolder holder = _recyclerView.findViewHolderForLayoutPosition(pos);
                         if (holder != null) {
-                            GsContextUtils.blinkView(holder.itemView);
+                            GsUiUtils.blinkView(holder.itemView);
                         }
                     }, 400));
             return true;
@@ -696,7 +699,7 @@ public class GsFileBrowserListAdapter extends RecyclerView.Adapter<GsFileBrowser
             newData.addAll(_virtualMapping.keySet());
 
             // SD Card and other external storage directories that are also not listable
-            for (final Pair<File, String> p : GsContextUtils.instance.getAppDataPublicDirs(_context, false, true, false)) {
+            for (final Pair<File, String> p : GsStorageUtils.getAppDataPublicDirs(_context, false, true, false)) {
                 File f = p.first;
                 while (f.getParentFile() != null && !f.getParentFile().getName().equals("storage")) {
                     f = f.getParentFile();

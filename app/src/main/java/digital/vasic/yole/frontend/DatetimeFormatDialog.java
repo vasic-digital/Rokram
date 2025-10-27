@@ -32,6 +32,8 @@ import digital.vasic.yole.frontend.textview.HighlightingEditor;
 import digital.vasic.yole.model.AppSettings;
 import digital.vasic.opoc.model.GsSharedPreferencesPropertyBackend;
 import digital.vasic.opoc.util.GsContextUtils;
+import digital.vasic.opoc.util.GsIntentUtils;
+import digital.vasic.opoc.util.GsResourceUtils;
 import digital.vasic.opoc.wrapper.GsCallback;
 
 import java.util.ArrayList;
@@ -85,7 +87,6 @@ public class DatetimeFormatDialog {
         final AlertDialog.Builder builder = new AlertDialog.Builder(activity, R.style.Theme_AppCompat_DayNight_Dialog_Rounded);
         final View viewRoot = activity.getLayoutInflater().inflate(R.layout.time_format_dialog, null);
 
-        final GsContextUtils cu = new GsContextUtils();
         final AppSettings appSettings = AppSettings.get(activity);
 
         final Locale locale = ConfigurationCompat.getLocales(activity.getResources().getConfiguration()).get(0);
@@ -117,7 +118,7 @@ public class DatetimeFormatDialog {
             formatEditText.setText(allFormats.get(position));
             popupWindow.dismiss();
             setToNow(cal, useCurrentDateCheckbox.isChecked());
-            previewTextView.setText(cu.formatDateTime(locale, formatEditText.getText().toString(), cal.getTimeInMillis()));
+            previewTextView.setText(GsResourceUtils.formatDateTime(locale, formatEditText.getText().toString(), cal.getTimeInMillis()));
         });
 
         popupWindow.setAnchorView(formatEditText);
@@ -143,7 +144,7 @@ public class DatetimeFormatDialog {
             public void afterTextChanged(Editable s) {
                 if (editTime + DELAY > System.currentTimeMillis()) {
                     setToNow(cal, useCurrentDateCheckbox.isChecked());
-                    previewTextView.setText(cu.formatDateTime(locale, formatEditText.getText().toString(), cal.getTimeInMillis()));
+                    previewTextView.setText(GsResourceUtils.formatDateTime(locale, formatEditText.getText().toString(), cal.getTimeInMillis()));
                     final boolean error = previewTextView.getText().toString().isEmpty() && !formatEditText.getText().toString().isEmpty();
                     formatEditText.setError(error ? "^^^!!!  'normal text'" : null);
                     previewTextView.setVisibility(error ? View.GONE : View.VISIBLE);
@@ -158,8 +159,8 @@ public class DatetimeFormatDialog {
         formatEditText.setText(lastUsed);
         viewRoot.findViewById(R.id.time_format_last_used).setEnabled(recentFormats.size() > 0);
         viewRoot.findViewById(R.id.time_format_last_used).setOnClickListener(b -> callbackInsertTextToEditor.get().callback(lastUsed));
-        viewRoot.findViewById(R.id.time_format_just_date).setOnClickListener(b -> callbackInsertTextToEditor.get().callback(cu.getLocalizedDateFormat(activity)));
-        viewRoot.findViewById(R.id.time_format_just_time).setOnClickListener(b -> callbackInsertTextToEditor.get().callback(cu.getLocalizedTimeFormat(activity)));
+        viewRoot.findViewById(R.id.time_format_just_date).setOnClickListener(b -> callbackInsertTextToEditor.get().callback(GsResourceUtils.getLocalizedDateFormat(activity)));
+        viewRoot.findViewById(R.id.time_format_just_time).setOnClickListener(b -> callbackInsertTextToEditor.get().callback(GsResourceUtils.getLocalizedTimeFormat(activity)));
         viewRoot.findViewById(R.id.time_format_yyyy_mm_dd).setOnClickListener(b -> callbackInsertTextToEditor.get().callback("yyyy-MM-dd"));
 
         // Pick Date Dialog
@@ -168,7 +169,7 @@ public class DatetimeFormatDialog {
                     cal.set(Calendar.YEAR, year);
                     cal.set(Calendar.MONTH, month);
                     cal.set(Calendar.DAY_OF_MONTH, day);
-                    previewTextView.setText(cu.formatDateTime(locale, formatEditText.getText().toString(), cal.getTimeInMillis()));
+                    previewTextView.setText(GsResourceUtils.formatDateTime(locale, formatEditText.getText().toString(), cal.getTimeInMillis()));
                 }, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH)).show()
         );
 
@@ -177,7 +178,7 @@ public class DatetimeFormatDialog {
                     useCurrentDateCheckbox.setChecked(false);
                     cal.set(Calendar.HOUR_OF_DAY, hour);
                     cal.set(Calendar.MINUTE, min);
-                    previewTextView.setText(cu.formatDateTime(locale, formatEditText.getText().toString(), cal.getTimeInMillis()));
+                    previewTextView.setText(GsResourceUtils.formatDateTime(locale, formatEditText.getText().toString(), cal.getTimeInMillis()));
                 }, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), true).show()
         );
 
@@ -190,12 +191,12 @@ public class DatetimeFormatDialog {
 
         useCurrentDateCheckbox.setOnClickListener(v -> {
             setToNow(cal, useCurrentDateCheckbox.isChecked());
-            previewTextView.setText(cu.formatDateTime(locale, formatEditText.getText().toString(), cal.getTimeInMillis()));
+            previewTextView.setText(GsResourceUtils.formatDateTime(locale, formatEditText.getText().toString(), cal.getTimeInMillis()));
         });
 
         // set builder and implement buttons to discard and submit
         builder.setView(viewRoot)
-                .setNeutralButton(R.string.help, (dlgI, which) -> cu.openWebpageInExternalBrowser(activity, "https://developer.android.com/reference/java/text/SimpleDateFormat#date-and-time-patterns"))
+                .setNeutralButton(R.string.help, (dlgI, which) -> GsIntentUtils.openWebpageInExternalBrowser(activity, "https://developer.android.com/reference/java/text/SimpleDateFormat#date-and-time-patterns"))
                 .setNegativeButton(R.string.cancel, null)
                 .setPositiveButton(android.R.string.ok, (dlgI, which) -> {
                     final String current = formatEditText.getText().toString();
@@ -207,7 +208,7 @@ public class DatetimeFormatDialog {
 
         callbackInsertTextToEditor.set((selectedFormat) -> {
             setToNow(cal, useCurrentDateCheckbox.isChecked());
-            String text = cu.formatDateTime(locale, selectedFormat, cal.getTimeInMillis());
+            String text = GsResourceUtils.formatDateTime(locale, selectedFormat, cal.getTimeInMillis());
             previewTextView.setText(text);
             hlEditor.insertOrReplaceTextOnCursor(getOutput(
                     formatInsteadCheckbox.isChecked(), text, formatEditText.getText().toString())
@@ -256,7 +257,7 @@ public class DatetimeFormatDialog {
         for (final String f : formats) {
             Map<String, String> pair = new HashMap<>(2);
             pair.put("format", f);
-            pair.put("date", GsContextUtils.instance.formatDateTime(locale, f, currentMillis, ""));
+            pair.put("date", GsResourceUtils.formatDateTime(locale, f, currentMillis, ""));
             formatsAndParsed.add(pair);
         }
 
@@ -347,7 +348,7 @@ public class DatetimeFormatDialog {
     public static String getMostRecentDate(final Context context) {
         final List<String> formats = getRecentFormats(context);
         if (formats.size() > 0) {
-            return GsContextUtils.instance.formatDateTime(context, formats.get(0), System.currentTimeMillis());
+            return GsResourceUtils.formatDateTime(context, formats.get(0), System.currentTimeMillis());
         } else {
             return "";
         }

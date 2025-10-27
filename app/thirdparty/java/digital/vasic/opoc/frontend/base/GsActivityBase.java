@@ -27,6 +27,8 @@ import androidx.fragment.app.FragmentManager;
 
 import digital.vasic.opoc.model.GsSharedPreferencesPropertyBackend;
 import digital.vasic.opoc.util.GsContextUtils;
+import digital.vasic.opoc.util.GsResourceUtils;
+import digital.vasic.opoc.util.GsUiUtils;
 import digital.vasic.opoc.wrapper.GsCallback;
 
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -39,8 +41,8 @@ public abstract class GsActivityBase<AS extends GsSharedPreferencesPropertyBacke
     protected GsContextUtils _cu;
     private int m_initialToolbarHeight = 0;
 
-    private final GsCallback.a0 m_setActivityBackgroundColor = () -> GsContextUtils.instance.setActivityBackgroundColor(GsActivityBase.this, getNewActivityBackgroundColor());
-    private final GsCallback.a0 m_setActivityNavigationBarColor = () -> GsContextUtils.instance.setActivityNavigationBarBackgroundColor(GsActivityBase.this, getNewNavigationBarColor());
+    private final GsCallback.a0 m_setActivityBackgroundColor = () -> GsUiUtils.setActivityBackgroundColor(GsActivityBase.this, getNewActivityBackgroundColor());
+    private final GsCallback.a0 m_setActivityNavigationBarColor = () -> GsUiUtils.setActivityNavigationBarBackgroundColor(GsActivityBase.this, getNewNavigationBarColor());
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -152,7 +154,7 @@ public abstract class GsActivityBase<AS extends GsSharedPreferencesPropertyBacke
     public void setTitle(CharSequence title) {
         super.setTitle(title);
         try {
-            final Toolbar t = findViewById(GsContextUtils.instance.getResId(this, GsContextUtils.ResType.ID, "toolbar"));
+            final Toolbar t = findViewById(GsResourceUtils.getResId(this, GsResourceUtils.ResType.ID, "toolbar"));
             if (t != null) {
                 t.setTitle(title);
             }
@@ -180,7 +182,7 @@ public abstract class GsActivityBase<AS extends GsSharedPreferencesPropertyBacke
 
     private Toolbar getToolbar() {
         try {
-            final int toolbarResId = GsContextUtils.instance.getResId(this, GsContextUtils.ResType.ID, "toolbar");
+            final int toolbarResId = GsResourceUtils.getResId(this, GsResourceUtils.ResType.ID, "toolbar");
             return findViewById(toolbarResId);
         } catch (Exception ignored) {
             return null;

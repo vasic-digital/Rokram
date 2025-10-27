@@ -17,12 +17,12 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 
 // App-specific imports
-import digital.vasic.yole.R;
 import digital.vasic.yole.model.AppSettings;
 import digital.vasic.yole.model.Document;
 import digital.vasic.opoc.format.GsTextUtils;
 import digital.vasic.opoc.util.GsContextUtils;
 import digital.vasic.opoc.util.GsFileUtils;
+import digital.vasic.opoc.util.GsUiUtils;
 
 import java.io.File;
 import java.util.Date;
@@ -147,7 +147,7 @@ public abstract class TextConverterBase {
     protected String putContentIntoTemplate(Context context, String content, boolean isExportInLightMode, File file, String onLoadJs, String head) {
         final AppSettings as = AppSettings.get(context);
         final String contentLower = content.toLowerCase();
-        boolean darkTheme = GsContextUtils.instance.isDarkModeEnabled(context) && !isExportInLightMode;
+        boolean darkTheme = GsUiUtils.isDarkModeEnabled(context) && !isExportInLightMode;
         String html = HTML_DOCTYPE + HTML001_HEAD_WITH_BASESTYLE.replace(TOKEN_POST_LANG, Locale.getDefault().getLanguage()) + (darkTheme ? HTML002_HEAD_WITH_STYLE_DARK : HTML002_HEAD_WITH_STYLE_LIGHT);
         if (isExportInLightMode) {
             html = html.replace("html,body{color:#303030;}", "html,body{color: black !important; background-color: white !important;}");
@@ -188,9 +188,9 @@ public abstract class TextConverterBase {
         html = html
                 .replace(TOKEN_BW_INVERSE_OF_THEME, darkTheme ? "white" : "black")
                 .replace(TOKEN_BW_INVERSE_OF_THEME_HEADER_UNDERLINE, darkTheme ? "#eaecef" : "#696969")
-                .replace(TOKEN_COLOR_GREY_OF_THEME, darkTheme ? "#393939" : GsTextUtils.colorToHexString(ContextCompat.getColor(context, R.color.lighter_grey)))
+                .replace(TOKEN_COLOR_GREY_OF_THEME, darkTheme ? "#393939" : GsTextUtils.colorToHexString(DEFAULT_LIGHTER_GREY))
                 .replace(TOKEN_LINK_COLOR, as.getViewModeLinkColor())
-                .replace(TOKEN_ACCENT_COLOR, GsTextUtils.colorToHexString(ContextCompat.getColor(context, R.color.accent)))
+                .replace(TOKEN_ACCENT_COLOR, GsTextUtils.colorToHexString(DEFAULT_ACCENT))
                 .replace(TOKEN_TEXT_DIRECTION, as.isRenderRtl() ? "right" : "left")
                 .replace(TOKEN_FONT, font)
                 .replace(TOKEN_TEXT_CONVERTER_CSS_CLASS, "format-" + getClass().getSimpleName().toLowerCase().replace("textconverter", "").replace("converter", "") + " fileext-" + GsFileUtils.getFilenameExtension(file).replace(".", ""))

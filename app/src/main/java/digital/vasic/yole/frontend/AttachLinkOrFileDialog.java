@@ -38,6 +38,8 @@ import digital.vasic.opoc.format.GsTextUtils;
 import digital.vasic.opoc.frontend.filebrowser.GsFileBrowserListAdapter;
 import digital.vasic.opoc.frontend.filebrowser.GsFileBrowserOptions;
 import digital.vasic.opoc.util.GsFileUtils;
+import digital.vasic.opoc.util.GsIntentUtils;
+import digital.vasic.opoc.util.GsStorageUtils;
 import digital.vasic.opoc.wrapper.GsCallback;
 
 import java.io.File;
@@ -413,11 +415,11 @@ public class AttachLinkOrFileDialog {
         // Do each thing as necessary
         switch (action) {
             case IMAGE_CAMERA: {
-                cu.requestCameraPicture(activity, insertFileLink);
+                GsIntentUtils.requestCameraPicture(activity, insertFileLink);
                 break;
             }
             case IMAGE_GALLERY: {
-                cu.requestGalleryPicture(activity, insertFileLink);
+                GsIntentUtils.requestGalleryPicture(activity, insertFileLink);
                 break;
             }
             case IMAGE_EDIT: {
@@ -426,20 +428,20 @@ public class AttachLinkOrFileDialog {
 
                     final File abs = new File(path).getAbsoluteFile();
                     if (abs.isFile()) {
-                        cu.requestFileEdit(activity, abs);
+                        GsStorageUtils.requestFileEdit(activity, abs);
                         break;
                     }
 
                     final File currentDir = (textFormatId == FormatRegistry.FORMAT_WIKITEXT) ? WikitextLinkResolver.findAttachmentDir(currentFile) : currentFile.getParentFile();
                     final File rel = new File(currentDir, path).getAbsoluteFile();
                     if (rel.isFile()) {
-                        cu.requestFileEdit(activity, rel);
+                        GsStorageUtils.requestFileEdit(activity, rel);
                     }
                 }
                 break;
             }
             case AUDIO_RECORDING: {
-                if (!cu.requestAudioRecording(activity, insertFileLink)) {
+                if (!GsIntentUtils.requestAudioRecording(activity, insertFileLink)) {
                     Toast.makeText(activity, "❌", Toast.LENGTH_SHORT).show();
                 }
                 break;

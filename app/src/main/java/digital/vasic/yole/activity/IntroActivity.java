@@ -17,6 +17,7 @@ import com.github.appintro.AppIntroFragment;
 import digital.vasic.yole.R;
 import digital.vasic.yole.model.AppSettings;
 import digital.vasic.opoc.util.GsContextUtils;
+import digital.vasic.opoc.util.GsResourceUtils;
 
 public class IntroActivity extends AppIntro {
     private static final String PREF_KEY_WAS_SHOWN = IntroActivity.class.getCanonicalName() + "was_shown";
@@ -38,7 +39,7 @@ public class IntroActivity extends AppIntro {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        GsContextUtils.instance.setAppLanguage(this, AppSettings.get(this).getLanguage());
+        GsResourceUtils.setAppLanguage(this, AppSettings.get(this).getLanguage());
 
         // Instead of fragments, you can also use our default slide
         // Just set a title, description, background and image. AppIntro will do the rest
@@ -52,7 +53,7 @@ public class IntroActivity extends AppIntro {
         setSkipButtonEnabled(false);
         setSwipeLock(false);
         setSeparatorColor(Color.DKGRAY);
-        setIndicatorColor(GsContextUtils.instance.rcolor(this, R.color.accent), Color.LTGRAY);
+        setIndicatorColor(GsResourceUtils.rcolor(this, R.color.accent), Color.LTGRAY);
     }
 
     @Override

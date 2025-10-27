@@ -24,6 +24,7 @@ import digital.vasic.yole.frontend.textview.TextViewUtils;
 import digital.vasic.yole.model.Document;
 import digital.vasic.opoc.util.GsContextUtils;
 import digital.vasic.opoc.util.GsFileUtils;
+import digital.vasic.opoc.util.GsIntentUtils;
 
 import java.io.File;
 import java.util.Arrays;

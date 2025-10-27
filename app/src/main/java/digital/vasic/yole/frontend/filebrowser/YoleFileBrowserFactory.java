@@ -19,15 +19,17 @@ import digital.vasic.opoc.frontend.filebrowser.GsFileBrowserDialog;
 import digital.vasic.opoc.frontend.filebrowser.GsFileBrowserListAdapter;
 import digital.vasic.opoc.frontend.filebrowser.GsFileBrowserOptions;
 import digital.vasic.opoc.util.GsContextUtils;
+import digital.vasic.opoc.util.GsFileUtils;
+import digital.vasic.opoc.util.GsStorageUtils;
 import digital.vasic.opoc.wrapper.GsCallback;
 
 import java.io.File;
 
 public class YoleFileBrowserFactory {
-    public static GsCallback.b2<Context, File> IsMimeText = (context, file) -> file != null && GsContextUtils.instance.getMimeType(context, file).startsWith("text/");
-    public static GsCallback.b2<Context, File> IsMimeImage = (context, file) -> file != null && GsContextUtils.instance.getMimeType(context, file).startsWith("image/");
-    public static GsCallback.b2<Context, File> IsMimeAudio = (context, file) -> file != null && GsContextUtils.instance.getMimeType(context, file).startsWith("audio/");
-    public static GsCallback.b2<Context, File> IsMimeVideo = (context, file) -> file != null && GsContextUtils.instance.getMimeType(context, file).startsWith("video/");
+    public static GsCallback.b2<Context, File> IsMimeText = (context, file) -> file != null && GsFileUtils.getMimeType(file).startsWith("text/");
+    public static GsCallback.b2<Context, File> IsMimeImage = (context, file) -> file != null && GsFileUtils.getMimeType(file).startsWith("image/");
+    public static GsCallback.b2<Context, File> IsMimeAudio = (context, file) -> file != null && GsFileUtils.getMimeType(file).startsWith("audio/");
+    public static GsCallback.b2<Context, File> IsMimeVideo = (context, file) -> file != null && GsFileUtils.getMimeType(file).startsWith("video/");
 
     public static GsFileBrowserOptions.Options prepareFsViewerOpts(
             final Context context,
@@ -69,7 +71,7 @@ public class YoleFileBrowserFactory {
         opts.fileImage = R.drawable.ic_file_white_24dp;
         opts.folderImage = R.drawable.ic_folder_white_24dp;
         opts.titleText = R.string.select;
-        opts.mountedStorageFolder = cu.getStorageAccessFolder(context);
+        opts.mountedStorageFolder = GsStorageUtils.getStorageAccessFolder(context);
         opts.sortOrder = appSettings.getFolderSortOrder(null);
 
         updateFsViewerOpts(opts, context);

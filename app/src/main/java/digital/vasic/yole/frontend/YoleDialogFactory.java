@@ -50,12 +50,19 @@ import digital.vasic.yole.frontend.textview.SyntaxHighlighterBase;
 import digital.vasic.yole.frontend.textview.TextViewUtils;
 import digital.vasic.yole.model.AppSettings;
 import digital.vasic.opoc.format.GsTextUtils;
+import digital.vasic.opoc.util.GsUiUtils;
 import digital.vasic.opoc.frontend.GsSearchOrCustomTextDialog;
+import digital.vasic.opoc.util.GsUiUtils;
 import digital.vasic.opoc.frontend.GsSearchOrCustomTextDialog.DialogOptions;
+import digital.vasic.opoc.util.GsUiUtils;
 import digital.vasic.opoc.util.GsCollectionUtils;
+import digital.vasic.opoc.util.GsUiUtils;
 import digital.vasic.opoc.util.GsContextUtils;
+import digital.vasic.opoc.util.GsUiUtils;
 import digital.vasic.opoc.util.GsFileUtils;
+import digital.vasic.opoc.util.GsUiUtils;
 import digital.vasic.opoc.wrapper.GsCallback;
+import digital.vasic.opoc.util.GsUiUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -1210,7 +1217,7 @@ public class YoleDialogFactory {
         if (dopt == null) {
             dopt = new DialogOptions();
         }
-        dopt.isDarkDialog = GsContextUtils.instance.isDarkModeEnabled(context);
+        dopt.isDarkDialog = GsUiUtils.isDarkModeEnabled(context);
         dopt.clearInputIcon = R.drawable.ic_baseline_clear_24;
         dopt.textColor = ContextCompat.getColor(context, R.color.primary_text);
         dopt.highlightColor = ContextCompat.getColor(context, R.color.accent);

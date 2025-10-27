@@ -31,6 +31,8 @@ import digital.vasic.yole.model.Document;
 import digital.vasic.opoc.frontend.filebrowser.GsFileBrowserListAdapter;
 import digital.vasic.opoc.util.GsContextUtils;
 import digital.vasic.opoc.util.GsFileUtils;
+import digital.vasic.opoc.util.GsIntentUtils;
+import digital.vasic.opoc.util.GsStorageUtils;
 
 import java.io.File;
 
@@ -38,16 +40,16 @@ public class YoleContextUtils extends GsContextUtils {
 
     public YoleContextUtils(@Nullable final Context context) {
         if (context != null) {
-            setChooserTitle(context.getString(R.string.share_to_arrow));
+            GsIntentUtils.setChooserTitle(context.getString(R.string.share_to_arrow));
         }
     }
 
     public <T extends GsContextUtils> T applySpecialLaunchersVisibility(final Context context, boolean extraLaunchersEnabled) {
-        setLauncherActivityEnabled(context, OpenEditorQuickNoteActivity.class, extraLaunchersEnabled);
-        setLauncherActivityEnabled(context, OpenEditorTodoActivity.class, extraLaunchersEnabled);
-        setLauncherActivityEnabled(context, OpenShareIntoActivity.class, extraLaunchersEnabled);
-        setLauncherActivityEnabledFromString(context, "digital.vasic.yole.AliasDocumentProcessText", extraLaunchersEnabled);
-        return thisp();
+        GsIntentUtils.setLauncherActivityEnabled(context, OpenEditorQuickNoteActivity.class, extraLaunchersEnabled);
+        GsIntentUtils.setLauncherActivityEnabled(context, OpenEditorTodoActivity.class, extraLaunchersEnabled);
+        GsIntentUtils.setLauncherActivityEnabled(context, OpenShareIntoActivity.class, extraLaunchersEnabled);
+        GsIntentUtils.setLauncherActivityEnabledFromString(context, "digital.vasic.yole.AliasDocumentProcessText", extraLaunchersEnabled);
+        return (T) this;
     }
 
     private static int getIconResForFile(final @NonNull File file) {
@@ -72,21 +74,22 @@ public class YoleContextUtils extends GsContextUtils {
         if (!TextUtils.isEmpty(title)) {
             final int iconRes = getIconResForFile(file);
             final Intent intent = new Intent(context, OpenFromShortcutOrWidgetActivity.class).setData(Uri.fromFile(file));
-            createLauncherDesktopShortcut(context, intent, iconRes, title);
+            GsIntentUtils.createLauncherDesktopShortcut(context, intent, iconRes, title);
         }
-        return thisp();
+        return (T) this;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @SuppressWarnings("deprecation")
     public PrintJob printOrCreatePdfFromWebview(final WebView webview, Document document, boolean... landscape) {
         String jobName = String.format("%s (%s)", document.title, webview.getContext().getString(R.string.app_name_real));
-        return super.print(webview, jobName, landscape);
+        boolean isLandscape = landscape != null && landscape.length > 0 && landscape[0];
+        return GsContextUtils.instance.print(webview, jobName, isLandscape);
     }
 
     public <T extends GsContextUtils> T showMountSdDialog(final Activity activity) {
-        showMountSdDialog(activity, R.string.mount_storage, R.string.application_needs_access_to_storage_mount_it, R.drawable.mount_sdcard_help);
-        return thisp();
+        GsIntentUtils.showMountSdDialog(activity, R.string.mount_storage, R.string.application_needs_access_to_storage_mount_it, R.drawable.mount_sdcard_help);
+        return (T) this;
     }
 
     public static File getIntentFile(final Intent intent) {
@@ -111,7 +114,7 @@ public class YoleContextUtils extends GsContextUtils {
 
         // By stream etc
         if (file == null && context != null) {
-            file = GsContextUtils.extractFileFromIntent(intent, context);
+            file = GsStorageUtils.extractFileFromIntent(intent, context);
         }
 
         return file;
