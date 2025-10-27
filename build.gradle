@@ -12,6 +12,7 @@ buildscript {
     ext {
         version_gradle_tools = '8.9.0'
         version_plugin_kotlin = "2.1.0"
+        version_compose_multiplatform = "1.7.0"
         enable_plugin_kotlin = true
 
         version_compileSdk = 35
@@ -23,6 +24,7 @@ buildscript {
         mavenCentral()
         maven { url 'https://maven.google.com' }
         maven { url "https://jitpack.io" }
+        maven { url "https://maven.pkg.jetbrains.space/public/p/compose/dev" }
         google()
     }
 
@@ -31,7 +33,12 @@ buildscript {
         classpath 'com.github.dcendents:android-maven-gradle-plugin:2.1'
         if (project.enable_plugin_kotlin) {
             classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${version_plugin_kotlin}"
+            classpath "org.jetbrains.kotlin:kotlin-serialization:${version_plugin_kotlin}"
+            classpath "org.jetbrains.kotlin:compose-compiler-gradle-plugin:${version_plugin_kotlin}"
         }
+
+        // NEW: Kotlin Multiplatform & Compose Multiplatform
+        classpath "org.jetbrains.compose:compose-gradle-plugin:${version_compose_multiplatform}"
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -54,7 +61,8 @@ allprojects {
     }
 }
 
-task clean(type: Delete) {
+// Clean task - compatible with multi-module project including KMP
+tasks.register('cleanAll', Delete) {
     delete rootProject.buildDir
 }
 

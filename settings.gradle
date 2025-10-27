@@ -18,6 +18,11 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = 'Markor'
+
+// NEW: Kotlin Multiplatform shared module
+include ':shared'
+
+// Existing modules
 include ':app'
 include ':core'
 include ':commons'
