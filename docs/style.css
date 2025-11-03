@@ -162,7 +162,7 @@ body::before {
     width: 150px;
     height: 150px;
     border-radius: 25px;
-    background: linear-gradient(135deg, rgba(240, 249, 255, 0.2) 0%, rgba(224, 242, 254, 0.2) 50%, rgba(219, 234, 254, 0.2) 100%);
+    background: linear-gradient(135deg, rgba(240, 249, 255, 0.15) 0%, rgba(224, 242, 254, 0.15) 50%, rgba(219, 234, 254, 0.15) 100%);
     box-shadow: 0 15px 35px rgba(220, 38, 38, 0.3);
     animation: yole-float 8s ease-in-out infinite;
     border: 6px solid rgba(255, 255, 255, 0.6);
@@ -951,7 +951,7 @@ body.yole-dark-mode .yole-theme-toggle:hover {
 }
 
 body.yole-dark-mode .yole-logo {
-    background: linear-gradient(135deg, rgba(15, 23, 42, 0.3) 0%, rgba(30, 41, 59, 0.3) 50%, rgba(51, 65, 85, 0.3) 100%);
+    background: linear-gradient(135deg, rgba(15, 23, 42, 0.225) 0%, rgba(30, 41, 59, 0.225) 50%, rgba(51, 65, 85, 0.225) 100%);
     box-shadow: 0 15px 35px rgba(113, 29, 33, 0.3);
 }
 
