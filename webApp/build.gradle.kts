@@ -53,13 +53,16 @@ compose.experimental {
     web.application {}
 }
 
-tasks.withType<org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig> {
-    devServer = (devServer ?: org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig.DevServer()).apply {
-        static = (static ?: mutableListOf()).apply {
-            add(project.file("src/wasmJsMain/resources"))
+// Dev server configuration
+kotlin {
+    wasmJs {
+        browser {
+            testTask {
+                useKarma {
+                    useChromeHeadless()
+                }
+            }
         }
-        port = 8080
-        host = "0.0.0.0"
     }
 }
 
@@ -71,4 +74,14 @@ tasks.register<Copy>("copyWebResources") {
 
 tasks.named("wasmJsBrowserDistribution") {
     dependsOn("copyWebResources")
+}
+
+// Copy Logo.png to resources
+tasks.register<Copy>("copyLogo") {
+    from("../../Assets/Logo.png")
+    into("src/wasmJsMain/resources")
+}
+
+tasks.named("compileKotlinWasmJs") {
+    dependsOn("copyLogo")
 }
