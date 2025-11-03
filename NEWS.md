@@ -3,7 +3,7 @@
 ## General
 
 ### Installation
-You can install and update from [F-Droid](https://f-droid.org/repository/browse/?fdid=net.gsantner.markor) or [GitHub](https://github.com/vasic-digital/Yole/releases/latest).
+You can install and update from [F-Droid](https://f-droid.org/repository/browse/?fdid=digital.vasic.yole) or [GitHub](https://github.com/vasic-digital/Yole/releases/latest).
 
 F-Droid is a store for free & open source apps.
 The *.apk's available for download are signed by the F-Droid team and guaranteed to correspond to the (open source) source code of Yole.

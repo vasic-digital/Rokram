@@ -17,8 +17,8 @@ diff --git a/app/src/main/java/net/vasic-digital/Yole/activity/DocumentActivity.
 index eca0ab1f..b9d95876 100644
 --- a/app/src/main/java/net/vasic-digital/Yole/activity/DocumentActivity.java
 +++ b/app/src/main/java/net/vasic-digital/Yole/activity/DocumentActivity.java
-@@ -37,6 +37,7 @@ import net.gsantner.markor.util.DocumentIO;
- import net.gsantner.markor.util.PermissionChecker;
+@@ -37,6 +37,7 @@ import digital.vasic.yole.util.DocumentIO;
+ import digital.vasic.yole.util.PermissionChecker;
  import net.gsantner.opoc.activity.GsFragmentBase;
  import net.gsantner.opoc.util.Callback;
 +import net.gsantner.opoc.util.CoolExperimentalStuff;

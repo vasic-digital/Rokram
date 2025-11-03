@@ -10,7 +10,7 @@
 <b>Text editor - Notes &amp; ToDo (for Android)</b>.
 <br/>Simple and lightweight, supporting Markdown, todo.txt, Zim & more!<br/><br/>
 
-**Download:**  [F-Droid](https://f-droid.org/repository/browse/?fdid=net.gsantner.markor), [GitHub](https://github.com/vasic-digital/Yole/releases/latest)
+**Download:**  [F-Droid](https://f-droid.org/repository/browse/?fdid=digital.vasic.yole), [GitHub](https://github.com/vasic-digital/Yole/releases/latest)
 
 **Current Version:** v2.15.1
 
@@ -177,7 +177,7 @@ Use the _auto reformat_ menu option of Android Studio before committing or befor
 
 ### Resources
 * Project repository: [Changelog](CHANGELOG.md) | [Issues](https://github.com/vasic-digital/Yole/issues?q=is%3Aissue+is%3Aopen) | [Discussions](https://github.com/vasic-digital/Yole/discussions) | [License](/LICENSE.txt) | [GitHub Releases](https://github.com/vasic-digital/Yole/releases) | [Makefile](Makefile)
-* F-Droid: [Listing](https://f-droid.org/packages/net.gsantner.markor) | [Wiki](https://f-droid.org/wiki/page/net.gsantner.markor) | [Metadata](https://gitlab.com/fdroid/fdroiddata/blob/master/metadata/net.gsantner.markor.yml) | [Build log](https://f-droid.org/wiki/page/net.gsantner.markor/lastbuild)
+* F-Droid: [Listing](https://f-droid.org/packages/digital.vasic.yole) | [Wiki](https://f-droid.org/wiki/page/digital.vasic.yole) | [Metadata](https://gitlab.com/fdroid/fdroiddata/blob/master/metadata/digital.vasic.yole.yml) | [Build log](https://f-droid.org/wiki/page/digital.vasic.yole/lastbuild)
 
 
 ## Privacy<a name="privacy"></a>
