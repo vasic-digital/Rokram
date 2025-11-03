@@ -70,6 +70,20 @@ Yole is a modern fork of the popular Markor Android text editor, with significan
 
 ## New features in the latest update - Yole v2.15.1 - Modern Android Architecture
 
+### Smooth Animated Transitions
+Yole now features beautiful, smooth animated transitions throughout the app:
+- **Tab Switching**: Elegant slide animations when switching between main screens (Files, To-Do, QuickNote, More)
+- **Screen Navigation**: Smooth slide-in/slide-out animations when navigating to sub-screens (Editor, Preview, Settings)
+- **Configurable**: Animations can be enabled/disabled in Settings for performance or preference
+- **Cross-Platform**: Consistent animation experience across Android, Desktop, iOS, and Web platforms
+
+### Settings Persistence
+All settings are now properly saved and persist across app sessions:
+- **Theme Settings**: Light/Dark/System theme preferences are remembered
+- **Editor Preferences**: Line numbers and auto-save settings are preserved
+- **Animation Settings**: Animation enable/disable preference is maintained
+- **Cross-Platform Storage**: Uses appropriate storage mechanisms for each platform (SharedPreferences on Android, Preferences on Desktop, NSUserDefaults on iOS)
+
 ### Modern Android Architecture
 Yole has been updated with modern Android development practices:
 - **Modular Architecture**: Clean separation of concerns with dedicated modules

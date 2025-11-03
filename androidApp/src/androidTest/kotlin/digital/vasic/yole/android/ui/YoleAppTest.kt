@@ -164,17 +164,117 @@ class YoleAppTest {
     @Test
     fun testSettingsOptions() {
         // Navigate to settings
-        composeTestRule.onNodeWithText("More").performClick()
         composeTestRule.onNodeWithText("Settings").performClick()
 
         // Test theme settings
+        composeTestRule.onNodeWithText("Appearance").assertIsDisplayed()
         composeTestRule.onNodeWithText("System theme (follows system setting)").assertIsDisplayed()
         composeTestRule.onNodeWithText("Light theme").assertIsDisplayed()
         composeTestRule.onNodeWithText("Dark theme").assertIsDisplayed()
 
         // Test editor settings
+        composeTestRule.onNodeWithText("Editor").assertIsDisplayed()
         composeTestRule.onNodeWithText("Show line numbers").assertIsDisplayed()
         composeTestRule.onNodeWithText("Auto-save").assertIsDisplayed()
+
+        // Test animation settings
+        composeTestRule.onNodeWithText("Animations").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Enable smooth transitions").assertIsDisplayed()
+
+        // Navigate to settings to check format information
+        composeTestRule.onNodeWithText("Settings").performClick()
+        composeTestRule.onNodeWithText("Formats").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Supported formats:").assertIsDisplayed()
+    }
+
+    @Test
+    fun testSettingsPersistence() {
+        // Navigate to settings
+        composeTestRule.onNodeWithText("Settings").performClick()
+
+        // Change theme setting
+        composeTestRule.onNodeWithText("Light theme").performClick()
+
+        // Change editor settings
+        composeTestRule.onNodeWithText("Show line numbers").performClick()
+        composeTestRule.onNodeWithText("Auto-save").performClick()
+
+        // Change animation setting
+        composeTestRule.onNodeWithText("Enable smooth transitions").performClick()
+
+        // Go back and return to settings
+        composeTestRule.onNodeWithContentDescription("Back").performClick()
+        composeTestRule.onNodeWithText("Settings").performClick()
+
+        // Verify settings are persisted (UI state)
+        composeTestRule.onNodeWithText("Light theme").assertIsSelected()
+        composeTestRule.onNodeWithText("Show line numbers").assertIsOff()
+        composeTestRule.onNodeWithText("Auto-save").assertIsOff()
+        composeTestRule.onNodeWithText("Enable smooth transitions").assertIsOff()
+    }
+
+    @Test
+    fun testAnimationTransitions() {
+        // Test that animations work when enabled (default)
+        composeTestRule.onNodeWithText("Files").assertIsDisplayed()
+
+        // Switch to To-Do screen - should animate
+        composeTestRule.onNodeWithText("To-Do").performClick()
+        composeTestRule.onNodeWithText("To-Do List").assertIsDisplayed()
+
+        // Switch to QuickNote screen - should animate
+        composeTestRule.onNodeWithText("QuickNote").performClick()
+        composeTestRule.onNodeWithText("QuickNote").assertIsDisplayed()
+
+        // Switch back to Files - should animate
+        composeTestRule.onNodeWithText("Files").performClick()
+        composeTestRule.onNodeWithText("Files").assertIsDisplayed()
+    }
+
+    @Test
+    fun testScreenNavigationAnimations() {
+        // Test navigation to sub-screens triggers animations
+        composeTestRule.onNodeWithText("Files").assertIsDisplayed()
+
+        // Navigate to settings (should trigger sub-screen animation)
+        composeTestRule.onNodeWithText("Settings").performClick()
+        composeTestRule.onNodeWithText("Settings").assertIsDisplayed()
+
+        // Go back (should animate back)
+        composeTestRule.onNodeWithContentDescription("Back").performClick()
+        composeTestRule.onNodeWithText("Files").assertIsDisplayed()
+    }
+
+    @Test
+    fun testAnimationSettingsPersistence() {
+        // Test that animation settings can be changed and persist
+        composeTestRule.onNodeWithText("Settings").performClick()
+
+        // Find and toggle animation setting
+        composeTestRule.onNodeWithText("Enable smooth transitions").performClick()
+
+        // Go back and return to settings
+        composeTestRule.onNodeWithContentDescription("Back").performClick()
+        composeTestRule.onNodeWithText("Settings").performClick()
+
+        // Verify animation setting is off
+        composeTestRule.onNodeWithText("Enable smooth transitions").assertIsOff()
+    }
+
+    @Test
+    fun testScreenNavigationWithAnimations() {
+        // Navigate to file browser and select a file to trigger sub-screen transition
+        composeTestRule.onNodeWithText("Files").assertIsDisplayed()
+
+        // Create new file (should trigger editor screen with animation)
+        composeTestRule.onAllNodesWithContentDescription("Add").first().performClick()
+
+        // Should be in editor now
+        composeTestRule.onNodeWithText("Editing: untitled.txt").assertIsDisplayed()
+
+        // Go back (should animate back to main screen)
+        composeTestRule.onNodeWithContentDescription("Back").performClick()
+        composeTestRule.onNodeWithText("Files").assertIsDisplayed()
     }
 
     @Test

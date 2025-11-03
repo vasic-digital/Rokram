@@ -3,6 +3,14 @@
 - New Updates also visible here: <https://github.com/vasic-digital/Yole/releases>
 
 
+### v2.15.2 - Smooth Animations & Settings Persistence
+- **🎬 Smooth Animations**: Beautiful slide transitions for tab switching and screen navigation
+- **⚙️ Settings Persistence**: All settings now save and persist across app sessions
+- **🎛️ Animation Controls**: Configurable animation settings for performance optimization
+- **💾 Cross-Platform Storage**: Platform-appropriate settings storage (SharedPreferences, Preferences, NSUserDefaults)
+- **🧪 Enhanced Testing**: New tests for animation transitions and settings persistence
+- **📖 Updated Documentation**: Comprehensive guides for new animation features
+
 ### v2.15.1 - Kotlin Multiplatform Migration Complete
 - **🎉 Migration Complete**: Full Kotlin Multiplatform implementation across Android, Desktop, iOS, and Web
 - **🏗️ Architecture**: Modular design with shared core and platform-specific implementations

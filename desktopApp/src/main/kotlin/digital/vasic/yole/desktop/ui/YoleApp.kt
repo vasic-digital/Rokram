@@ -9,6 +9,13 @@
 
 package digital.vasic.yole.desktop.ui
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -19,6 +26,29 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import digital.vasic.yole.format.FormatRegistry
+import java.util.prefs.Preferences
+
+/**
+ * Settings manager for Yole desktop app
+ */
+class YoleDesktopSettings {
+    private val prefs = Preferences.userNodeForPackage(YoleDesktopSettings::class.java)
+
+    // Theme settings
+    fun getThemeMode(): String = prefs.get("theme_mode", "system")
+    fun setThemeMode(mode: String) = prefs.put("theme_mode", mode)
+
+    // Editor settings
+    fun getShowLineNumbers(): Boolean = prefs.getBoolean("show_line_numbers", true)
+    fun setShowLineNumbers(show: Boolean) = prefs.putBoolean("show_line_numbers", show)
+
+    fun getAutoSave(): Boolean = prefs.getBoolean("auto_save", true)
+    fun setAutoSave(auto: Boolean) = prefs.putBoolean("auto_save", auto)
+
+    // Animation settings
+    fun getAnimationsEnabled(): Boolean = prefs.getBoolean("animations_enabled", true)
+    fun setAnimationsEnabled(enabled: Boolean) = prefs.putBoolean("animations_enabled", enabled)
+}
 
 enum class Screen {
     FILE_BROWSER,
@@ -46,9 +76,17 @@ fun YoleApp() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen() {
+    val settings = remember { YoleDesktopSettings() }
+
     var currentScreen by remember { mutableStateOf(Screen.FILE_BROWSER) }
     var selectedFile by remember { mutableStateOf<String?>(null) }
     var fileContent by remember { mutableStateOf("") }
+
+    // Load settings
+    var themeMode by remember { mutableStateOf(settings.getThemeMode()) }
+    var showLineNumbers by remember { mutableStateOf(settings.getShowLineNumbers()) }
+    var autoSave by remember { mutableStateOf(settings.getAutoSave()) }
+    var animationsEnabled by remember { mutableStateOf(settings.getAnimationsEnabled()) }
 
     Scaffold(
         topBar = {
@@ -73,24 +111,116 @@ fun MainScreen() {
         }
     ) { padding ->
         Box(modifier = Modifier.padding(padding)) {
-            when (currentScreen) {
-                Screen.FILE_BROWSER -> FileBrowserScreen(
-                    onFileSelected = { file, content ->
-                        selectedFile = file
-                        fileContent = content
-                        currentScreen = Screen.EDITOR
+            if (animationsEnabled) {
+                AnimatedContent(
+                    targetState = currentScreen,
+                    transitionSpec = {
+                        // Screen transitions - slide horizontally
+                        if (targetState.ordinal > initialState.ordinal) {
+                            slideInHorizontally(
+                                animationSpec = tween(600),
+                                initialOffsetX = { it }
+                            ) + fadeIn(animationSpec = tween(600)) togetherWith
+                            slideOutHorizontally(
+                                animationSpec = tween(600),
+                                targetOffsetX = { -it / 2 }
+                            ) + fadeOut(animationSpec = tween(600))
+                        } else {
+                            slideInHorizontally(
+                                animationSpec = tween(600),
+                                initialOffsetX = { -it }
+                            ) + fadeIn(animationSpec = tween(600)) togetherWith
+                            slideOutHorizontally(
+                                animationSpec = tween(600),
+                                targetOffsetX = { it / 2 }
+                            ) + fadeOut(animationSpec = tween(600))
+                        }
+                    },
+                    label = "ScreenTransition"
+                ) { screen ->
+                    when (screen) {
+                        Screen.FILE_BROWSER -> FileBrowserScreen(
+                            onFileSelected = { file, content ->
+                                selectedFile = file
+                                fileContent = content
+                                currentScreen = Screen.EDITOR
+                            }
+                        )
+                        Screen.EDITOR -> EditorScreen(
+                            fileName = selectedFile ?: "Untitled",
+                            content = fileContent,
+                            onContentChanged = { fileContent = it }
+                        )
+                        Screen.PREVIEW -> PreviewScreen(
+                            fileName = selectedFile ?: "Untitled",
+                            content = fileContent
+                        )
+                        Screen.SETTINGS -> SettingsScreen(
+                            themeMode = themeMode,
+                            onThemeModeChanged = {
+                                themeMode = it
+                                settings.setThemeMode(it)
+                            },
+                            showLineNumbers = showLineNumbers,
+                            onShowLineNumbersChanged = {
+                                showLineNumbers = it
+                                settings.setShowLineNumbers(it)
+                            },
+                            autoSave = autoSave,
+                            onAutoSaveChanged = {
+                                autoSave = it
+                                settings.setAutoSave(it)
+                            },
+                            animationsEnabled = animationsEnabled,
+                            onAnimationsEnabledChanged = {
+                                animationsEnabled = it
+                                settings.setAnimationsEnabled(it)
+                            }
+                        )
                     }
-                )
-                Screen.EDITOR -> EditorScreen(
-                    fileName = selectedFile ?: "Untitled",
-                    content = fileContent,
-                    onContentChanged = { fileContent = it }
-                )
-                Screen.PREVIEW -> PreviewScreen(
-                    fileName = selectedFile ?: "Untitled",
-                    content = fileContent
-                )
-                Screen.SETTINGS -> SettingsScreen()
+                }
+            } else {
+                // No animations
+                when (currentScreen) {
+                    Screen.FILE_BROWSER -> FileBrowserScreen(
+                        onFileSelected = { file, content ->
+                            selectedFile = file
+                            fileContent = content
+                            currentScreen = Screen.EDITOR
+                        }
+                    )
+                    Screen.EDITOR -> EditorScreen(
+                        fileName = selectedFile ?: "Untitled",
+                        content = fileContent,
+                        onContentChanged = { fileContent = it }
+                    )
+                    Screen.PREVIEW -> PreviewScreen(
+                        fileName = selectedFile ?: "Untitled",
+                        content = fileContent
+                    )
+                    Screen.SETTINGS -> SettingsScreen(
+                        themeMode = themeMode,
+                        onThemeModeChanged = {
+                            themeMode = it
+                            settings.setThemeMode(it)
+                        },
+                        showLineNumbers = showLineNumbers,
+                        onShowLineNumbersChanged = {
+                            showLineNumbers = it
+                            settings.setShowLineNumbers(it)
+                        },
+                        autoSave = autoSave,
+                        onAutoSaveChanged = {
+                            autoSave = it
+                            settings.setAutoSave(it)
+                        },
+                        animationsEnabled = animationsEnabled,
+                        onAnimationsEnabledChanged = {
+                            animationsEnabled = it
+                            settings.setAnimationsEnabled(it)
+                        }
+                    )
+                }
             }
         }
     }
@@ -189,10 +319,16 @@ fun PreviewScreen(fileName: String, content: String) {
 }
 
 @Composable
-fun SettingsScreen() {
-    var themeMode by remember { mutableStateOf("system") }
-    var showLineNumbers by remember { mutableStateOf(true) }
-    var autoSave by remember { mutableStateOf(true) }
+fun SettingsScreen(
+    themeMode: String,
+    onThemeModeChanged: (String) -> Unit,
+    showLineNumbers: Boolean,
+    onShowLineNumbersChanged: (Boolean) -> Unit,
+    autoSave: Boolean,
+    onAutoSaveChanged: (Boolean) -> Unit,
+    animationsEnabled: Boolean,
+    onAnimationsEnabledChanged: (Boolean) -> Unit
+) {
 
     Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
         Text(
@@ -213,7 +349,7 @@ fun SettingsScreen() {
         Row(verticalAlignment = Alignment.CenterVertically) {
             RadioButton(
                 selected = themeMode == "system",
-                onClick = { themeMode = "system" }
+                onClick = { onThemeModeChanged("system") }
             )
             Spacer(modifier = Modifier.width(8.dp))
             Text("System theme (follows system setting)")
@@ -222,7 +358,7 @@ fun SettingsScreen() {
         Row(verticalAlignment = Alignment.CenterVertically) {
             RadioButton(
                 selected = themeMode == "light",
-                onClick = { themeMode = "light" }
+                onClick = { onThemeModeChanged("light") }
             )
             Spacer(modifier = Modifier.width(8.dp))
             Text("Light theme")
@@ -231,7 +367,7 @@ fun SettingsScreen() {
         Row(verticalAlignment = Alignment.CenterVertically) {
             RadioButton(
                 selected = themeMode == "dark",
-                onClick = { themeMode = "dark" }
+                onClick = { onThemeModeChanged("dark") }
             )
             Spacer(modifier = Modifier.width(8.dp))
             Text("Dark theme")
@@ -255,7 +391,7 @@ fun SettingsScreen() {
             Text("Show line numbers")
             Switch(
                 checked = showLineNumbers,
-                onCheckedChange = { showLineNumbers = it }
+                onCheckedChange = onShowLineNumbersChanged
             )
         }
 
@@ -267,7 +403,29 @@ fun SettingsScreen() {
             Text("Auto-save")
             Switch(
                 checked = autoSave,
-                onCheckedChange = { autoSave = it }
+                onCheckedChange = onAutoSaveChanged
+            )
+        }
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        // Animation settings
+        Text(
+            text = "Animations",
+            style = MaterialTheme.typography.titleMedium
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text("Enable smooth transitions")
+            Switch(
+                checked = animationsEnabled,
+                onCheckedChange = onAnimationsEnabledChanged
             )
         }
 

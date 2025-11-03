@@ -9,6 +9,13 @@
 
 package digital.vasic.yole.android.ui
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -30,10 +37,32 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.documentfile.provider.DocumentFile
+import digital.vasic.opoc.model.GsSharedPreferencesPropertyBackend
 import digital.vasic.yole.format.FormatRegistry
 import digital.vasic.yole.format.ParserRegistry
 import digital.vasic.yole.format.ParseOptions
 import java.io.File
+
+/**
+ * Settings manager for Yole app
+ */
+class YoleSettings(context: android.content.Context) : GsSharedPreferencesPropertyBackend(context, "yole_settings") {
+
+    // Theme settings
+    fun getThemeMode(): String = getString("theme_mode", "system")
+    fun setThemeMode(mode: String) = setString("theme_mode", mode)
+
+    // Editor settings
+    fun getShowLineNumbers(): Boolean = getBool("show_line_numbers", true)
+    fun setShowLineNumbers(show: Boolean) = setBool("show_line_numbers", show)
+
+    fun getAutoSave(): Boolean = getBool("auto_save", true)
+    fun setAutoSave(auto: Boolean) = setBool("auto_save", auto)
+
+    // Animation settings
+    fun getAnimationsEnabled(): Boolean = getBool("animations_enabled", true)
+    fun setAnimationsEnabled(enabled: Boolean) = setBool("animations_enabled", enabled)
+}
 
 /**
  * Save content to a file
@@ -110,6 +139,8 @@ fun YoleApp() {
 @Composable
 fun MainScreen() {
     val context = LocalContext.current
+    val settings = remember { YoleSettings(context) }
+
     var currentScreen by remember { mutableStateOf(Screen.FILES) }
     var currentSubScreen by remember { mutableStateOf<SubScreen?>(null) }
     var selectedFile by remember { mutableStateOf<String?>(null) }
@@ -118,6 +149,12 @@ fun MainScreen() {
     var showFileSearch by remember { mutableStateOf(false) }
     var fileSearchQuery by remember { mutableStateOf("") }
     var fileSortBy by remember { mutableStateOf("name") }
+
+    // Load settings
+    var themeMode by remember { mutableStateOf(settings.getThemeMode()) }
+    var showLineNumbers by remember { mutableStateOf(settings.getShowLineNumbers()) }
+    var autoSave by remember { mutableStateOf(settings.getAutoSave()) }
+    var animationsEnabled by remember { mutableStateOf(settings.getAnimationsEnabled()) }
 
     // Initialize parsers
     LaunchedEffect(Unit) {
@@ -222,46 +259,189 @@ fun MainScreen() {
         }
     ) { padding ->
         Box(modifier = Modifier.padding(padding)) {
-            when (currentSubScreen) {
-                SubScreen.EDITOR -> EditorScreen(
-                    fileName = selectedFile ?: "Untitled",
-                    content = fileContent,
-                    onContentChanged = { fileContent = it },
-                    onBackClick = { currentSubScreen = null }
-                )
-                SubScreen.PREVIEW -> PreviewScreen(
-                    fileName = selectedFile ?: "Untitled",
-                    content = fileContent,
-                    onBackClick = { currentSubScreen = null }
-                )
-                SubScreen.SETTINGS -> SettingsScreen(
-                    onBackClick = { currentSubScreen = null }
-                )
-                null -> {
-                    when (currentScreen) {
-                        Screen.FILES -> FilesScreen(
-                            searchQuery = fileSearchQuery,
-                            sortBy = fileSortBy,
-                            onSearchQueryChanged = { fileSearchQuery = it },
-                            onSortChanged = { fileSortBy = it },
-                            showSearch = showFileSearch,
-                            onShowSearchChanged = { showFileSearch = it },
-                            onFileSelected = { file, content ->
-                                selectedFile = file
-                                fileContent = content
-                                currentSubScreen = SubScreen.EDITOR
+            if (animationsEnabled) {
+                AnimatedContent(
+                    targetState = currentSubScreen,
+                    transitionSpec = {
+                        if (targetState != null && initialState == null) {
+                            // Entering sub-screen (slide in from right)
+                            slideInHorizontally(
+                                animationSpec = tween(800),
+                                initialOffsetX = { it }
+                            ) + fadeIn(animationSpec = tween(800)) togetherWith
+                            slideOutHorizontally(
+                                animationSpec = tween(800),
+                                targetOffsetX = { -it / 2 }
+                            ) + fadeOut(animationSpec = tween(800))
+                        } else if (targetState == null && initialState != null) {
+                            // Exiting sub-screen (slide out to right)
+                            slideInHorizontally(
+                                animationSpec = tween(800),
+                                initialOffsetX = { -it / 2 }
+                            ) + fadeIn(animationSpec = tween(800)) togetherWith
+                            slideOutHorizontally(
+                                animationSpec = tween(800),
+                                targetOffsetX = { it }
+                            ) + fadeOut(animationSpec = tween(800))
+                        } else {
+                            // Same level transitions or null to null
+                            fadeIn(animationSpec = tween(300)) togetherWith fadeOut(animationSpec = tween(300))
+                        }
+                    },
+                    label = "SubScreenTransition"
+                ) { subScreen ->
+                    when (subScreen) {
+                        SubScreen.EDITOR -> EditorScreen(
+                            fileName = selectedFile ?: "Untitled",
+                            content = fileContent,
+                            onContentChanged = { fileContent = it },
+                            onBackClick = { currentSubScreen = null }
+                        )
+                        SubScreen.PREVIEW -> PreviewScreen(
+                            fileName = selectedFile ?: "Untitled",
+                            content = fileContent,
+                            onBackClick = { currentSubScreen = null }
+                        )
+                        SubScreen.SETTINGS -> SettingsScreen(
+                            onBackClick = { currentSubScreen = null },
+                            themeMode = themeMode,
+                            onThemeModeChanged = {
+                                themeMode = it
+                                settings.setThemeMode(it)
                             },
-                            onSettingsClick = { currentSubScreen = SubScreen.SETTINGS }
+                            showLineNumbers = showLineNumbers,
+                            onShowLineNumbersChanged = {
+                                showLineNumbers = it
+                                settings.setShowLineNumbers(it)
+                            },
+                            autoSave = autoSave,
+                            onAutoSaveChanged = {
+                                autoSave = it
+                                settings.setAutoSave(it)
+                            },
+                            animationsEnabled = animationsEnabled,
+                            onAnimationsEnabledChanged = {
+                                animationsEnabled = it
+                                settings.setAnimationsEnabled(it)
+                            }
                         )
-                        Screen.TODO -> TodoScreen()
-                        Screen.QUICKNOTE -> QuickNoteScreen(
-                            content = quickNoteContent,
-                            onContentChanged = { quickNoteContent = it }
-                        )
-                        Screen.MORE -> MoreScreen()
+                        null -> {
+                            AnimatedContent(
+                                targetState = currentScreen,
+                                transitionSpec = {
+                                    // Tab transitions - slide horizontally
+                                    if (targetState.ordinal > initialState.ordinal) {
+                                        slideInHorizontally(
+                                            animationSpec = tween(600),
+                                            initialOffsetX = { it }
+                                        ) + fadeIn(animationSpec = tween(600)) togetherWith
+                                        slideOutHorizontally(
+                                            animationSpec = tween(600),
+                                            targetOffsetX = { -it }
+                                        ) + fadeOut(animationSpec = tween(600))
+                                    } else {
+                                        slideInHorizontally(
+                                            animationSpec = tween(600),
+                                            initialOffsetX = { -it }
+                                        ) + fadeIn(animationSpec = tween(600)) togetherWith
+                                        slideOutHorizontally(
+                                            animationSpec = tween(600),
+                                            targetOffsetX = { it }
+                                        ) + fadeOut(animationSpec = tween(600))
+                                    }
+                                },
+                                label = "MainScreenTransition"
+                            ) { screen ->
+                                when (screen) {
+                                    Screen.FILES -> FilesScreen(
+                                        searchQuery = fileSearchQuery,
+                                        sortBy = fileSortBy,
+                                        onSearchQueryChanged = { fileSearchQuery = it },
+                                        onSortChanged = { fileSortBy = it },
+                                        showSearch = showFileSearch,
+                                        onShowSearchChanged = { showFileSearch = it },
+                                        onFileSelected = { file, content ->
+                                            selectedFile = file
+                                            fileContent = content
+                                            currentSubScreen = SubScreen.EDITOR
+                                        },
+                                        onSettingsClick = { currentSubScreen = SubScreen.SETTINGS }
+                                    )
+                                    Screen.TODO -> TodoScreen()
+                                    Screen.QUICKNOTE -> QuickNoteScreen(
+                                        content = quickNoteContent,
+                                        onContentChanged = { quickNoteContent = it }
+                                    )
+                                    Screen.MORE -> MoreScreen()
+                                }
+                            }
+                        }
+                        else -> {} // Exhaustive when
                     }
                 }
-                else -> {} // Exhaustive when
+            } else {
+                // No animations - direct content switching
+                when (currentSubScreen) {
+                    SubScreen.EDITOR -> EditorScreen(
+                        fileName = selectedFile ?: "Untitled",
+                        content = fileContent,
+                        onContentChanged = { fileContent = it },
+                        onBackClick = { currentSubScreen = null }
+                    )
+                    SubScreen.PREVIEW -> PreviewScreen(
+                        fileName = selectedFile ?: "Untitled",
+                        content = fileContent,
+                        onBackClick = { currentSubScreen = null }
+                    )
+                    SubScreen.SETTINGS -> SettingsScreen(
+                        onBackClick = { currentSubScreen = null },
+                        themeMode = themeMode,
+                        onThemeModeChanged = {
+                            themeMode = it
+                            settings.setThemeMode(it)
+                        },
+                        showLineNumbers = showLineNumbers,
+                        onShowLineNumbersChanged = {
+                            showLineNumbers = it
+                            settings.setShowLineNumbers(it)
+                        },
+                        autoSave = autoSave,
+                        onAutoSaveChanged = {
+                            autoSave = it
+                            settings.setAutoSave(it)
+                        },
+                        animationsEnabled = animationsEnabled,
+                        onAnimationsEnabledChanged = {
+                            animationsEnabled = it
+                            settings.setAnimationsEnabled(it)
+                        }
+                    )
+                    null -> {
+                        when (currentScreen) {
+                            Screen.FILES -> FilesScreen(
+                                searchQuery = fileSearchQuery,
+                                sortBy = fileSortBy,
+                                onSearchQueryChanged = { fileSearchQuery = it },
+                                onSortChanged = { fileSortBy = it },
+                                showSearch = showFileSearch,
+                                onShowSearchChanged = { showFileSearch = it },
+                                onFileSelected = { file, content ->
+                                    selectedFile = file
+                                    fileContent = content
+                                    currentSubScreen = SubScreen.EDITOR
+                                },
+                                onSettingsClick = { currentSubScreen = SubScreen.SETTINGS }
+                            )
+                            Screen.TODO -> TodoScreen()
+                            Screen.QUICKNOTE -> QuickNoteScreen(
+                                content = quickNoteContent,
+                                onContentChanged = { quickNoteContent = it }
+                            )
+                            Screen.MORE -> MoreScreen()
+                        }
+                    }
+                    else -> {} // Exhaustive when
+                }
             }
         }
     }
@@ -708,11 +888,17 @@ fun convertTodoTxtToHtml(content: String): String {
 }
 
 @Composable
-fun SettingsScreen(onBackClick: () -> Unit = {}) {
-    val context = LocalContext.current
-    var themeMode by remember { mutableStateOf("system") }
-    var showLineNumbers by remember { mutableStateOf(true) }
-    var autoSave by remember { mutableStateOf(true) }
+fun SettingsScreen(
+    onBackClick: () -> Unit = {},
+    themeMode: String,
+    onThemeModeChanged: (String) -> Unit,
+    showLineNumbers: Boolean,
+    onShowLineNumbersChanged: (Boolean) -> Unit,
+    autoSave: Boolean,
+    onAutoSaveChanged: (Boolean) -> Unit,
+    animationsEnabled: Boolean,
+    onAnimationsEnabledChanged: (Boolean) -> Unit
+) {
 
     Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
         Text(
@@ -733,7 +919,7 @@ fun SettingsScreen(onBackClick: () -> Unit = {}) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             RadioButton(
                 selected = themeMode == "system",
-                onClick = { themeMode = "system" }
+                onClick = { onThemeModeChanged("system") }
             )
             Spacer(modifier = Modifier.width(8.dp))
             Text("System theme (follows system setting)")
@@ -742,7 +928,7 @@ fun SettingsScreen(onBackClick: () -> Unit = {}) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             RadioButton(
                 selected = themeMode == "light",
-                onClick = { themeMode = "light" }
+                onClick = { onThemeModeChanged("light") }
             )
             Spacer(modifier = Modifier.width(8.dp))
             Text("Light theme")
@@ -751,7 +937,7 @@ fun SettingsScreen(onBackClick: () -> Unit = {}) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             RadioButton(
                 selected = themeMode == "dark",
-                onClick = { themeMode = "dark" }
+                onClick = { onThemeModeChanged("dark") }
             )
             Spacer(modifier = Modifier.width(8.dp))
             Text("Dark theme")
@@ -775,7 +961,7 @@ fun SettingsScreen(onBackClick: () -> Unit = {}) {
             Text("Show line numbers")
             Switch(
                 checked = showLineNumbers,
-                onCheckedChange = { showLineNumbers = it }
+                onCheckedChange = onShowLineNumbersChanged
             )
         }
 
@@ -787,7 +973,29 @@ fun SettingsScreen(onBackClick: () -> Unit = {}) {
             Text("Auto-save")
             Switch(
                 checked = autoSave,
-                onCheckedChange = { autoSave = it }
+                onCheckedChange = onAutoSaveChanged
+            )
+        }
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        // Animation settings
+        Text(
+            text = "Animations",
+            style = MaterialTheme.typography.titleMedium
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text("Enable smooth transitions")
+            Switch(
+                checked = animationsEnabled,
+                onCheckedChange = onAnimationsEnabledChanged
             )
         }
 

@@ -10,6 +10,13 @@
 
 package digital.vasic.yole.ios
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.togetherWith
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -39,6 +46,29 @@ import androidx.compose.material3.TopAppBarDefaults
 import digital.vasic.yole.model.Document
 import digital.vasic.yole.format.FormatRegistry
 import kotlinx.coroutines.*
+import platform.Foundation.NSUserDefaults
+
+/**
+ * Settings manager for Yole iOS app
+ */
+class YoleIOSSettings {
+    private val defaults = NSUserDefaults.standardUserDefaults
+
+    // Theme settings
+    fun getThemeMode(): String = defaults.stringForKey("theme_mode") ?: "system"
+    fun setThemeMode(mode: String) = defaults.setObject(mode, "theme_mode")
+
+    // Editor settings
+    fun getShowLineNumbers(): Boolean = defaults.boolForKey("show_line_numbers")
+    fun setShowLineNumbers(show: Boolean) = defaults.setBool(show, "show_line_numbers")
+
+    fun getAutoSave(): Boolean = defaults.boolForKey("auto_save")
+    fun setAutoSave(auto: Boolean) = defaults.setBool(auto, "auto_save")
+
+    // Animation settings
+    fun getAnimationsEnabled(): Boolean = defaults.boolForKey("animations_enabled")
+    fun setAnimationsEnabled(enabled: Boolean) = defaults.setBool(enabled, "animations_enabled")
+}
 
 /**
  * Main entry point for Yole iOS Application
@@ -55,8 +85,16 @@ fun YoleIOSApp() {
  */
 @Composable
 fun YoleAppContent() {
+    val settings = remember { YoleIOSSettings() }
+
     var currentScreen by remember { mutableStateOf<AppScreen>(AppScreen.Documents) }
     var documents by remember { mutableStateOf(emptyList<Document>()) }
+
+    // Load settings
+    var themeMode by remember { mutableStateOf(settings.getThemeMode()) }
+    var showLineNumbers by remember { mutableStateOf(settings.getShowLineNumbers()) }
+    var autoSave by remember { mutableStateOf(settings.getAutoSave()) }
+    var animationsEnabled by remember { mutableStateOf(settings.getAnimationsEnabled()) }
     
     Scaffold(
         topBar = {
@@ -67,14 +105,96 @@ fun YoleAppContent() {
         }
     ) { paddingValues ->
         Box(modifier = Modifier.padding(paddingValues)) {
-            when (currentScreen) {
-                AppScreen.Documents -> DocumentsScreen(
-                    documents = documents,
-                    onDocumentSelected = { /* TODO */ },
-                    onCreateDocument = { /* TODO */ }
-                )
-                AppScreen.Editor -> EditorScreen()
-                AppScreen.Settings -> SettingsScreen()
+            if (animationsEnabled) {
+                AnimatedContent(
+                    targetState = currentScreen,
+                    transitionSpec = {
+                        // Screen transitions - slide horizontally
+                        if (targetState.ordinal > initialState.ordinal) {
+                            slideInHorizontally(
+                                animationSpec = tween(600),
+                                initialOffsetX = { it }
+                            ) + fadeIn(animationSpec = tween(600)) togetherWith
+                            slideOutHorizontally(
+                                animationSpec = tween(600),
+                                targetOffsetX = { -it / 2 }
+                            ) + fadeOut(animationSpec = tween(600))
+                        } else {
+                            slideInHorizontally(
+                                animationSpec = tween(600),
+                                initialOffsetX = { -it }
+                            ) + fadeIn(animationSpec = tween(600)) togetherWith
+                            slideOutHorizontally(
+                                animationSpec = tween(600),
+                                targetOffsetX = { it / 2 }
+                            ) + fadeOut(animationSpec = tween(600))
+                        }
+                    },
+                    label = "ScreenTransition"
+                ) { screen ->
+                    when (screen) {
+                        AppScreen.Documents -> DocumentsScreen(
+                            documents = documents,
+                            onDocumentSelected = { /* TODO */ },
+                            onCreateDocument = { /* TODO */ }
+                        )
+                        AppScreen.Editor -> EditorScreen()
+                        AppScreen.Settings -> SettingsScreen(
+                            themeMode = themeMode,
+                            onThemeModeChanged = {
+                                themeMode = it
+                                settings.setThemeMode(it)
+                            },
+                            showLineNumbers = showLineNumbers,
+                            onShowLineNumbersChanged = {
+                                showLineNumbers = it
+                                settings.setShowLineNumbers(it)
+                            },
+                            autoSave = autoSave,
+                            onAutoSaveChanged = {
+                                autoSave = it
+                                settings.setAutoSave(it)
+                            },
+                            animationsEnabled = animationsEnabled,
+                            onAnimationsEnabledChanged = {
+                                animationsEnabled = it
+                                settings.setAnimationsEnabled(it)
+                            }
+                        )
+                    }
+                }
+            } else {
+                // No animations
+                when (currentScreen) {
+                    AppScreen.Documents -> DocumentsScreen(
+                        documents = documents,
+                        onDocumentSelected = { /* TODO */ },
+                        onCreateDocument = { /* TODO */ }
+                    )
+                    AppScreen.Editor -> EditorScreen()
+                    AppScreen.Settings -> SettingsScreen(
+                        themeMode = themeMode,
+                        onThemeModeChanged = {
+                            themeMode = it
+                            settings.setThemeMode(it)
+                        },
+                        showLineNumbers = showLineNumbers,
+                        onShowLineNumbersChanged = {
+                            showLineNumbers = it
+                            settings.setShowLineNumbers(it)
+                        },
+                        autoSave = autoSave,
+                        onAutoSaveChanged = {
+                            autoSave = it
+                            settings.setAutoSave(it)
+                        },
+                        animationsEnabled = animationsEnabled,
+                        onAnimationsEnabledChanged = {
+                            animationsEnabled = it
+                            settings.setAnimationsEnabled(it)
+                        }
+                    )
+                }
             }
         }
     }
@@ -290,7 +410,16 @@ fun EditorScreen() {
  * Settings Screen
  */
 @Composable
-fun SettingsScreen() {
+fun SettingsScreen(
+    themeMode: String,
+    onThemeModeChanged: (String) -> Unit,
+    showLineNumbers: Boolean,
+    onShowLineNumbersChanged: (Boolean) -> Unit,
+    autoSave: Boolean,
+    onAutoSaveChanged: (Boolean) -> Unit,
+    animationsEnabled: Boolean,
+    onAnimationsEnabledChanged: (Boolean) -> Unit
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -301,11 +430,99 @@ fun SettingsScreen() {
             text = "Settings",
             style = MaterialTheme.typography.headlineMedium
         )
-        Spacer(modifier = Modifier.height(16.dp))
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        // Theme settings
         Text(
-            text = "Application settings will be implemented here",
-            style = MaterialTheme.typography.bodyLarge
+            text = "Appearance",
+            style = MaterialTheme.typography.titleMedium
         )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            RadioButton(
+                selected = themeMode == "system",
+                onClick = { onThemeModeChanged("system") }
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Text("System theme")
+        }
+
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            RadioButton(
+                selected = themeMode == "light",
+                onClick = { onThemeModeChanged("light") }
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Text("Light theme")
+        }
+
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            RadioButton(
+                selected = themeMode == "dark",
+                onClick = { onThemeModeChanged("dark") }
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Text("Dark theme")
+        }
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        // Editor settings
+        Text(
+            text = "Editor",
+            style = MaterialTheme.typography.titleMedium
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text("Show line numbers")
+            Switch(
+                checked = showLineNumbers,
+                onCheckedChange = onShowLineNumbersChanged
+            )
+        }
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text("Auto-save")
+            Switch(
+                checked = autoSave,
+                onCheckedChange = onAutoSaveChanged
+            )
+        }
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        // Animation settings
+        Text(
+            text = "Animations",
+            style = MaterialTheme.typography.titleMedium
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text("Enable smooth transitions")
+            Switch(
+                checked = animationsEnabled,
+                onCheckedChange = onAnimationsEnabledChanged
+            )
+        }
     }
 }
 

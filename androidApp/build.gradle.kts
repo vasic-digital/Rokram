@@ -69,6 +69,7 @@ android {
 
 dependencies {
     implementation(project(":shared"))
+    implementation(project(":commons"))
 
     // Compose
     implementation(libs.compose.runtime)
