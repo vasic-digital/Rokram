@@ -36,6 +36,13 @@ buildscript {
 
 // Configure all projects
 allprojects {
+    // Set extra properties for all projects
+    extra.apply {
+        set("version_compileSdk", 35)
+        set("version_buildTools", "35.0.0")
+        set("version_minSdk", 21) // Updated for Compose Multiplatform support
+        set("version_targetSdk", 35)
+    }
     // Copy repo files task (for README, LICENSE, etc.)
     tasks.register<Copy>("copyRepoFiles") {
         from(rootProject.files(ROOT_TO_RAW_COPYFILES))

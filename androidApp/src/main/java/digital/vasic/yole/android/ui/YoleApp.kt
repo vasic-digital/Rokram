@@ -31,7 +31,49 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.documentfile.provider.DocumentFile
 import digital.vasic.yole.format.FormatRegistry
+import digital.vasic.yole.format.ParserRegistry
+import digital.vasic.yole.format.ParseOptions
 import java.io.File
+
+/**
+ * Save content to a file
+ */
+fun saveFile(filePath: String, content: String): Boolean {
+    return try {
+        val file = File(filePath)
+        file.parentFile?.mkdirs() // Create parent directories if they don't exist
+        file.writeText(content)
+        true
+    } catch (e: Exception) {
+        false
+    }
+}
+
+/**
+ * Load content from a file
+ */
+fun loadFile(filePath: String): String? {
+    return try {
+        val file = File(filePath)
+        if (file.exists()) file.readText() else null
+    } catch (e: Exception) {
+        null
+    }
+}
+
+/**
+ * Delete a file
+ */
+fun deleteFile(filePath: String): Boolean {
+    return try {
+        val file = File(filePath)
+        file.delete()
+    } catch (e: Exception) {
+        false
+    }
+}
+
+
 
 enum class Screen {
     FILES,
@@ -67,17 +109,36 @@ fun YoleApp() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen() {
+    val context = LocalContext.current
     var currentScreen by remember { mutableStateOf(Screen.FILES) }
     var currentSubScreen by remember { mutableStateOf<SubScreen?>(null) }
     var selectedFile by remember { mutableStateOf<String?>(null) }
     var fileContent by remember { mutableStateOf("") }
+    var quickNoteContent by remember { mutableStateOf("") }
+    var showFileSearch by remember { mutableStateOf(false) }
+    var fileSearchQuery by remember { mutableStateOf("") }
+    var fileSortBy by remember { mutableStateOf("name") }
+
+    // Initialize parsers
+    LaunchedEffect(Unit) {
+        digital.vasic.yole.format.ParserInitializer.registerAllParsers()
+    }
 
     Scaffold(
         topBar = {
             when (currentSubScreen) {
                 SubScreen.EDITOR -> EditorTopBar(
                     fileName = selectedFile ?: "Untitled",
-                    onSaveClick = { /* TODO: Implement save */ },
+                    onSaveClick = {
+                        selectedFile?.let { fileName ->
+                            val docsDir = File(context.getExternalFilesDir(null)?.parentFile, "Documents")
+                            if (!docsDir.exists()) docsDir.mkdirs()
+                            val filePath = File(docsDir, fileName).absolutePath
+                            if (saveFile(filePath, fileContent)) {
+                                // Could show a success snackbar here
+                            }
+                        }
+                    },
                     onPreviewClick = { currentSubScreen = SubScreen.PREVIEW },
                     onBackClick = { currentSubScreen = null }
                 )
@@ -92,18 +153,32 @@ fun MainScreen() {
                 null -> {
                     when (currentScreen) {
                         Screen.FILES -> FilesTopBar(
-                            onSearchClick = { /* TODO: Implement search */ },
-                            onSortClick = { /* TODO: Implement sort */ },
-                            onMoreClick = { /* TODO: Implement more options */ }
+                            onSearchClick = { showFileSearch = !showFileSearch },
+                            onSortClick = {
+                                fileSortBy = when (fileSortBy) {
+                                    "name" -> "date"
+                                    "date" -> "size"
+                                    "size" -> "name"
+                                    else -> "name"
+                                }
+                            },
+                            onMoreClick = { currentSubScreen = SubScreen.SETTINGS }
                         )
                         Screen.TODO -> TodoTopBar(
                             onSearchClick = { /* TODO: Implement search */ },
                             onFilterClick = { /* TODO: Implement filter */ },
-                            onMoreClick = { /* TODO: Implement more options */ }
+                            onMoreClick = { currentSubScreen = SubScreen.SETTINGS }
                         )
                         Screen.QUICKNOTE -> QuickNoteTopBar(
-                            onSaveClick = { /* TODO: Implement save */ },
-                            onMoreClick = { /* TODO: Implement more options */ }
+                            onSaveClick = {
+                                val docsDir = File(context.getExternalFilesDir(null)?.parentFile, "Documents")
+                                if (!docsDir.exists()) docsDir.mkdirs()
+                                val filePath = File(docsDir, "quicknote.md").absolutePath
+                                if (saveFile(filePath, quickNoteContent)) {
+                                    // Could show success message
+                                }
+                            },
+                            onMoreClick = { currentSubScreen = SubScreen.SETTINGS }
                         )
                         Screen.MORE -> MoreTopBar()
                     }
@@ -165,6 +240,12 @@ fun MainScreen() {
                 null -> {
                     when (currentScreen) {
                         Screen.FILES -> FilesScreen(
+                            searchQuery = fileSearchQuery,
+                            sortBy = fileSortBy,
+                            onSearchQueryChanged = { fileSearchQuery = it },
+                            onSortChanged = { fileSortBy = it },
+                            showSearch = showFileSearch,
+                            onShowSearchChanged = { showFileSearch = it },
                             onFileSelected = { file, content ->
                                 selectedFile = file
                                 fileContent = content
@@ -173,7 +254,10 @@ fun MainScreen() {
                             onSettingsClick = { currentSubScreen = SubScreen.SETTINGS }
                         )
                         Screen.TODO -> TodoScreen()
-                        Screen.QUICKNOTE -> QuickNoteScreen()
+                        Screen.QUICKNOTE -> QuickNoteScreen(
+                            content = quickNoteContent,
+                            onContentChanged = { quickNoteContent = it }
+                        )
                         Screen.MORE -> MoreScreen()
                     }
                 }
@@ -184,22 +268,47 @@ fun MainScreen() {
 }
 
 @Composable
-fun FileBrowserScreen(onFileSelected: (String, String) -> Unit, onSettingsClick: () -> Unit = {}) {
+fun FileBrowserScreen(
+    searchQuery: String = "",
+    sortBy: String = "name",
+    onSearchQueryChanged: (String) -> Unit = {},
+    onSortChanged: (String) -> Unit = {},
+    showSearch: Boolean = false,
+    onShowSearchChanged: (Boolean) -> Unit = {},
+    onFileSelected: (String, String) -> Unit,
+    onSettingsClick: () -> Unit = {}
+) {
     val context = LocalContext.current
     var currentDirectory by remember { mutableStateOf<File?>(null) }
-    var files by remember { mutableStateOf<List<File>>(emptyList()) }
+    var allFiles by remember { mutableStateOf<List<File>>(emptyList()) }
 
     // Initialize with documents directory
     LaunchedEffect(Unit) {
         val docsDir = File(context.getExternalFilesDir(null)?.parentFile, "Documents")
         if (docsDir.exists()) {
             currentDirectory = docsDir
-            files = docsDir.listFiles()?.toList() ?: emptyList()
+            allFiles = docsDir.listFiles()?.toList() ?: emptyList()
         } else {
             // Fallback to app's private directory
             currentDirectory = context.filesDir
-            files = context.filesDir.listFiles()?.toList() ?: emptyList()
+            allFiles = context.filesDir.listFiles()?.toList() ?: emptyList()
         }
+    }
+
+    // Filter and sort files
+    val files = remember(allFiles, searchQuery, sortBy) {
+        var filtered = allFiles.filter { file ->
+            searchQuery.isEmpty() || file.name.contains(searchQuery, ignoreCase = true)
+        }
+
+        filtered = when (sortBy) {
+            "name" -> filtered.sortedBy { it.name.lowercase() }
+            "date" -> filtered.sortedByDescending { it.lastModified() }
+            "size" -> filtered.sortedByDescending { if (it.isFile) it.length() else 0L }
+            else -> filtered
+        }
+
+        filtered
     }
 
     val directoryPicker = rememberLauncherForActivityResult(
@@ -212,6 +321,27 @@ fun FileBrowserScreen(onFileSelected: (String, String) -> Unit, onSettingsClick:
     }
 
     Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
+        // Search bar
+        if (showSearch) {
+            OutlinedTextField(
+                value = searchQuery,
+                onValueChange = onSearchQueryChanged,
+                modifier = Modifier.fillMaxWidth(),
+                placeholder = { Text("Search files...") },
+                leadingIcon = {
+                    Icon(Icons.Filled.Search, contentDescription = "Search")
+                },
+                trailingIcon = {
+                    if (searchQuery.isNotEmpty()) {
+                        IconButton(onClick = { onSearchQueryChanged("") }) {
+                            Icon(Icons.Filled.Clear, contentDescription = "Clear")
+                        }
+                    }
+                }
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+        }
+
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
@@ -254,7 +384,7 @@ fun FileBrowserScreen(onFileSelected: (String, String) -> Unit, onSettingsClick:
                         if (isDirectory) {
                             // Navigate into directory
                             currentDirectory = file
-                            files = file.listFiles()?.toList() ?: emptyList()
+                            allFiles = file.listFiles()?.toList() ?: emptyList()
                         } else {
                             // Try to read file content
                             try {
@@ -309,7 +439,7 @@ fun FileBrowserScreen(onFileSelected: (String, String) -> Unit, onSettingsClick:
                     // Go up one directory
                     currentDirectory?.parentFile?.let { parent ->
                         currentDirectory = parent
-                        files = parent.listFiles()?.toList() ?: emptyList()
+                        allFiles = parent.listFiles()?.toList() ?: emptyList()
                     }
                 },
                 enabled = currentDirectory?.parentFile != null
@@ -892,10 +1022,22 @@ fun SettingsTopBar(onBackClick: () -> Unit) {
 // Screen Composables
 @Composable
 fun FilesScreen(
+    searchQuery: String,
+    sortBy: String,
+    onSearchQueryChanged: (String) -> Unit,
+    onSortChanged: (String) -> Unit,
+    showSearch: Boolean,
+    onShowSearchChanged: (Boolean) -> Unit,
     onFileSelected: (String, String) -> Unit,
     onSettingsClick: () -> Unit
 ) {
     FileBrowserScreen(
+        searchQuery = searchQuery,
+        sortBy = sortBy,
+        onSearchQueryChanged = onSearchQueryChanged,
+        onSortChanged = onSortChanged,
+        showSearch = showSearch,
+        onShowSearchChanged = onShowSearchChanged,
         onFileSelected = onFileSelected,
         onSettingsClick = onSettingsClick
     )
@@ -1053,8 +1195,8 @@ fun TodoItemRow(
 }
 
 @Composable
-fun QuickNoteScreen() {
-    var noteContent by remember { mutableStateOf("") }
+fun QuickNoteScreen(content: String, onContentChanged: (String) -> Unit) {
+    var noteContent by remember { mutableStateOf(content) }
     var isPreviewMode by remember { mutableStateOf(false) }
     val isDarkTheme = isSystemInDarkTheme()
 
@@ -1100,7 +1242,10 @@ fun QuickNoteScreen() {
             // Edit mode
             OutlinedTextField(
                 value = noteContent,
-                onValueChange = { noteContent = it },
+                onValueChange = {
+                    noteContent = it
+                    onContentChanged(it)
+                },
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(horizontal = 16.dp),
