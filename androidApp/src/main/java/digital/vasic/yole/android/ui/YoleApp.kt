@@ -23,6 +23,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.outlined.*
+import androidx.compose.material.icons.automirrored.filled.*
+import androidx.compose.material3.Checkbox
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.documentfile.provider.DocumentFile
@@ -30,6 +34,13 @@ import digital.vasic.yole.format.FormatRegistry
 import java.io.File
 
 enum class Screen {
+    FILES,
+    TODO,
+    QUICKNOTE,
+    MORE
+}
+
+enum class SubScreen {
     FILE_BROWSER,
     EDITOR,
     PREVIEW,
@@ -56,58 +67,124 @@ fun YoleApp() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen() {
-    var currentScreen by remember { mutableStateOf(Screen.FILE_BROWSER) }
+    var currentScreen by remember { mutableStateOf(Screen.FILES) }
+    var currentSubScreen by remember { mutableStateOf<SubScreen?>(null) }
     var selectedFile by remember { mutableStateOf<String?>(null) }
     var fileContent by remember { mutableStateOf("") }
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text("Yole") },
-                actions = {
-                    // Navigation buttons with icons
-                    TextButton(onClick = { currentScreen = Screen.FILE_BROWSER }) {
-                        Text(if (currentScreen == Screen.FILE_BROWSER) "📁 Files" else "Files")
-                    }
-                    TextButton(onClick = { currentScreen = Screen.EDITOR }) {
-                        Text(if (currentScreen == Screen.EDITOR) "✏️ Edit" else "Edit")
-                    }
-                    TextButton(onClick = { currentScreen = Screen.PREVIEW }) {
-                        Text(if (currentScreen == Screen.PREVIEW) "👁️ Preview" else "Preview")
-                    }
-                    TextButton(onClick = { currentScreen = Screen.SETTINGS }) {
-                        Text(if (currentScreen == Screen.SETTINGS) "⚙️ Settings" else "Settings")
+            when (currentSubScreen) {
+                SubScreen.EDITOR -> EditorTopBar(
+                    fileName = selectedFile ?: "Untitled",
+                    onSaveClick = { /* TODO: Implement save */ },
+                    onPreviewClick = { currentSubScreen = SubScreen.PREVIEW },
+                    onBackClick = { currentSubScreen = null }
+                )
+                SubScreen.PREVIEW -> PreviewTopBar(
+                    fileName = selectedFile ?: "Untitled",
+                    onEditClick = { currentSubScreen = SubScreen.EDITOR },
+                    onBackClick = { currentSubScreen = null }
+                )
+                SubScreen.SETTINGS -> SettingsTopBar(
+                    onBackClick = { currentSubScreen = null }
+                )
+                null -> {
+                    when (currentScreen) {
+                        Screen.FILES -> FilesTopBar(
+                            onSearchClick = { /* TODO: Implement search */ },
+                            onSortClick = { /* TODO: Implement sort */ },
+                            onMoreClick = { /* TODO: Implement more options */ }
+                        )
+                        Screen.TODO -> TodoTopBar(
+                            onSearchClick = { /* TODO: Implement search */ },
+                            onFilterClick = { /* TODO: Implement filter */ },
+                            onMoreClick = { /* TODO: Implement more options */ }
+                        )
+                        Screen.QUICKNOTE -> QuickNoteTopBar(
+                            onSaveClick = { /* TODO: Implement save */ },
+                            onMoreClick = { /* TODO: Implement more options */ }
+                        )
+                        Screen.MORE -> MoreTopBar()
                     }
                 }
+                else -> {} // Exhaustive when
+            }
+        },
+        bottomBar = {
+            BottomNavigationBar(
+                currentScreen = currentScreen,
+                onScreenSelected = { currentScreen = it }
             )
+        },
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = {
+                    when (currentScreen) {
+                        Screen.FILES -> {
+                            // Create new file
+                            selectedFile = "untitled.txt"
+                            fileContent = ""
+                            currentSubScreen = SubScreen.EDITOR
+                        }
+                        Screen.TODO -> {
+                            // Add new todo item
+                            // TODO: Implement
+                        }
+                        Screen.QUICKNOTE -> {
+                            // Quick note functionality
+                            // TODO: Implement
+                        }
+                        Screen.MORE -> {
+                            // More options
+                            // TODO: Implement
+                        }
+                    }
+                }
+            ) {
+                Icon(Icons.Filled.Add, contentDescription = "Add")
+            }
         }
     ) { padding ->
         Box(modifier = Modifier.padding(padding)) {
-            when (currentScreen) {
-                Screen.FILE_BROWSER -> FileBrowserScreen(
-                    onFileSelected = { file, content ->
-                        selectedFile = file
-                        fileContent = content
-                        currentScreen = Screen.EDITOR
-                    }
-                )
-                Screen.EDITOR -> EditorScreen(
+            when (currentSubScreen) {
+                SubScreen.EDITOR -> EditorScreen(
                     fileName = selectedFile ?: "Untitled",
                     content = fileContent,
-                    onContentChanged = { fileContent = it }
+                    onContentChanged = { fileContent = it },
+                    onBackClick = { currentSubScreen = null }
                 )
-                Screen.PREVIEW -> PreviewScreen(
+                SubScreen.PREVIEW -> PreviewScreen(
                     fileName = selectedFile ?: "Untitled",
-                    content = fileContent
+                    content = fileContent,
+                    onBackClick = { currentSubScreen = null }
                 )
-                Screen.SETTINGS -> SettingsScreen()
+                SubScreen.SETTINGS -> SettingsScreen(
+                    onBackClick = { currentSubScreen = null }
+                )
+                null -> {
+                    when (currentScreen) {
+                        Screen.FILES -> FilesScreen(
+                            onFileSelected = { file, content ->
+                                selectedFile = file
+                                fileContent = content
+                                currentSubScreen = SubScreen.EDITOR
+                            },
+                            onSettingsClick = { currentSubScreen = SubScreen.SETTINGS }
+                        )
+                        Screen.TODO -> TodoScreen()
+                        Screen.QUICKNOTE -> QuickNoteScreen()
+                        Screen.MORE -> MoreScreen()
+                    }
+                }
+                else -> {} // Exhaustive when
             }
         }
     }
 }
 
 @Composable
-fun FileBrowserScreen(onFileSelected: (String, String) -> Unit) {
+fun FileBrowserScreen(onFileSelected: (String, String) -> Unit, onSettingsClick: () -> Unit = {}) {
     val context = LocalContext.current
     var currentDirectory by remember { mutableStateOf<File?>(null) }
     var files by remember { mutableStateOf<List<File>>(emptyList()) }
@@ -259,7 +336,7 @@ fun FileBrowserScreen(onFileSelected: (String, String) -> Unit) {
 }
 
 @Composable
-fun EditorScreen(fileName: String, content: String, onContentChanged: (String) -> Unit) {
+fun EditorScreen(fileName: String, content: String, onContentChanged: (String) -> Unit, onBackClick: () -> Unit = {}) {
     var text by remember { mutableStateOf(content) }
     val format = remember(fileName) { FormatRegistry.detectByFilename(fileName) }
 
@@ -362,7 +439,7 @@ fun ActionButton(text: String, description: String, onClick: () -> Unit) {
 }
 
 @Composable
-fun PreviewScreen(fileName: String, content: String) {
+fun PreviewScreen(fileName: String, content: String, onBackClick: () -> Unit = {}) {
     val context = LocalContext.current
     val format = remember(fileName) { FormatRegistry.detectByFilename(fileName) }
 
@@ -501,7 +578,7 @@ fun convertTodoTxtToHtml(content: String): String {
 }
 
 @Composable
-fun SettingsScreen() {
+fun SettingsScreen(onBackClick: () -> Unit = {}) {
     val context = LocalContext.current
     var themeMode by remember { mutableStateOf("system") }
     var showLineNumbers by remember { mutableStateOf(true) }
@@ -639,6 +716,540 @@ fun SettingsScreen() {
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
         )
+    }
+}
+
+// Bottom Navigation Bar
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun BottomNavigationBar(
+    currentScreen: Screen,
+    onScreenSelected: (Screen) -> Unit
+) {
+    NavigationBar {
+        NavigationBarItem(
+            icon = { Icon(Icons.Filled.List, contentDescription = "Files") },
+            label = { Text("Files") },
+            selected = currentScreen == Screen.FILES,
+            onClick = { onScreenSelected(Screen.FILES) }
+        )
+        NavigationBarItem(
+            icon = { Icon(Icons.Filled.CheckCircle, contentDescription = "To-Do") },
+            label = { Text("To-Do") },
+            selected = currentScreen == Screen.TODO,
+            onClick = { onScreenSelected(Screen.TODO) }
+        )
+        NavigationBarItem(
+            icon = { Icon(Icons.Filled.Edit, contentDescription = "QuickNote") },
+            label = { Text("QuickNote") },
+            selected = currentScreen == Screen.QUICKNOTE,
+            onClick = { onScreenSelected(Screen.QUICKNOTE) }
+        )
+        NavigationBarItem(
+            icon = { Icon(Icons.Filled.Menu, contentDescription = "More") },
+            label = { Text("More") },
+            selected = currentScreen == Screen.MORE,
+            onClick = { onScreenSelected(Screen.MORE) }
+        )
+    }
+}
+
+// Top Bars
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun FilesTopBar(
+    onSearchClick: () -> Unit,
+    onSortClick: () -> Unit,
+    onMoreClick: () -> Unit
+) {
+    TopAppBar(
+        title = { Text("Files") },
+        actions = {
+            IconButton(onClick = onSearchClick) {
+                Icon(Icons.Outlined.Search, contentDescription = "Search")
+            }
+            IconButton(onClick = onSortClick) {
+                Icon(Icons.Filled.List, contentDescription = "Sort")
+            }
+            IconButton(onClick = onMoreClick) {
+                Icon(Icons.Outlined.MoreVert, contentDescription = "More")
+            }
+        }
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun TodoTopBar(
+    onSearchClick: () -> Unit,
+    onFilterClick: () -> Unit,
+    onMoreClick: () -> Unit
+) {
+    TopAppBar(
+        title = { Text("To-Do") },
+        actions = {
+            IconButton(onClick = onSearchClick) {
+                Icon(Icons.Outlined.Search, contentDescription = "Search")
+            }
+            IconButton(onClick = onFilterClick) {
+                Icon(Icons.Filled.Search, contentDescription = "Filter")
+            }
+            IconButton(onClick = onMoreClick) {
+                Icon(Icons.Outlined.MoreVert, contentDescription = "More")
+            }
+        }
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun QuickNoteTopBar(
+    onSaveClick: () -> Unit,
+    onMoreClick: () -> Unit
+) {
+    TopAppBar(
+        title = { Text("QuickNote") },
+        actions = {
+            IconButton(onClick = onSaveClick) {
+                Icon(Icons.Filled.Check, contentDescription = "Save")
+            }
+            IconButton(onClick = onMoreClick) {
+                Icon(Icons.Outlined.MoreVert, contentDescription = "More")
+            }
+        }
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun MoreTopBar() {
+    TopAppBar(
+        title = { Text("More") }
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun EditorTopBar(
+    fileName: String,
+    onSaveClick: () -> Unit,
+    onPreviewClick: () -> Unit,
+    onBackClick: () -> Unit
+) {
+    TopAppBar(
+        title = { Text(fileName, maxLines = 1) },
+        navigationIcon = {
+            IconButton(onClick = onBackClick) {
+                Icon(Icons.Outlined.ArrowBack, contentDescription = "Back")
+            }
+        },
+        actions = {
+            IconButton(onClick = onSaveClick) {
+                Icon(Icons.Filled.Check, contentDescription = "Save")
+            }
+            IconButton(onClick = onPreviewClick) {
+                Icon(Icons.Filled.Info, contentDescription = "Preview")
+            }
+        }
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun PreviewTopBar(
+    fileName: String,
+    onEditClick: () -> Unit,
+    onBackClick: () -> Unit
+) {
+    TopAppBar(
+        title = { Text("$fileName (Preview)", maxLines = 1) },
+        navigationIcon = {
+            IconButton(onClick = onBackClick) {
+                Icon(Icons.Outlined.ArrowBack, contentDescription = "Back")
+            }
+        },
+        actions = {
+            IconButton(onClick = onEditClick) {
+                Icon(Icons.Outlined.Edit, contentDescription = "Edit")
+            }
+        }
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun SettingsTopBar(onBackClick: () -> Unit) {
+    TopAppBar(
+        title = { Text("Settings") },
+        navigationIcon = {
+            IconButton(onClick = onBackClick) {
+                Icon(Icons.Outlined.ArrowBack, contentDescription = "Back")
+            }
+        }
+    )
+}
+
+// Screen Composables
+@Composable
+fun FilesScreen(
+    onFileSelected: (String, String) -> Unit,
+    onSettingsClick: () -> Unit
+) {
+    FileBrowserScreen(
+        onFileSelected = onFileSelected,
+        onSettingsClick = onSettingsClick
+    )
+}
+
+@Composable
+fun TodoScreen() {
+    var todoItems by remember { mutableStateOf(listOf<TodoItem>()) }
+    var newTodoText by remember { mutableStateOf("") }
+    var showCompleted by remember { mutableStateOf(true) }
+
+    Column(modifier = Modifier.fillMaxSize()) {
+        // Filter/Sort Row
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 8.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = "To-Do List",
+                style = MaterialTheme.typography.headlineMedium
+            )
+
+            Row {
+                TextButton(onClick = { showCompleted = !showCompleted }) {
+                    Text(if (showCompleted) "Hide Done" else "Show Done")
+                }
+            }
+        }
+
+        // Add new todo
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            OutlinedTextField(
+                value = newTodoText,
+                onValueChange = { newTodoText = it },
+                modifier = Modifier.weight(1f),
+                placeholder = { Text("Add new todo...") },
+                singleLine = true
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Button(
+                onClick = {
+                    if (newTodoText.isNotBlank()) {
+                        val newItem = TodoItem(
+                            id = System.currentTimeMillis().toString(),
+                            text = newTodoText,
+                            completed = false,
+                            priority = null,
+                            projects = emptyList(),
+                            contexts = emptyList(),
+                            dueDate = null
+                        )
+                        todoItems = todoItems + newItem
+                        newTodoText = ""
+                    }
+                }
+            ) {
+                Text("Add")
+            }
+        }
+
+        // Todo list
+        LazyColumn(modifier = Modifier.weight(1f)) {
+            items(todoItems.filter { showCompleted || !it.completed }) { item ->
+                TodoItemRow(
+                    item = item,
+                    onToggleComplete = { completed ->
+                        todoItems = todoItems.map {
+                            if (it.id == item.id) it.copy(completed = completed) else it
+                        }
+                    },
+                    onDelete = {
+                        todoItems = todoItems.filter { it.id != item.id }
+                    }
+                )
+            }
+        }
+    }
+}
+
+data class TodoItem(
+    val id: String,
+    val text: String,
+    val completed: Boolean,
+    val priority: Char?,
+    val projects: List<String>,
+    val contexts: List<String>,
+    val dueDate: String?
+)
+
+@Composable
+fun TodoItemRow(
+    item: TodoItem,
+    onToggleComplete: (Boolean) -> Unit,
+    onDelete: () -> Unit
+) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 4.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Checkbox(
+                checked = item.completed,
+                onCheckedChange = onToggleComplete
+            )
+
+            Spacer(modifier = Modifier.width(12.dp))
+
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = item.text,
+                    style = if (item.completed) {
+                        MaterialTheme.typography.bodyLarge.copy(
+                            textDecoration = TextDecoration.LineThrough
+                        )
+                    } else {
+                        MaterialTheme.typography.bodyLarge
+                    },
+                    color = if (item.completed) {
+                        MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                    } else {
+                        MaterialTheme.colorScheme.onSurface
+                    }
+                )
+
+                // Show projects and contexts
+                val tags = (item.projects.map { "+$it" } + item.contexts.map { "@$it" }).joinToString(" ")
+                if (tags.isNotEmpty()) {
+                    Text(
+                        text = tags,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                }
+            }
+
+            IconButton(onClick = onDelete) {
+                Icon(Icons.Filled.Delete, contentDescription = "Delete")
+            }
+        }
+    }
+}
+
+@Composable
+fun QuickNoteScreen() {
+    var noteContent by remember { mutableStateOf("") }
+    var isPreviewMode by remember { mutableStateOf(false) }
+    val isDarkTheme = isSystemInDarkTheme()
+
+    Column(modifier = Modifier.fillMaxSize()) {
+        // Quick actions toolbar
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 8.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = "QuickNote",
+                style = MaterialTheme.typography.headlineMedium
+            )
+
+            Row {
+                TextButton(onClick = { isPreviewMode = !isPreviewMode }) {
+                    Text(if (isPreviewMode) "Edit" else "Preview")
+                }
+                TextButton(onClick = { /* TODO: Save */ }) {
+                    Text("Save")
+                }
+            }
+        }
+
+        if (isPreviewMode) {
+            // Preview mode
+            val format = remember { FormatRegistry.detectByFilename("quicknote.md") }
+            val htmlContent = remember(noteContent, format, isDarkTheme) {
+                generateHtmlPreview(noteContent, format, isDarkTheme)
+            }
+
+            Text(
+                text = htmlContent,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
+                style = MaterialTheme.typography.bodyMedium
+            )
+        } else {
+            // Edit mode
+            OutlinedTextField(
+                value = noteContent,
+                onValueChange = { noteContent = it },
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 16.dp),
+                placeholder = { Text("Start writing your quick note...") }
+            )
+        }
+    }
+}
+
+@Composable
+fun MoreScreen() {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
+    ) {
+        Text(
+            text = "More Options",
+            style = MaterialTheme.typography.headlineMedium
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Settings option
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            onClick = { /* TODO: Navigate to settings */ }
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(Icons.Filled.Settings, contentDescription = "Settings")
+                Spacer(modifier = Modifier.width(16.dp))
+                Column {
+                    Text("Settings", style = MaterialTheme.typography.bodyLarge)
+                    Text(
+                        "Configure app preferences and behavior",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                    )
+                }
+            }
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        // File browser option
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            onClick = { /* TODO: Open file browser */ }
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(Icons.Filled.List, contentDescription = "File Browser")
+                Spacer(modifier = Modifier.width(16.dp))
+                Column {
+                    Text("File Browser", style = MaterialTheme.typography.bodyLarge)
+                    Text(
+                        "Browse and manage your files",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                    )
+                }
+            }
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        // Search option
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            onClick = { /* TODO: Open search */ }
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(Icons.Filled.Search, contentDescription = "Search")
+                Spacer(modifier = Modifier.width(16.dp))
+                Column {
+                    Text("Search", style = MaterialTheme.typography.bodyLarge)
+                    Text(
+                        "Search through your notes and files",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                    )
+                }
+            }
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        // Backup/Restore option
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            onClick = { /* TODO: Open backup/restore */ }
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(Icons.Filled.Check, contentDescription = "Backup")
+                Spacer(modifier = Modifier.width(16.dp))
+                Column {
+                    Text("Backup & Restore", style = MaterialTheme.typography.bodyLarge)
+                    Text(
+                        "Backup your data or restore from backup",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                    )
+                }
+            }
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        // About option
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            onClick = { /* TODO: Show about dialog */ }
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(Icons.Filled.Info, contentDescription = "About")
+                Spacer(modifier = Modifier.width(16.dp))
+                Column {
+                    Text("About Yole", style = MaterialTheme.typography.bodyLarge)
+                    Text(
+                        "Version 2.15.1 - Text editor for Android, Desktop, iOS & Web",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                    )
+                }
+            }
+        }
     }
 }
 
