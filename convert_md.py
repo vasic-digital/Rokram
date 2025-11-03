@@ -40,9 +40,11 @@ def convert_md_to_html(md_file, html_file, title, nav_home, nav_guides, nav_read
 
 # List of MD files and titles with nav paths
 files = [
+    ('README.md', 'docs/README.html', 'README', 'index.html', 'QUICK_START.html', 'ARCHITECTURE.html', 'style.css'),
+    ('ARCHITECTURE.md', 'docs/ARCHITECTURE.html', 'Architecture', 'index.html', 'README.html', 'QUICK_START.html', 'style.css'),
     ('doc/2023-06-02-csv-readme.md', 'docs/doc/2023-06-02-csv-readme.html', 'CSV Format Guide', '../index.html', 'README.html', '../README.html', '../style.css'),
     ('doc/2020-09-26-vimwiki-sync-plaintext-to-do-and-notes-todotxt-markdown.md', 'docs/doc/2020-09-26-vimwiki-sync-plaintext-to-do-and-notes-todotxt-markdown.html', 'VimWiki Sync Guide', '../index.html', 'README.html', '../README.html', '../style.css'),
-    ('doc/2020-04-04-syncthing-file-sync-setup-how-to-use-with-markor.md', 'docs/doc/2020-04-04-syncthing-file-sync-setup-how-to-use-with-markor.html', 'Syncthing Setup', '../index.html', 'README.html', '../README.html', '../style.css'),
+    ('doc/2020-04-04-syncthing-file-sync-setup-how-to-use-with-markor.md', 'docs/doc/2020-04-04-syncthing-file-sync-setup-how-to-use-markor.html', 'Syncthing Setup', '../index.html', 'README.html', '../README.html', '../style.css'),
     ('doc/2019-07-16-using-markor-to-write-on-an-android-device-plaintextproject.md', 'docs/doc/2019-07-16-using-markor-to-write-on-an-android-device-plaintextproject.html', 'Android Writing Guide', '../index.html', 'README.html', '../README.html', '../style.css'),
     ('doc/2018-05-15-pandoc-vim-markdown-how-i-take-notes-vaughan.md', 'docs/doc/2018-05-15-pandoc-vim-markdown-how-i-take-notes-vaughan.html', 'Pandoc Integration', '../index.html', 'README.html', '../README.html', '../style.css'),
     ('FORMAT_DOCUMENTATION.md', 'docs/FORMAT_DOCUMENTATION.html', 'Format Documentation', 'index.html', 'doc/README.html', 'README.html', 'style.css'),

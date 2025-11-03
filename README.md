@@ -48,6 +48,26 @@ Yole is openly developed free software that accepts community contributions.
 <br/>🔃 Yole is an offline app. It works with sync apps, but they have to do syncing respectively.
 <br/>🔒 Can encrypt your textfiles with AES256. You need to set a password at the settings and use device with appropriate OS version. You can use [jpencconverter](https://gitlab.com/opensource21/jpencconverter) to encrypt/decrypt on desktop. Be aware that only the text is encrypted not pictures or attachments.
 
+## Yole vs Markor: Feature Comparison
+
+Yole is a modern fork of the popular Markor Android text editor, with significant enhancements:
+
+| Feature | Markor | Yole |
+|---------|--------|------|
+| **Platforms** | Android only | Android, Desktop (Windows/macOS/Linux), iOS, Web |
+| **Formats** | 8 formats | 18+ formats (all Markor + 10 new) |
+| **Architecture** | Legacy Android | Modern multi-platform with KMP |
+| **New Formats** | - | AsciiDoc, CSV, Org-mode, LaTeX, reStructuredText, TaskPaper, Textile, Creole, TiddlyWiki, Jupyter, R Markdown |
+| **Performance** | Android optimized | Cross-platform optimized |
+| **Development** | Android-focused | Multi-platform development |
+
+**Key Improvements in Yole:**
+- **Cross-Platform Support**: Native apps for all major platforms
+- **Expanded Format Support**: 10 additional text formats beyond Markor
+- **Modern Architecture**: Kotlin Multiplatform for shared code
+- **Enhanced Testing**: Comprehensive test coverage for all formats
+- **Future-Proof**: Modular design for easy format additions
+
 ## New features in the latest update - Yole v2.15.1 - Modern Android Architecture
 
 ### Modern Android Architecture
