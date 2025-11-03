@@ -362,7 +362,7 @@ public class MainActivity extends YoleBaseActivity implements GsFileBrowserFragm
         // Check if fragment handled back press
         final GsFragmentBase<?, ?> frag = getPosFragment(getCurrentPos());
         if (frag == null || !frag.onBackPressed()) {
-            super.onBackPressed();
+            moveTaskToBack(true);
         }
     }
 
