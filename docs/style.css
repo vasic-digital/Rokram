@@ -35,8 +35,8 @@ body::before {
     left: 0;
     width: 100%;
     height: 100%;
-    background: radial-gradient(circle at 15% 15%, rgba(99, 102, 241, 0.08) 0%, transparent 30%),
-                radial-gradient(circle at 85% 85%, rgba(168, 85, 247, 0.08) 0%, transparent 30%);
+    background: radial-gradient(circle at 15% 15%, rgba(220, 38, 38, 0.08) 0%, transparent 30%),
+                radial-gradient(circle at 85% 85%, rgba(185, 28, 28, 0.08) 0%, transparent 30%);
     z-index: -1;
     pointer-events: none;
 }
@@ -63,14 +63,14 @@ body::before {
     width: 60px;
     height: 60px;
     border-radius: 50%;
-    background: linear-gradient(145deg, #4f46e5, #7c3aed);
+    background: linear-gradient(145deg, #dc2626, #b91c1c);
     border: none;
     color: white;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 6px 20px rgba(79, 70, 229, 0.4);
+    box-shadow: 0 6px 20px rgba(220, 38, 38, 0.4);
     transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
@@ -94,7 +94,7 @@ body::before {
 
 .yole-theme-toggle:hover {
     transform: scale(1.05);
-    box-shadow: 0 8px 25px rgba(79, 70, 229, 0.6);
+    box-shadow: 0 8px 25px rgba(220, 38, 38, 0.6);
 }
 
 .yole-theme-icon {
@@ -162,20 +162,20 @@ body::before {
     width: 150px;
     height: 150px;
     border-radius: 25px;
-    box-shadow: 0 15px 35px rgba(79, 70, 229, 0.3);
+    box-shadow: 0 15px 35px rgba(220, 38, 38, 0.3);
     animation: yole-float 8s ease-in-out infinite;
     border: 6px solid rgba(255, 255, 255, 0.6);
 }
 
 .yole-hero-title {
-    font-size: 5rem;
+    font-size: 4rem;
     font-weight: 800;
-    background: linear-gradient(135deg, #4f46e5, #7c3aed, #ec4899);
+    background: linear-gradient(135deg, #dc2626, #b91c1c, #991b1b);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
     text-align: center;
-    letter-spacing: -2px;
+    letter-spacing: -1px;
     margin: 0;
     position: relative;
 }
@@ -188,7 +188,7 @@ body::before {
     transform: translateX(-50%);
     width: 120px;
     height: 6px;
-    background: linear-gradient(90deg, #4f46e5, #ec4899);
+    background: linear-gradient(90deg, #dc2626, #991b1b);
     border-radius: 3px;
     animation: yole-pulse 2s infinite;
 }
@@ -303,7 +303,7 @@ body::before {
     display: block;
     width: 100px;
     height: 5px;
-    background: linear-gradient(to right, #4f46e5, #ec4899);
+    background: linear-gradient(to right, #dc2626, #991b1b);
     margin: 20px auto 0;
     border-radius: 3px;
     animation: yole-grow-width 1s ease-out forwards;
@@ -349,7 +349,7 @@ body::before {
     left: 0;
     width: 100%;
     height: 6px;
-    background: linear-gradient(to right, #4f46e5, #7c3aed);
+    background: linear-gradient(to right, #dc2626, #b91c1c);
 }
 
 .yole-platform-card:hover {
@@ -367,8 +367,8 @@ body::before {
     border-radius: 50%;
     font-size: 2.5rem;
     color: white;
-    background: linear-gradient(135deg, #4f46e5, #7c3aed);
-    box-shadow: 0 10px 25px rgba(79, 70, 229, 0.3);
+    background: linear-gradient(135deg, #dc2626, #b91c1c);
+    box-shadow: 0 10px 25px rgba(220, 38, 38, 0.3);
 }
 
 .yole-platform-card h3 {
@@ -435,12 +435,12 @@ body::before {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, #4f46e5, #7c3aed);
+    background: linear-gradient(135deg, #dc2626, #b91c1c);
     border-radius: 18px;
     color: white;
     font-size: 2rem;
     margin-bottom: 25px;
-    box-shadow: 0 10px 25px rgba(79, 70, 229, 0.3);
+    box-shadow: 0 10px 25px rgba(220, 38, 38, 0.3);
 }
 
 .yole-feature-card h3 {
@@ -463,7 +463,7 @@ body::before {
 /* Yole Download Section */
 .yole-download-section {
     padding: 120px 0;
-    background: linear-gradient(135deg, #4f46e5, #7c3aed);
+    background: linear-gradient(135deg, #dc2626, #b91c1c);
     color: white;
     text-align: center;
 }
@@ -624,12 +624,12 @@ body::before {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, #4f46e5, #7c3aed);
+    background: linear-gradient(135deg, #dc2626, #b91c1c);
     border-radius: 15px;
     color: white;
     font-size: 1.6rem;
     margin-bottom: 25px;
-    box-shadow: 0 8px 20px rgba(79, 70, 229, 0.25);
+    box-shadow: 0 8px 20px rgba(220, 38, 38, 0.25);
 }
 
 .yole-doc-card h3 {
@@ -685,9 +685,9 @@ body::before {
 }
 
 .yole-social-links a:hover {
-    background: linear-gradient(135deg, #4f46e5, #7c3aed);
+    background: linear-gradient(135deg, #dc2626, #b91c1c);
     transform: translateY(-5px);
-    box-shadow: 0 8px 20px rgba(79, 70, 229, 0.4);
+    box-shadow: 0 8px 20px rgba(220, 38, 38, 0.4);
 }
 
 /* Other pages specific styles */
@@ -720,7 +720,7 @@ nav a::after {
     left: 0;
     width: 0;
     height: 3px;
-    background: linear-gradient(to right, #4f46e5, #7c3aed);
+    background: linear-gradient(to right, #dc2626, #b91c1c);
     border-radius: 2px;
     transition: width 0.4s ease;
 }
@@ -753,7 +753,7 @@ main::before {
     left: 0;
     width: 100%;
     height: 8px;
-    background: linear-gradient(to right, #4f46e5, #ec4899);
+    background: linear-gradient(to right, #dc2626, #991b1b);
 }
 
 h1, h2, h3 {
@@ -775,7 +775,7 @@ h1::after {
     left: 0;
     width: 100px;
     height: 5px;
-    background: linear-gradient(to right, #4f46e5, #ec4899);
+    background: linear-gradient(to right, #dc2626, #991b1b);
     border-radius: 3px;
 }
 
@@ -793,13 +793,13 @@ h3 {
 }
 
 code {
-    background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+    background: linear-gradient(135deg, #fef2f2, #fee2e2);
     padding: 5px 12px;
     border-radius: 8px;
-    font-family: 'Fira Code', 'Courier New', 'Monaco', 'Menlo', monospace;
+    font-family: 'Fira Code', 'Courier New', monospace;
     font-size: 1rem;
-    border: 1px solid rgba(79, 70, 229, 0.25);
-    color: #4f46e5;
+    border: 1px solid rgba(220, 38, 38, 0.25);
+    color: #dc2626;
 }
 
 pre {
@@ -838,8 +838,8 @@ body.yole-dark-mode {
 }
 
 body.yole-dark-mode::before {
-    background: radial-gradient(circle at 15% 15%, rgba(99, 102, 241, 0.1) 0%, transparent 30%),
-                radial-gradient(circle at 85% 85%, rgba(168, 85, 247, 0.1) 0%, transparent 30%);
+    background: radial-gradient(circle at 15% 15%, rgba(113, 29, 33, 0.1) 0%, transparent 30%),
+                radial-gradient(circle at 85% 85%, rgba(69, 10, 10, 0.1) 0%, transparent 30%);
 }
 
 body.yole-dark-mode .yole-subtitle {
@@ -871,6 +871,10 @@ body.yole-dark-mode .yole-platform-card p {
     color: #94a3b8;
 }
 
+body.yole-dark-mode .yole-platform-icon {
+    box-shadow: 0 10px 25px rgba(113, 29, 33, 0.3);
+}
+
 body.yole-dark-mode .yole-features-section {
     background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
 }
@@ -886,6 +890,10 @@ body.yole-dark-mode .yole-feature-card h3 {
 
 body.yole-dark-mode .yole-feature-card p {
     color: #94a3b8;
+}
+
+body.yole-dark-mode .yole-feature-icon {
+    box-shadow: 0 10px 25px rgba(113, 29, 33, 0.3);
 }
 
 body.yole-dark-mode .yole-docs-section {
@@ -904,6 +912,10 @@ body.yole-dark-mode .yole-doc-card h3 {
 
 body.yole-dark-mode .yole-doc-card p {
     color: #94a3b8;
+}
+
+body.yole-dark-mode .yole-doc-icon {
+    box-shadow: 0 8px 20px rgba(113, 29, 33, 0.25);
 }
 
 body.yole-dark-mode .yole-doc-card:hover {
@@ -928,6 +940,19 @@ body.yole-dark-mode .yole-editor-line {
     color: #e2e8f0;
 }
 
+body.yole-dark-mode .yole-theme-toggle {
+    background: linear-gradient(145deg, #711D21, #450a0a);
+    box-shadow: 0 6px 20px rgba(113, 29, 33, 0.4);
+}
+
+body.yole-dark-mode .yole-theme-toggle:hover {
+    box-shadow: 0 8px 25px rgba(113, 29, 33, 0.6);
+}
+
+body.yole-dark-mode .yole-logo {
+    box-shadow: 0 15px 35px rgba(113, 29, 33, 0.3);
+}
+
 body.yole-dark-mode nav {
     background: rgba(15, 23, 42, 0.92);
     border: 1px solid rgba(255, 255, 255, 0.1);
@@ -939,6 +964,10 @@ body.yole-dark-mode nav a {
 
 body.yole-dark-mode nav a:hover {
     background: rgba(255, 255, 255, 0.08);
+}
+
+body.yole-dark-mode .yole-social-links a:hover {
+    box-shadow: 0 8px 20px rgba(113, 29, 33, 0.4);
 }
 
 body.yole-dark-mode main {
