@@ -9,9 +9,13 @@
 
 package digital.vasic.yole.desktop.ui
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import digital.vasic.yole.format.FormatRegistry
@@ -19,13 +23,17 @@ import digital.vasic.yole.format.FormatRegistry
 enum class Screen {
     FILE_BROWSER,
     EDITOR,
-    PREVIEW
+    PREVIEW,
+    SETTINGS
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun YoleApp() {
-    MaterialTheme {
+    val systemInDarkTheme = isSystemInDarkTheme()
+    val colorScheme = if (systemInDarkTheme) darkColorScheme() else lightColorScheme()
+
+    MaterialTheme(colorScheme = colorScheme) {
         Surface(
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
@@ -45,9 +53,9 @@ fun MainScreen() {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Yole Desktop") },
+                title = { Text("Yole") },
                 actions = {
-                    // Navigation buttons
+                    // Navigation buttons with icons
                     TextButton(onClick = { currentScreen = Screen.FILE_BROWSER }) {
                         Text(if (currentScreen == Screen.FILE_BROWSER) "📁 Files" else "Files")
                     }
@@ -56,6 +64,9 @@ fun MainScreen() {
                     }
                     TextButton(onClick = { currentScreen = Screen.PREVIEW }) {
                         Text(if (currentScreen == Screen.PREVIEW) "👁️ Preview" else "Preview")
+                    }
+                    TextButton(onClick = { currentScreen = Screen.SETTINGS }) {
+                        Text(if (currentScreen == Screen.SETTINGS) "⚙️ Settings" else "Settings")
                     }
                 }
             )
@@ -79,6 +90,7 @@ fun MainScreen() {
                     fileName = selectedFile ?: "Untitled",
                     content = fileContent
                 )
+                Screen.SETTINGS -> SettingsScreen()
             }
         }
     }
@@ -172,6 +184,147 @@ fun PreviewScreen(fileName: String, content: String) {
         Text(
             text = previewContent,
             style = MaterialTheme.typography.bodyMedium
+        )
+    }
+}
+
+@Composable
+fun SettingsScreen() {
+    var themeMode by remember { mutableStateOf("system") }
+    var showLineNumbers by remember { mutableStateOf(true) }
+    var autoSave by remember { mutableStateOf(true) }
+
+    Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
+        Text(
+            text = "Settings",
+            style = MaterialTheme.typography.headlineMedium
+        )
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        // Theme settings
+        Text(
+            text = "Appearance",
+            style = MaterialTheme.typography.titleMedium
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            RadioButton(
+                selected = themeMode == "system",
+                onClick = { themeMode = "system" }
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Text("System theme (follows system setting)")
+        }
+
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            RadioButton(
+                selected = themeMode == "light",
+                onClick = { themeMode = "light" }
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Text("Light theme")
+        }
+
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            RadioButton(
+                selected = themeMode == "dark",
+                onClick = { themeMode = "dark" }
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Text("Dark theme")
+        }
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        // Editor settings
+        Text(
+            text = "Editor",
+            style = MaterialTheme.typography.titleMedium
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text("Show line numbers")
+            Switch(
+                checked = showLineNumbers,
+                onCheckedChange = { showLineNumbers = it }
+            )
+        }
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text("Auto-save")
+            Switch(
+                checked = autoSave,
+                onCheckedChange = { autoSave = it }
+            )
+        }
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        // Format settings
+        Text(
+            text = "Formats",
+            style = MaterialTheme.typography.titleMedium
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Text(
+            text = "Supported formats: ${FormatRegistry.formats.size}",
+            style = MaterialTheme.typography.bodyMedium
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        FormatRegistry.formats.take(5).forEach { format ->
+            Text(
+                text = "• ${format.name} (${format.extensions.joinToString(", ")})",
+                style = MaterialTheme.typography.bodySmall,
+                modifier = Modifier.padding(vertical = 2.dp)
+            )
+        }
+
+        if (FormatRegistry.formats.size > 5) {
+            Text(
+                text = "... and ${FormatRegistry.formats.size - 5} more",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+            )
+        }
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        // About
+        Text(
+            text = "About Yole",
+            style = MaterialTheme.typography.titleMedium
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Text(
+            text = "Yole is a cross-platform text editor supporting 18+ markup formats including Markdown, todo.txt, CSV, and more.",
+            style = MaterialTheme.typography.bodyMedium
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Text(
+            text = "Version: 2.15.1",
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
         )
     }
 }

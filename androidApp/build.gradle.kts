@@ -83,6 +83,7 @@ dependencies {
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.lifecycle.compose)
+    implementation(libs.androidx.documentfile)
 
     // Material Design 3
     implementation(libs.compose.material3)
