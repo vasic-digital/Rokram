@@ -325,3 +325,10 @@ class WikitextParser : TextParser {
         val EXTENSIONS = setOf(".wiki", ".wikitext", ".txt")
     }
 }
+
+/**
+ * Register the WikiText parser with the registry
+ */
+fun registerWikitextParser() {
+    ParserRegistry.register(WikitextParser())
+}

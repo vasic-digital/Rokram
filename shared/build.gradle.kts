@@ -8,6 +8,8 @@
  *
  *########################################################*/
 
+import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
+
 plugins {
     kotlin("multiplatform")
     kotlin("plugin.serialization")
@@ -85,7 +87,8 @@ kotlin {
         val commonTest by getting {
             dependencies {
                 implementation(kotlin("test"))
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
+                // kotlinx-coroutines-test doesn't have WASM variant
+                // implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
             }
         }
 
@@ -125,7 +128,7 @@ kotlin {
         //     iosX64Main.dependsOn(this)
         //     iosArm64Main.dependsOn(this)
         //     iosSimulatorArm64Main.dependsOn(this)
-        //     
+        //
         //     dependencies {
         //         implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
         //     }
@@ -153,7 +156,8 @@ kotlin {
         val wasmJsTest by getting {
             dependencies {
                 implementation(kotlin("test-wasm-js"))
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
+                // kotlinx-coroutines-test doesn't have WASM variant
+                // implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
             }
         }
     }

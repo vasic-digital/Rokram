@@ -381,3 +381,10 @@ class CreoleParser : TextParser {
         val EXTENSIONS = setOf(".creole", ".txt")
     }
 }
+
+/**
+ * Register the Creole parser with the registry
+ */
+fun registerCreoleParser() {
+    ParserRegistry.register(CreoleParser())
+}

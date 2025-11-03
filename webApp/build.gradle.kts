@@ -1,4 +1,4 @@
-/*#######################################################
+ /*#######################################################
  *
  * SPDX-FileCopyrightText: 2025 Milos Vasic
  * SPDX-License-Identifier: Apache-2.0
@@ -8,11 +8,15 @@
  *
  *########################################################*/
 
+import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
+
 plugins {
     id("org.jetbrains.kotlin.multiplatform")
+    id("org.jetbrains.kotlin.plugin.compose")
     id("org.jetbrains.compose")
 }
 
+@OptIn(ExperimentalWasmDsl::class)
 kotlin {
     wasmJs {
         moduleName = "yole-web"
@@ -21,7 +25,6 @@ kotlin {
                 outputFileName = "yole-web.js"
             }
         }
-        binaries.executable()
     }
 
     sourceSets {
@@ -43,17 +46,15 @@ kotlin {
         val wasmJsTest by getting {
             dependencies {
                 implementation(kotlin("test-wasm-js"))
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
+                // kotlinx-coroutines-test doesn't have WASM variant
+                // implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
             }
         }
     }
 }
 
-compose.experimental {
-    web.application {}
-}
-
 // Dev server configuration
+@OptIn(ExperimentalWasmDsl::class)
 kotlin {
     wasmJs {
         browser {
@@ -66,15 +67,9 @@ kotlin {
     }
 }
 
-// Configure PWA features
-tasks.register<Copy>("copyWebResources") {
-    from("src/wasmJsMain/resources")
-    into("build/distributions")
-}
-
-tasks.named("wasmJsBrowserDistribution") {
-    dependsOn("copyWebResources")
-}
+// tasks.named("wasmJsBrowserDistribution") {
+//     dependsOn("copyWebResources")
+// }
 
 // Copy Logo.png to resources
 tasks.register<Copy>("copyLogo") {
@@ -83,5 +78,9 @@ tasks.register<Copy>("copyLogo") {
 }
 
 tasks.named("compileKotlinWasmJs") {
+    dependsOn("copyLogo")
+}
+
+tasks.named("wasmJsProcessResources") {
     dependsOn("copyLogo")
 }

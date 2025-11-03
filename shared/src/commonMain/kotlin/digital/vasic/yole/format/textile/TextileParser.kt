@@ -274,3 +274,10 @@ class TextileParser : TextParser {
         val EXTENSIONS = setOf(".textile", ".txt")
     }
 }
+
+/**
+ * Register the Textile parser with the registry
+ */
+fun registerTextileParser() {
+    ParserRegistry.register(TextileParser())
+}

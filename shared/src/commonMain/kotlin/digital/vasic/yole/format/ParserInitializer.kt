@@ -9,27 +9,28 @@
  *########################################################*/
 package digital.vasic.yole.format
 
-import digital.vasic.yole.format.asciidoc.registerAsciidocParser
-import digital.vasic.yole.format.binary.registerBinaryParser
-import digital.vasic.yole.format.creole.registerCreoleParser
-import digital.vasic.yole.format.csv.registerCsvParser
-import digital.vasic.yole.format.jupyter.registerJupyterParser
-import digital.vasic.yole.format.keyvalue.registerKeyValueParser
-import digital.vasic.yole.format.latex.registerLatexParser
-import digital.vasic.yole.format.markdown.registerMarkdownParser
-import digital.vasic.yole.format.orgmode.registerOrgModeParser
-import digital.vasic.yole.format.plaintext.registerPlaintextParser
-import digital.vasic.yole.format.restructuredtext.registerRestructuredTextParser
-import digital.vasic.yole.format.rmarkdown.registerRMarkdownParser
-import digital.vasic.yole.format.taskpaper.registerTaskpaperParser
-import digital.vasic.yole.format.textile.registerTextileParser
-import digital.vasic.yole.format.tiddlywiki.registerTiddlyWikiParser
-import digital.vasic.yole.format.todotxt.registerTodoTxtParser
-import digital.vasic.yole.format.wikitext.registerWikitextParser
+import digital.vasic.yole.format.*
+import digital.vasic.yole.format.plaintext.PlaintextParser
+import digital.vasic.yole.format.markdown.MarkdownParser
+import digital.vasic.yole.format.todotxt.TodoTxtParser
+import digital.vasic.yole.format.csv.CsvParser
+import digital.vasic.yole.format.wikitext.WikitextParser
+import digital.vasic.yole.format.creole.CreoleParser
+import digital.vasic.yole.format.tiddlywiki.TiddlyWikiParser
+import digital.vasic.yole.format.latex.LatexParser
+import digital.vasic.yole.format.asciidoc.AsciidocParser
+import digital.vasic.yole.format.orgmode.OrgModeParser
+import digital.vasic.yole.format.restructuredtext.RestructuredTextParser
+import digital.vasic.yole.format.keyvalue.KeyValueParser
+import digital.vasic.yole.format.taskpaper.TaskpaperParser
+import digital.vasic.yole.format.textile.TextileParser
+import digital.vasic.yole.format.jupyter.JupyterParser
+import digital.vasic.yole.format.rmarkdown.RMarkdownParser
+import digital.vasic.yole.format.binary.BinaryParser
 
 /**
  * Initializes and registers all format parsers.
- * 
+ *
  * This object provides methods to register all available format parsers with the
  * ParserRegistry. It also provides utilities to check initialization status and
  * get statistics about registered parsers.
@@ -38,21 +39,21 @@ import digital.vasic.yole.format.wikitext.registerWikitextParser
  * ```kotlin
  * // Initialize all parsers
  * ParserInitializer.registerAllParsers()
- * 
+ *
  * // Check initialization status
  * val status = ParserInitializer.getInitializationStatus()
  * println(status["Markdown"]) // true
- * 
+ *
  * // Get parser statistics
  * val stats = ParserInitializer.getParserStatistics()
  * println(stats["total_parsers"]) // 15
  * ```
  */
 object ParserInitializer {
-    
+
     /**
      * Register all available parsers with the ParserRegistry.
-     * 
+     *
      * This method should be called during application initialization to ensure
      * all format parsers are available for use. It registers parsers in a logical
      * order: core formats first, then wiki formats, technical formats, specialized
@@ -62,40 +63,40 @@ object ParserInitializer {
      * ```kotlin
      * // In application startup
      * ParserInitializer.registerAllParsers()
-     * 
+     *
      * // Now parsers are available
      * val parser = ParserRegistry.getParser("markdown")
      * ```
      */
     fun registerAllParsers() {
         // Core formats
-        registerPlaintextParser()
-        registerMarkdownParser()
-        registerTodoTxtParser()
-        registerCsvParser()
-        
+        ParserRegistry.register(PlaintextParser())
+        ParserRegistry.register(MarkdownParser())
+        ParserRegistry.register(TodoTxtParser())
+        ParserRegistry.register(CsvParser())
+
         // Wiki formats
-        registerWikitextParser()
-        registerCreoleParser()
-        registerTiddlyWikiParser()
-        
+        ParserRegistry.register(WikitextParser())
+        ParserRegistry.register(CreoleParser())
+        ParserRegistry.register(TiddlyWikiParser())
+
         // Technical formats
-        registerLatexParser()
-        registerAsciidocParser()
-        registerOrgModeParser()
-        registerRestructuredTextParser()
-        
+        ParserRegistry.register(LatexParser())
+        ParserRegistry.register(AsciidocParser())
+        ParserRegistry.register(OrgModeParser())
+        ParserRegistry.register(RestructuredTextParser())
+
         // Specialized formats
-        registerKeyValueParser()
-        registerTaskpaperParser()
-        registerTextileParser()
-        
+        ParserRegistry.register(KeyValueParser())
+        ParserRegistry.register(TaskpaperParser())
+        ParserRegistry.register(TextileParser())
+
         // Data science formats
-        registerJupyterParser()
-        registerRMarkdownParser()
-        
+        ParserRegistry.register(JupyterParser())
+        ParserRegistry.register(RMarkdownParser())
+
         // Binary format
-        registerBinaryParser()
+        ParserRegistry.register(BinaryParser())
     }
     
     /**

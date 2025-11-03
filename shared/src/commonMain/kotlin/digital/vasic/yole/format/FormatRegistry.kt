@@ -40,133 +40,131 @@ object FormatRegistry {
     val formats: List<TextFormat> = listOf(
         // Core formats
         TextFormat(
-            id = ID_PLAINTEXT,
-            name = "Plain Text",
-            extensions = listOf("txt", "text", "log"),
-            mimeTypes = listOf("text/plain"),
-            description = "Plain text without formatting"
-        ),
-        TextFormat(
             id = ID_MARKDOWN,
             name = "Markdown",
-            extensions = listOf("md", "markdown", "mdown"),
-            mimeTypes = listOf("text/markdown"),
-            description = "Lightweight markup language"
+            defaultExtension = ".md",
+            extensions = listOf(".md", ".markdown", ".mdown", ".mkd"),
+            detectionPatterns = listOf("^#+ ", "^\\[.*\\]\\(.*\\)", "^\\*\\*.*\\*\\*")
+        ),
+        TextFormat(
+            id = ID_PLAINTEXT,
+            name = "Plain Text",
+            defaultExtension = ".txt",
+            extensions = listOf(".txt", ".text", ".log")
         ),
         TextFormat(
             id = ID_TODOTXT,
             name = "Todo.txt",
-            extensions = listOf("txt"),
-            mimeTypes = listOf("text/plain"),
-            description = "Simple todo list format"
+            defaultExtension = ".txt",
+            extensions = listOf(".txt"),
+            detectionPatterns = listOf("^\\(([A-Z])\\) ", "^x \\d{4}-\\d{2}-\\d{2}")
         ),
         TextFormat(
             id = ID_CSV,
             name = "CSV",
-            extensions = listOf("csv"),
-            mimeTypes = listOf("text/csv"),
-            description = "Comma-separated values"
+            defaultExtension = ".csv",
+            extensions = listOf(".csv"),
+            detectionPatterns = listOf("^.*,.*,.*$")
         ),
-        
+
         // Wiki formats
         TextFormat(
             id = ID_WIKITEXT,
             name = "WikiText",
-            extensions = listOf("wiki", "wikitext"),
-            mimeTypes = listOf("text/plain"),
-            description = "MediaWiki markup language"
-        ),
-        TextFormat(
-            id = ID_CREOLE,
-            name = "Creole",
-            extensions = listOf("creole"),
-            mimeTypes = listOf("text/plain"),
-            description = "Universal wiki markup"
-        ),
-        TextFormat(
-            id = ID_TIDDLYWIKI,
-            name = "TiddlyWiki",
-            extensions = listOf("tid", "tiddly"),
-            mimeTypes = listOf("text/plain"),
-            description = "TiddlyWiki markup"
-        ),
-        
-        // Technical formats
-        TextFormat(
-            id = ID_LATEX,
-            name = "LaTeX",
-            extensions = listOf("tex", "latex"),
-            mimeTypes = listOf("text/x-tex"),
-            description = "Document preparation system"
-        ),
-        TextFormat(
-            id = ID_ASCIIDOC,
-            name = "AsciiDoc",
-            extensions = listOf("adoc", "asciidoc"),
-            mimeTypes = listOf("text/asciidoc"),
-            description = "Lightweight markup for technical docs"
+            defaultExtension = ".wiki",
+            extensions = listOf(".wiki", ".wikitext"),
+            detectionPatterns = listOf("^==+ .* ==+$", "^\\[\\[.*\\]\\]")
         ),
         TextFormat(
             id = ID_ORGMODE,
             name = "Org Mode",
-            extensions = listOf("org"),
-            mimeTypes = listOf("text/org"),
-            description = "Emacs Org Mode format"
+            defaultExtension = ".org",
+            extensions = listOf(".org"),
+            detectionPatterns = listOf("^\\* ", "^#\\+")
+        ),
+        TextFormat(
+            id = ID_CREOLE,
+            name = "Creole",
+            defaultExtension = ".creole",
+            extensions = listOf(".creole"),
+            detectionPatterns = listOf("^=+ ", "^\\*\\* ")
+        ),
+        TextFormat(
+            id = ID_TIDDLYWIKI,
+            name = "TiddlyWiki",
+            defaultExtension = ".tid",
+            extensions = listOf(".tid", ".tiddly"),
+            detectionPatterns = listOf("^!+ ", "^title: ")
+        ),
+
+        // Technical formats
+        TextFormat(
+            id = ID_LATEX,
+            name = "LaTeX",
+            defaultExtension = ".tex",
+            extensions = listOf(".tex", ".latex"),
+            detectionPatterns = listOf("\\\\documentclass", "\\\\begin\\{document\\}")
+        ),
+        TextFormat(
+            id = ID_ASCIIDOC,
+            name = "AsciiDoc",
+            defaultExtension = ".adoc",
+            extensions = listOf(".adoc", ".asciidoc"),
+            detectionPatterns = listOf("^= ", "^== ")
         ),
         TextFormat(
             id = ID_RESTRUCTUREDTEXT,
             name = "reStructuredText",
-            extensions = listOf("rst", "rest"),
-            mimeTypes = listOf("text/x-rst"),
-            description = "Python documentation format"
+            defaultExtension = ".rst",
+            extensions = listOf(".rst", ".rest"),
+            detectionPatterns = listOf("^=+$", "^-+$", "^\\.\\. ")
         ),
-        
+
         // Specialized formats
         TextFormat(
             id = ID_KEYVALUE,
             name = "Key-Value",
-            extensions = listOf("keyvalue", "properties", "ini"),
-            mimeTypes = listOf("text/plain"),
-            description = "Key-value configuration format"
+            defaultExtension = ".ini",
+            extensions = listOf(".keyvalue", ".properties", ".ini"),
+            detectionPatterns = listOf("^[a-zA-Z_]+\\s*=", "^\\[.*\\]$")
         ),
         TextFormat(
             id = ID_TASKPAPER,
             name = "TaskPaper",
-            extensions = listOf("taskpaper"),
-            mimeTypes = listOf("text/plain"),
-            description = "Simple task management format"
+            defaultExtension = ".taskpaper",
+            extensions = listOf(".taskpaper"),
+            detectionPatterns = listOf("^\\t- ", "^.*:$")
         ),
         TextFormat(
             id = ID_TEXTILE,
             name = "Textile",
-            extensions = listOf("textile"),
-            mimeTypes = listOf("text/plain"),
-            description = "Lightweight markup language"
+            defaultExtension = ".textile",
+            extensions = listOf(".textile"),
+            detectionPatterns = listOf("^h[1-6]\\. ", "^\\*+ ")
         ),
-        
+
         // Data science formats
         TextFormat(
             id = ID_JUPYTER,
             name = "Jupyter Notebook",
-            extensions = listOf("ipynb"),
-            mimeTypes = listOf("application/x-ipynb+json"),
-            description = "Jupyter notebook format"
+            defaultExtension = ".ipynb",
+            extensions = listOf(".ipynb"),
+            detectionPatterns = listOf("\"nbformat\":", "\"cell_type\":")
         ),
         TextFormat(
             id = ID_RMARKDOWN,
             name = "R Markdown",
-            extensions = listOf("rmd", "rmarkdown"),
-            mimeTypes = listOf("text/markdown"),
-            description = "R statistical computing with Markdown"
+            defaultExtension = ".rmd",
+            extensions = listOf(".rmd", ".rmarkdown"),
+            detectionPatterns = listOf("```\\{r", "^---$")
         ),
-        
+
         // Binary format
         TextFormat(
             id = ID_BINARY,
             name = "Binary",
-            extensions = emptyList(),
-            mimeTypes = listOf("application/octet-stream"),
-            description = "Binary file format"
+            defaultExtension = ".bin",
+            extensions = emptyList()
         )
     )
 
@@ -188,7 +186,7 @@ object FormatRegistry {
 
     /**
      * Get format by file extension.
-     * 
+     *
      * @param extension The file extension (with or without dot)
      * @return The TextFormat if found, null otherwise
      *
@@ -198,57 +196,25 @@ object FormatRegistry {
      * val format2 = FormatRegistry.getByExtension(".markdown")
      * ```
      */
-    fun getByExtension(extension: String): TextFormat? {
-        val cleanExtension = extension.trim().lowercase()
-        return formats.firstOrNull { format ->
-            format.extensions.any { it.equals(cleanExtension, ignoreCase = true) }
-        }
-    }
+     fun getByExtension(extension: String): TextFormat? {
+         val cleanExtension = extension.trim().lowercase().let { if (it.startsWith(".")) it else ".$it" }
+         return formats.firstOrNull { format ->
+             format.extensions.any { it.equals(cleanExtension, ignoreCase = true) }
+         }
+     }
 
-    /**
-     * Get format by MIME type.
-     * 
-     * @param mimeType The MIME type to look up
-     * @return The TextFormat if found, null otherwise
-     *
-     * @example
-     * ```kotlin
-     * val format = FormatRegistry.getByMimeType("text/markdown")
-     * ```
-     */
-    fun getByMimeType(mimeType: String): TextFormat? {
-        val cleanMimeType = mimeType.trim().lowercase()
-        return formats.firstOrNull { format ->
-            format.mimeTypes.any { it.equals(cleanMimeType, ignoreCase = true) }
-        }
-    }
 
-    /**
-     * Detect format by file extension with fallback to plain text.
-     * 
-     * Unlike getByExtension(), this method never returns null and will fall back
-     * to plain text format if the extension is not recognized.
-     *
-     * @param extension The file extension (with or without dot)
-     * @return A TextFormat (never null, falls back to plain text)
-     *
-     * @example
-     * ```kotlin
-     * val format = FormatRegistry.detectByExtension("unknown")
-     * // Returns plain text format
-     * ```
-     */
-    fun detectByExtension(extension: String): TextFormat {
-        return getByExtension(extension) ?: formats.first { it.id == ID_PLAINTEXT }
-    }
+
+
 
     /**
      * Detect format by file content analysis.
-     * 
+     *
      * This method analyzes the actual content to determine the most likely format.
      * It checks for format-specific signatures and patterns in the text.
-     * 
+     *
      * @param content The content to analyze
+     * @param maxLines Maximum number of lines to analyze (default: 10)
      * @return The detected TextFormat, or null if no specific format is detected
      *
      * @example
@@ -258,62 +224,22 @@ object FormatRegistry {
      * // Returns Markdown format
      * ```
      */
-    fun detectByContent(content: String): TextFormat? {
+    fun detectByContent(content: String, maxLines: Int = 10): TextFormat? {
         if (content.isEmpty()) return null
 
-        // Check for format-specific signatures
-        return when {
-            // Markdown detection
-            content.contains("```") || content.contains("# ") || 
-            content.contains("**") || content.contains("* ") -> getById(ID_MARKDOWN)
-            
-            // Todo.txt detection
-            content.lines().any { line ->
-                line.matches(Regex("^[xX]\\s.*|^\\d{4}-\\d{2}-\\d{2}.*"))
-            } -> getById(ID_TODOTXT)
-            
-            // CSV detection
-            content.lines().take(5).any { line ->
-                line.split(',').size > 1 && line.split(',').all { it.isNotBlank() }
-            } -> getById(ID_CSV)
-            
-            // LaTeX detection
-            content.contains("\\documentclass") || content.contains("\\begin{document}") -> 
-                getById(ID_LATEX)
-            
-            // AsciiDoc detection
-            content.contains("= ") && content.lines().first().startsWith("=") -> 
-                getById(ID_ASCIIDOC)
-            
-            // Org Mode detection
-            content.contains("* ") && content.lines().any { it.startsWith("* ") } -> 
-                getById(ID_ORGMODE)
-            
-            // reStructuredText detection
-            content.contains("====") || content.contains("----") -> 
-                getById(ID_RESTRUCTUREDTEXT)
-            
-            // Key-Value detection
-            content.lines().take(10).any { line ->
-                line.matches(Regex("^[a-zA-Z_][a-zA-Z0-9_]*\\s*=\\s*.*"))
-            } -> getById(ID_KEYVALUE)
-            
-            // TaskPaper detection
-            content.contains("- ") && content.lines().any { it.startsWith("- ") } -> 
-                getById(ID_TASKPAPER)
-            
-            // WikiText detection
-            content.contains("[[") && content.contains("]]") -> 
-                getById(ID_WIKITEXT)
-            
-            // Default to plain text
-            else -> getById(ID_PLAINTEXT)
+        val lines = content.lines().take(maxLines)
+        val sampleText = lines.joinToString("\n")
+
+        return formats.firstOrNull { format ->
+            format.detectionPatterns.any { pattern ->
+                Regex(pattern, RegexOption.MULTILINE).containsMatchIn(sampleText)
+            }
         }
     }
 
     /**
      * Get all formats that support a given extension.
-     * 
+     *
      * Unlike getByExtension(), this method returns all formats that claim to
      * support the extension, which can be useful when multiple formats share
      * the same extension (e.g., .txt for both plain text and Todo.txt).
@@ -327,12 +253,12 @@ object FormatRegistry {
      * // May return both plain text and Todo.txt formats
      * ```
      */
-    fun getFormatsByExtension(extension: String): List<TextFormat> {
-        val cleanExtension = extension.trim().lowercase()
-        return formats.filter { format ->
-            format.extensions.any { it.equals(cleanExtension, ignoreCase = true) }
-        }
-    }
+     fun getFormatsByExtension(extension: String): List<TextFormat> {
+         val cleanExtension = extension.trim().lowercase().let { if (it.startsWith(".")) it else ".$it" }
+         return formats.filter { format ->
+             format.extensions.any { it.equals(cleanExtension, ignoreCase = true) }
+         }
+     }
 
     /**
      * Check if a format is supported by the registry.
@@ -367,7 +293,7 @@ object FormatRegistry {
 
     /**
      * Get all supported file extensions.
-     * 
+     *
      * @return List of all unique file extensions supported by any format
      *
      * @example
@@ -379,6 +305,68 @@ object FormatRegistry {
     fun getAllExtensions(): List<String> {
         return formats.flatMap { it.extensions }.distinct()
     }
+
+    /**
+     * Detect format by file extension with fallback to plain text.
+     *
+     * Unlike getByExtension(), this method never returns null and will fall back
+     * to plain text format if the extension is not recognized.
+     *
+     * @param extension The file extension (with or without dot)
+     * @return A TextFormat (never null, falls back to plain text)
+     *
+     * @example
+     * ```kotlin
+     * val format = FormatRegistry.detectByExtension("unknown")
+     * // Returns plain text format
+     * ```
+     */
+     fun detectByExtension(extension: String): TextFormat {
+         val cleanExtension = extension.trim().lowercase().let { if (it.startsWith(".")) it else ".$it" }
+         return formats.firstOrNull { format ->
+             format.extensions.any { it.equals(cleanExtension, ignoreCase = true) }
+         } ?: formats.first { it.id == ID_PLAINTEXT }
+     }
+
+    /**
+     * Detect format by filename.
+     *
+     * @param filename The filename to analyze
+     * @return The detected TextFormat
+     *
+     * @example
+     * ```kotlin
+     * val format = FormatRegistry.detectByFilename("document.md")
+     * // Returns Markdown format
+     * ```
+     */
+     fun detectByFilename(filename: String): TextFormat {
+         val extension = filename.substringAfterLast('.', "")
+         return if (extension.isNotEmpty()) {
+             detectByExtension(extension)
+         } else {
+             formats.first { it.id == ID_PLAINTEXT }
+         }
+     }
+
+    /**
+     * Check if a file extension is supported.
+     *
+     * @param extension The file extension to check (with or without dot)
+     * @return true if the extension is supported, false otherwise
+     *
+     * @example
+     * ```kotlin
+     * val isSupported = FormatRegistry.isExtensionSupported(".md")
+     * // Returns true
+     * ```
+     */
+     fun isExtensionSupported(extension: String): Boolean {
+         val cleanExtension = extension.trim().lowercase().let { if (it.startsWith(".")) it else ".$it" }
+         return formats.any { format ->
+             format.extensions.any { it.equals(cleanExtension, ignoreCase = true) }
+         }
+     }
 
     // Format ID constants
     const val ID_UNKNOWN = "unknown"

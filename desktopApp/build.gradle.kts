@@ -10,22 +10,27 @@
 
 plugins {
     id("org.jetbrains.kotlin.jvm")
+    id("org.jetbrains.kotlin.plugin.compose")
     id("org.jetbrains.compose")
 }
 
 kotlin {
-    jvmToolchain(11)
+    jvmToolchain(21)
 }
 
 dependencies {
     implementation(project(":shared"))
-    
+
     // Compose Desktop
     implementation(compose.desktop.currentOs)
-    
+    implementation(compose.foundation)
+    implementation(compose.material3)
+    implementation(compose.ui)
+    implementation(compose.components.resources)
+
     // Kotlinx Coroutines
     implementation(libs.kotlinx.coroutines.core)
-    
+
     // Testing
     testImplementation(libs.junit)
 }

@@ -18,8 +18,8 @@ class FormatRegistryTest {
 
     @Test
     fun testFormatCount() {
-        // Should have all 18 formats (17 + unknown)
-        assertTrue(FormatRegistry.formats.size >= 18, "Expected at least 18 formats")
+        // Should have all 17 supported formats
+        assertEquals(17, FormatRegistry.formats.size, "Expected exactly 17 formats")
     }
 
     @Test
@@ -63,7 +63,7 @@ class FormatRegistryTest {
     @Test
     fun testDetectByFilenameWithoutExtension() {
         val format = FormatRegistry.detectByFilename("README")
-        assertEquals(TextFormat.ID_UNKNOWN, format.id)
+        assertEquals(TextFormat.ID_PLAINTEXT, format.id)
     }
 
     @Test
@@ -205,9 +205,7 @@ class FormatRegistryTest {
         // More specific formats should come before more general ones
         val markdownIndex = FormatRegistry.formats.indexOfFirst { it.id == TextFormat.ID_MARKDOWN }
         val plaintextIndex = FormatRegistry.formats.indexOfFirst { it.id == TextFormat.ID_PLAINTEXT }
-        val unknownIndex = FormatRegistry.formats.indexOfFirst { it.id == TextFormat.ID_UNKNOWN }
 
         assertTrue(markdownIndex < plaintextIndex, "Markdown should come before plaintext")
-        assertTrue(plaintextIndex < unknownIndex, "Plaintext should come before unknown")
     }
 }

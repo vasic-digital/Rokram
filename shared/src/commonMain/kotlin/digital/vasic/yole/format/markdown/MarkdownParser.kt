@@ -454,3 +454,10 @@ class MarkdownParser : TextParser {
         val EXTENSIONS = setOf(".md", ".markdown", ".mdown", ".mkd")
     }
 }
+
+/**
+ * Register the Markdown parser with the registry
+ */
+fun registerMarkdownParser() {
+    ParserRegistry.register(MarkdownParser())
+}

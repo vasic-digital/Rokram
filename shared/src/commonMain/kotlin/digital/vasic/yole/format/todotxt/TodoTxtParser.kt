@@ -387,6 +387,13 @@ class TodoTxtParser : TextParser {
 }
 
 /**
+ * Register the Todo.txt parser with the registry
+ */
+fun registerTodoTxtParser() {
+    ParserRegistry.register(TodoTxtParser())
+}
+
+/**
  * Get current date in YYYY-MM-DD format.
  * 
  * This is a platform-specific function implemented via expect/actual

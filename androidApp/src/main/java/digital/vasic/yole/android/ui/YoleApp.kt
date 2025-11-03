@@ -15,7 +15,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import digital.vasic.yole.shared.format.FormatRegistry
+import digital.vasic.yole.format.FormatRegistry
 
 @Composable
 fun YoleApp() {

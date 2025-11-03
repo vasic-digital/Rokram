@@ -216,6 +216,13 @@ class RMarkdownParser : TextParser {
     }
 }
 
+/**
+ * Register the R Markdown parser with the registry
+ */
+fun registerRMarkdownParser() {
+    ParserRegistry.register(RMarkdownParser())
+}
+
 data class CodeChunk(
     val language: String,
     val code: String,

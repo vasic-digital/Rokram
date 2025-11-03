@@ -305,3 +305,10 @@ class TaskpaperParser : TextParser {
         val EXTENSIONS = setOf(".taskpaper", ".todo", ".txt")
     }
 }
+
+/**
+ * Register the TaskPaper parser with the registry
+ */
+fun registerTaskpaperParser() {
+    ParserRegistry.register(TaskpaperParser())
+}

@@ -246,6 +246,13 @@ class RestructuredTextParser : TextParser {
     }
 }
 
+/**
+ * Register the reStructuredText parser with the registry
+ */
+fun registerRestructuredTextParser() {
+    ParserRegistry.register(RestructuredTextParser())
+}
+
 data class RstSection(
     val level: Int,
     val title: String,

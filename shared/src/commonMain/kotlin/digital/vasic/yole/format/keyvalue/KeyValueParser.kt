@@ -298,3 +298,10 @@ class KeyValueParser : TextParser {
         val EXTENSIONS = setOf(".yml", ".yaml", ".toml", ".vcf", ".ics", ".ini", ".json", ".zim", ".properties")
     }
 }
+
+/**
+ * Register the Key-Value parser with the registry
+ */
+fun registerKeyValueParser() {
+    ParserRegistry.register(KeyValueParser())
+}

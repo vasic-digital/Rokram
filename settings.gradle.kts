@@ -24,7 +24,7 @@ pluginManagement {
 }
 
 dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositoriesMode.set(RepositoriesMode.PREFER_SETTINGS)
     repositories {
         google {
             content {
@@ -36,6 +36,30 @@ dependencyResolutionManagement {
         mavenCentral()
         maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
         maven("https://jitpack.io")
+        // Node.js distributions for Kotlin/JS and Kotlin/Wasm
+        ivy("https://nodejs.org/dist") {
+            patternLayout {
+                artifact("v[revision]/[artifact]-v[revision]-[classifier].[ext]")
+            }
+            metadataSources {
+                artifact()
+            }
+            content {
+                includeModule("org.nodejs", "node")
+            }
+        }
+        // Yarn distributions for Kotlin/JS and Kotlin/Wasm
+        ivy("https://github.com/yarnpkg/yarn/releases/download") {
+            patternLayout {
+                artifact("v[revision]/[artifact]-v[revision].tar.gz")
+            }
+            metadataSources {
+                artifact()
+            }
+            content {
+                includeModule("com.yarnpkg", "yarn")
+            }
+        }
     }
 }
 
@@ -45,27 +69,10 @@ rootProject.name = "Yole"
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 // Existing Android modules
-include(":app")
 include(":core")
 include(":commons")
 
-// Format modules
-include(":format-markdown")
-include(":format-todotxt")
-include(":format-csv")
-include(":format-wikitext")
-include(":format-keyvalue")
-include(":format-asciidoc")
-include(":format-orgmode")
-include(":format-plaintext")
-include(":format-latex")
-include(":format-restructuredtext")
-include(":format-taskpaper")
-include(":format-textile")
-include(":format-creole")
-include(":format-tiddlywiki")
-include(":format-jupyter")
-include(":format-rmarkdown")
+// Format modules removed as they were for legacy app
 
 // Kotlin Multiplatform modules
 include(":shared")

@@ -255,3 +255,10 @@ class PlaintextParser : TextParser {
         )
     }
 }
+
+/**
+ * Register the Plaintext parser with the registry
+ */
+fun registerPlaintextParser() {
+    ParserRegistry.register(PlaintextParser())
+}

@@ -258,6 +258,13 @@ class OrgModeParser : TextParser {
     }
 }
 
+/**
+ * Register the Org Mode parser with the registry
+ */
+fun registerOrgModeParser() {
+    ParserRegistry.register(OrgModeParser())
+}
+
 data class OrgHeading(
     val level: Int,
     val title: String,

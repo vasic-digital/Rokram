@@ -253,8 +253,8 @@ class CsvParser : TextParser {
                     } else {
                         // Toggle quote state
                         inQuotes = !inQuotes
-                    }
-                }
+    }
+}
 
                 // Delimiter (when not in quotes)
                 char == delimiter && !inQuotes -> {
@@ -265,8 +265,15 @@ class CsvParser : TextParser {
                 // Regular character
                 else -> {
                     currentField.append(char)
-                }
-            }
+    }
+}
+
+/**
+ * Register the CSV parser with the registry
+ */
+fun registerCsvParser() {
+    ParserRegistry.register(CsvParser())
+}
 
             i++
         }

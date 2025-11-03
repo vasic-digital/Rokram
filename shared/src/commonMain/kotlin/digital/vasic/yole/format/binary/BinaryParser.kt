@@ -228,3 +228,10 @@ class BinaryParser : TextParser {
             .replace("'", "&#39;")
     }
 }
+
+/**
+ * Register the Binary parser with the registry
+ */
+fun registerBinaryParser() {
+    ParserRegistry.register(BinaryParser())
+}

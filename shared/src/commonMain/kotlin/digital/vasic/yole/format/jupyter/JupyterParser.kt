@@ -234,6 +234,13 @@ class JupyterParser : TextParser {
     }
 }
 
+/**
+ * Register the Jupyter parser with the registry
+ */
+fun registerJupyterParser() {
+    ParserRegistry.register(JupyterParser())
+}
+
 data class JupyterNotebook(
     val cells: List<NotebookCell>,
     val kernel: String,

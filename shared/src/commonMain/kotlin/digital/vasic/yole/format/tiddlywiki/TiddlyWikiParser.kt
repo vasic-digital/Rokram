@@ -469,3 +469,10 @@ class TiddlyWikiParser : TextParser {
         val EXTENSIONS = setOf(".tid", ".tiddler")
     }
 }
+
+/**
+ * Register the TiddlyWiki parser with the registry
+ */
+fun registerTiddlyWikiParser() {
+    ParserRegistry.register(TiddlyWikiParser())
+}
