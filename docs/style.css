@@ -295,9 +295,7 @@ body::before {
     margin-bottom: 60px;
     color: #1f2937;
     position: relative;
-    display: inline-block;
-    left: 50%;
-    transform: translateX(-50%);
+    display: block;
 }
 
 .yole-section-heading::after {
