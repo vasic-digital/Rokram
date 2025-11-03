@@ -25,8 +25,8 @@ android {
     defaultConfig {
         resValue "string", "manifest_package_id", "digital.vasic.yole"
         applicationId "digital.vasic.yole"
-        versionName "2.15.1"
-        versionCode 160
+        versionName "1.0.0"
+        versionCode 1
 
         multiDexEnabled true
         minSdkVersion rootProject.ext.version_minSdk
