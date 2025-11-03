@@ -42,7 +42,7 @@
         android:allowBackup="true"
         android:appCategory="productivity"
         android:fullBackupContent="@xml/full_backup_rules"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@mipmap/ic_launcher"
         android:isGame="false"
         android:label="@string/app_name"
         android:requestLegacyExternalStorage="true"
@@ -140,7 +140,7 @@
             android:name=".activity.openeditor.OpenEditorTodoActivity"
             android:enabled="false"
             android:exported="true"
-            android:icon="@drawable/ic_launcher_todo"
+            android:icon="@mipmap/ic_launcher_todo"
             android:label="@string/todo"
             android:noHistory="true">
             <intent-filter>
@@ -157,7 +157,7 @@
             android:name=".activity.openeditor.OpenEditorQuickNoteActivity"
             android:enabled="false"
             android:exported="true"
-            android:icon="@drawable/ic_launcher_quicknote"
+            android:icon="@mipmap/ic_launcher_quicknote"
             android:label="@string/quicknote"
             android:noHistory="true">
             <intent-filter>
@@ -170,7 +170,7 @@
             android:name=".activity.openeditor.OpenShareIntoActivity"
             android:enabled="false"
             android:exported="true"
-            android:icon="@drawable/ic_launcher_share_into"
+            android:icon="@mipmap/ic_launcher_share_into"
             android:label="@string/share_into"
             android:noHistory="true">
             <intent-filter>
