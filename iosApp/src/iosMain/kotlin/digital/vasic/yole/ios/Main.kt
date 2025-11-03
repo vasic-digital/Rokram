@@ -66,7 +66,7 @@ class YoleIOSSettings {
     fun setAutoSave(auto: Boolean) = defaults.setBool(auto, "auto_save")
 
     // Animation settings
-    fun getAnimationsEnabled(): Boolean = defaults.boolForKey("animations_enabled")
+    fun getAnimationsEnabled(): Boolean = defaults.objectForKey("animations_enabled")?.boolValue ?: true
     fun setAnimationsEnabled(enabled: Boolean) = defaults.setBool(enabled, "animations_enabled")
 }
 
