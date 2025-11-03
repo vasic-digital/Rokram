@@ -444,6 +444,6 @@ work. If not, see <https://creativecommons.org/publicdomain/zero/1.0/>.
     <string name="error_could_not_open_file">Error: Klarte ikke å åpne filen.</string>
     <string name="document_error_clip">Oppnådd tekst: kopiert til utklippstavlen.</string>
     <string name="wont_save_min_length">Filer med færre enn %d tegn blir ikke automatisk lagret, for å forhindre datatap.</string>
-    <string name="advanced_filtering_help"><![CDATA[<small><a href="https://www.github.com/gsantner/markor/discussions/1940">Avansert filtreringssyntaks</a></small>]]></string>
+    <string name="advanced_filtering_help"><![CDATA[<small><a href="https://www.github.com/vasic-digital/Yole/discussions/1940">Avansert filtreringssyntaks</a></small>]]></string>
     <string name="filter">Filter</string>
 </resources>

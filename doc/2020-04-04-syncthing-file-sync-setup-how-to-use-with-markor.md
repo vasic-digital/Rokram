@@ -1,12 +1,12 @@
 # Yole: How to synchronize files with Syncthing
 
-This page helps you to get started using file synchronization with Syncthing and [Yole](https://github.com/gsantner/markor) as your favourite file editor of choice. Required applications are Syncthing (Desktop & Android) and Yole (Android).
+This page helps you to get started using file synchronization with Syncthing and [Yole](https://github.com/vasic-digital/Yole) as your favourite file editor of choice. Required applications are Syncthing (Desktop & Android) and Yole (Android).
 
 ## Attribution
 '_I_/_me_/_myself_/_our_/_we_' refers to the original author.
 
-* [@wmww (GitHub)](https://github.com/gsantner/markor/issues/358#issuecomment-433652981) from Yole community wrote the Quick Guide.
-* [@tengucrow (GitHub)](https://github.com/gsantner/markor/issues/358#issuecomment-427037466) from Yole community wrote the Detailed Guide.
+* [@wmww (GitHub)](https://github.com/vasic-digital/Yole/issues/358#issuecomment-433652981) from Yole community wrote the Quick Guide.
+* [@tengucrow (GitHub)](https://github.com/vasic-digital/Yole/issues/358#issuecomment-427037466) from Yole community wrote the Detailed Guide.
 
 
 ## Quick Guide

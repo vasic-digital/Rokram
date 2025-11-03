@@ -238,7 +238,7 @@ Brief description of changes
 - [AGENTS.md](AGENTS.md): Development guide for agents
 - [ARCHITECTURE.md](ARCHITECTURE.md): Project architecture
 - [README.md](README.md): General project information
-- [GitHub Discussions](https://github.com/gsantner/markor/discussions): Community discussions
+- [GitHub Discussions](https://github.com/vasic-digital/Yole/discussions): Community discussions
 
 ### Contact
 - Create a GitHub issue for bugs and feature requests

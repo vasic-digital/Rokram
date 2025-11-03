@@ -19,7 +19,7 @@ writing. To do that, I need an editor.
 
 Over the years, I’ve used a number of editors with a number of Android-powered
 devices. Right my, my editor of choice is
-[Yole](https://github.com/gsantner/markor).
+[Yole](https://github.com/vasic-digital/Yole).
 
 
 ## Getting Yole
@@ -31,7 +31,7 @@ mix. And since I don’t use Google services with the [version of
 Android](https://lineageos.org), F-Droid is the best way to get those apps.
 
 In case you’re wondering, you _can_ install Yole from the Google Play Store.
-Visit the [Yole web page](https://github.com/gsantner/markor) for the link.
+Visit the [Yole web page](https://github.com/vasic-digital/Yole) for the link.
 
 ## Using Yole
 

@@ -457,7 +457,7 @@ work. If not, see <https://creativecommons.org/publicdomain/zero/1.0/>.
     <string name="error_could_not_open_file">Fout: bestand kon niet worden geopend.</string>
     <string name="document_error_clip">Fout opgetreden: tekst gekopieerd naar klembord.</string>
     <string name="wont_save_min_length">Bestanden met minder dan %d karakters worden niet automatisch opgeslagen om gegevensverlies te voorkomen.</string>
-    <string name="advanced_filtering_help"><![CDATA[<small><a href="https://www.github.com/gsantner/markor/discussions/1940">Geavanceerde filter-syntaxis</a></small>]]></string>
+    <string name="advanced_filtering_help"><![CDATA[<small><a href="https://www.github.com/vasic-digital/Yole/discussions/1940">Geavanceerde filter-syntaxis</a></small>]]></string>
     <string name="filter">Filter</string>
     <string name="text_case">Hoofdlettergebruik</string>
     <string name="toggle_case">Hoofdletters omwisselen (bijv: Case-&gt;CASE-&gt;case)</string>

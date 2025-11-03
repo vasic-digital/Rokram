@@ -124,7 +124,7 @@ v2.15.1
 
 ## Repository
 The source code is available at:
-- GitHub: https://github.com/gsantner/markor
+- GitHub: https://github.com/vasic-digital/Yole
 - F-Droid: https://f-droid.org/repository/browse/?fdid=net.gsantner.markor
 
 This project appears to be a fork or alternative name for the Yole project, which is a well-known open-source note-taking app, with extensive Kotlin Multiplatform support added for cross-platform functionality.

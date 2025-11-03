@@ -3,7 +3,7 @@
 ## General
 
 ### Installation
-You can install and update from [F-Droid](https://f-droid.org/repository/browse/?fdid=net.gsantner.markor) or [GitHub](https://github.com/gsantner/markor/releases/latest).
+You can install and update from [F-Droid](https://f-droid.org/repository/browse/?fdid=net.gsantner.markor) or [GitHub](https://github.com/vasic-digital/Yole/releases/latest).
 
 F-Droid is a store for free & open source apps.
 The *.apk's available for download are signed by the F-Droid team and guaranteed to correspond to the (open source) source code of Yole.
@@ -11,13 +11,13 @@ Generally this is the recommended way to install Yole & keep it updated.
 
 
 ### Get informed
-* Check the [project readme](https://github.com/gsantner/markor/tree/news#readme) for general project information.
-* Check the [project news](https://github.com/gsantner/markor/blob/master/NEWS.md#readme) for more details on what is going on.
-* Check the [project git history](https://github.com/gsantner/markor/commits/master) for most recent code changes.
+* Check the [project readme](https://github.com/vasic-digital/Yole/tree/news#readme) for general project information.
+* Check the [project news](https://github.com/vasic-digital/Yole/blob/master/NEWS.md#readme) for more details on what is going on.
+* Check the [project git history](https://github.com/vasic-digital/Yole/commits/master) for most recent code changes.
 
 ### The right place to ask
-If you have questions or found an issue please head to the [Yole project](https://github.com/gsantner/markor/issues/new/choose) and ask there. 
-[Search](https://github.com/gsantner/markor/issues?q=#js-issues-search) for same/similar and related issues/questions before, it might be already answered or resolved.   
+If you have questions or found an issue please head to the [Yole project](https://github.com/vasic-digital/Yole/issues/new/choose) and ask there. 
+[Search](https://github.com/vasic-digital/Yole/issues?q=#js-issues-search) for same/similar and related issues/questions before, it might be already answered or resolved.   
 
 
 ## Navigation
@@ -104,8 +104,8 @@ There is no dedicated view mode implemented.
   * Better Support for the new storage APIs including scoped storage, SAF (fixes #1172 )
 * New Features
   * View mode: open Image,Video,Audio files in Yole ( #1806, #1200 )
-  * [Todo.txt advanced search system](https://github.com/gsantner/markor/pull/1901) ( #1901 )
-* [More fixed issues:](https://github.com/gsantner/markor/milestone/16?closed=1)
+  * [Todo.txt advanced search system](https://github.com/vasic-digital/Yole/pull/1901) ( #1901 )
+* [More fixed issues:](https://github.com/vasic-digital/Yole/milestone/16?closed=1)
 
 ------------------------------------------------------------------------------------------------------------------------------------
 
@@ -130,7 +130,7 @@ Automatically remove tracking & analytics parameters from URLs shared into Yole.
 Usually when you share URLs from articles you will notice that it is multiple lines long, by adding a lot of unwanted tracking & analytics parameters.  
 Yole helps you here to clean the URLs prior displaying them - by removing parameters like utm_, ref, fbclid & more.
 
-- [ShareInto: Filter few additional tracking parameters in shared URLs, by @gsantner](https://github.com/gsantner/markor/issues/1490)
+- [ShareInto: Filter few additional tracking parameters in shared URLs, by @gsantner](https://github.com/vasic-digital/Yole/issues/1490)
 
 
 
@@ -149,7 +149,7 @@ Then click the new snippets button on the bottom-bar (see screenshot) and select
 
 **NEW (Added in Yole 2.10)**
 
-- [New file dialog: Custom file templates, using snippets folder (notebook/.app/snippets), by @gsantner, closes #676](https://github.com/gsantner/markor/issues/676)
+- [New file dialog: Custom file templates, using snippets folder (notebook/.app/snippets), by @gsantner, closes #676](https://github.com/vasic-digital/Yole/issues/676)
 
 Being able to make custom file templates and creating new files of it was a very frequent requested feature.  
 Now with this Yole update this feature is available. Using the same system like snippets (as seen above) you can create files out of templates directly in the _new file_ dialog.  
@@ -165,30 +165,30 @@ With this improvement the system is even more flexible - based on the same templ
 ## Dialog improvements
 Most dialogs got a few minor improvements. The most important change is that the search dialog keeps now open when you used in-content search. This allows you to jump & browse other search matches without repeating the search.
 
-- [Search: Keep in-files search dialog open, closes #1663, by @harshad1 (PR #1689)](https://github.com/gsantner/markor/pull/1689/files)
-- [Dialogs: Don't show OK button at dialogs that require specific selection, by @gsantner closes #1699, closes #1700](https://github.com/gsantner/markor/commit/b4ae32bf0e8ab890ded57718a9598da7a7d52870)
-- [Rename dialog: Check file existance case insensitive (Android filesystem usually is insensitive), by @gsantner, closes #1695](https://github.com/gsantner/markor/issues/1695)
-- [Improve Dialog OK button constraints #1699, by @harshad1 (PR #1720)](https://github.com/gsantner/markor/pull/1720/files)
-- [SearchDialog: Improve condition calculation for simple dialogs, by @harshad1 (PR #1751)](https://github.com/gsantner/markor/pull/1751/files)
-- [todo.txt filter search: Disable highlighting at completed tasks, by @harshad1 (PR #1754)](https://github.com/gsantner/markor/pull/1754/files)
+- [Search: Keep in-files search dialog open, closes #1663, by @harshad1 (PR #1689)](https://github.com/vasic-digital/Yole/pull/1689/files)
+- [Dialogs: Don't show OK button at dialogs that require specific selection, by @gsantner closes #1699, closes #1700](https://github.com/vasic-digital/Yole/commit/b4ae32bf0e8ab890ded57718a9598da7a7d52870)
+- [Rename dialog: Check file existance case insensitive (Android filesystem usually is insensitive), by @gsantner, closes #1695](https://github.com/vasic-digital/Yole/issues/1695)
+- [Improve Dialog OK button constraints #1699, by @harshad1 (PR #1720)](https://github.com/vasic-digital/Yole/pull/1720/files)
+- [SearchDialog: Improve condition calculation for simple dialogs, by @harshad1 (PR #1751)](https://github.com/vasic-digital/Yole/pull/1751/files)
+- [todo.txt filter search: Disable highlighting at completed tasks, by @harshad1 (PR #1754)](https://github.com/vasic-digital/Yole/pull/1754/files)
 
 
 ## Changes to file browser & file management
-- [Sync clients: Remove irritating file paths from unsupported dialog, by @gsantner, closes #1705](https://github.com/gsantner/markor/issues/1699)
-- [dotFiles: Hide "*_files" and "*.assets" from browser->save page to html, by @tifish (PR #1704)](https://github.com/gsantner/markor/pull/1704/files)
-- [More deterministic save / resume - Switching on every tab move, by @harshad1 (PR #1736)](https://github.com/gsantner/markor/pull/1736/files)
-- [Improve file handling (hash calc) & FileInfo detection, by @harshad1 (PR #1719)](https://github.com/gsantner/markor/pull/1719/files)
-- [File management: Support UTF-8 with BOM, by @tifish (PR #1693)](https://github.com/gsantner/markor/pull/1693/files)
+- [Sync clients: Remove irritating file paths from unsupported dialog, by @gsantner, closes #1705](https://github.com/vasic-digital/Yole/issues/1699)
+- [dotFiles: Hide "*_files" and "*.assets" from browser->save page to html, by @tifish (PR #1704)](https://github.com/vasic-digital/Yole/pull/1704/files)
+- [More deterministic save / resume - Switching on every tab move, by @harshad1 (PR #1736)](https://github.com/vasic-digital/Yole/pull/1736/files)
+- [Improve file handling (hash calc) & FileInfo detection, by @harshad1 (PR #1719)](https://github.com/vasic-digital/Yole/pull/1719/files)
+- [File management: Support UTF-8 with BOM, by @tifish (PR #1693)](https://github.com/vasic-digital/Yole/pull/1693/files)
 
 ## Increased performance & under the hood improvements:
 Yole got lot's of under the hood improvements in all areas - editor, filebrowser, syntax highlighting, textactions, widgets...
 
-- [Editor: Increase performance on editables, more chunked operations, by @harshad1 (PR #1694)](https://github.com/gsantner/markor/pull/1694/files)
-- [Use style/AppTheme.Unified.StartupFlash for DocumentActivity, by @gsantner, closes #1717](https://github.com/gsantner/markor/issues/1717)
-- [Various performance improvements, by @harshad1 (PR #1735)](https://github.com/gsantner/markor/pull/1735/files)
-- [Editor: Restore behaviour - don't overwrite newer files unless content modified, by @harshad1 (PR #1758)](https://github.com/gsantner/markor/pull/1758/files)
-- [Editor: Disable richtext pasting which can lead to dropped characters, by @gsantner, closes #1614](https://github.com/gsantner/markor/issues/1614)
-- [Launcher shortcuts: Open ToDo & QuickNote at bottom, by @harshad1 (PR #1748)](https://github.com/gsantner/markor/pull/1748/files)
+- [Editor: Increase performance on editables, more chunked operations, by @harshad1 (PR #1694)](https://github.com/vasic-digital/Yole/pull/1694/files)
+- [Use style/AppTheme.Unified.StartupFlash for DocumentActivity, by @gsantner, closes #1717](https://github.com/vasic-digital/Yole/issues/1717)
+- [Various performance improvements, by @harshad1 (PR #1735)](https://github.com/vasic-digital/Yole/pull/1735/files)
+- [Editor: Restore behaviour - don't overwrite newer files unless content modified, by @harshad1 (PR #1758)](https://github.com/vasic-digital/Yole/pull/1758/files)
+- [Editor: Disable richtext pasting which can lead to dropped characters, by @gsantner, closes #1614](https://github.com/vasic-digital/Yole/issues/1614)
+- [Launcher shortcuts: Open ToDo & QuickNote at bottom, by @harshad1 (PR #1748)](https://github.com/vasic-digital/Yole/pull/1748/files)
 
 
 
@@ -268,131 +268,131 @@ Checkout the [mermaidjs live-editor](https://mermaid-js.github.io/mermaid-live-e
 - Per-file settings - In addition to the global settings, many options are now also configurable on a file basis
 
 ### More changes
-* [Add Yole blog posts markdown documents, by @gsantner](https://github.com/gsantner/markor/commit/ddb41a6e)
-* [Renumber list performance improvement, by @harshad1 (PR #1688)](https://github.com/gsantner/markor/commit/0142c2e1)
-* [Fix: Template is not applied when creating new file, by @tifish (PR #1669)](https://github.com/gsantner/markor/commit/7616818b)
-* [Enable filename text input filter at rename dialog, by @gsantner closes #1668](https://github.com/gsantner/markor/commit/2102dc6e)
-* [Cleaner widget logic, update widget on path change, by @harshad1 (PR #1660)](https://github.com/gsantner/markor/commit/79bcb47a)
-* [Take picture: Change filename template to usual camera format, by @gsantner, #1655](https://github.com/gsantner/markor/commit/7146fb62)
-* [Improve showing selection and related functions, by @harshad1 (PR #1658)](https://github.com/gsantner/markor/commit/0db38d5c)
-* [Improvements to show selection after search / heading etc, by @harshad1, closes #1325 (PR #1653)](https://github.com/gsantner/markor/commit/efb9f6a1)
-* [Replace discussion reference from Matrix to GitHub discussions, by @gsantner](https://github.com/gsantner/markor/commit/3514491d)
-* [Filebrowser: Fix copy/move getCurrentFolder() NullPointer, by @gsantner](https://github.com/gsantner/markor/commit/7a3ffd04)
-* [Fix ArrayIndexOutOfBounds at ShortcutUtils, by @gsantner](https://github.com/gsantner/markor/commit/e746478c)
-* [Filemanager: disable search button at root directory, closes #1652, by @gsantner](https://github.com/gsantner/markor/commit/47de5795)
-* [Base functionality to handle Toolbar (title) clicks & long-clicks, by @gsantner](https://github.com/gsantner/markor/commit/6ac968c5)
-* [Simplify TextAction handling code, by @harshad1 (PR #1626)](https://github.com/gsantner/markor/commit/f2aa4b59)
-* [markdown: Fix rendered list indent with depth 3, closes #1643, by @fgtham (PR #1651)](https://github.com/gsantner/markor/commit/302b022f)
-* [Don't run auto-format immediately on document load, by @gsantner](https://github.com/gsantner/markor/commit/6014327f)
-* [Fix version of AppIntro dependency, by @gsantner, closes #1632](https://github.com/gsantner/markor/commit/285551f2)
-* [Feature: Snippets, by @harshad1, closes #437 (PR #1624)](https://github.com/gsantner/markor/commit/3f7243b0)
-* [Automatically set HTML lang attribute, by @fgtham (PR #1623)](https://github.com/gsantner/markor/commit/cd3d0fec)
-* [TextActions improvements for spacing and save, by @harshad1 (PR #1622)](https://github.com/gsantner/markor/commit/86a55620)
-* [textactions: allow setting lower spacing, by @harshad1 (PR #1621)](https://github.com/gsantner/markor/commit/c7fdadde)
-* [wording improvements](https://github.com/gsantner/markor/commit/b46291f8)
-* [Markdown: Fix wrong indentation of code blocks in checklists, by @fgtham, closes #1600 (PR #1620)](https://github.com/gsantner/markor/commit/98e9e83e)
-* [markdown: YAML front-matter improvements, by @gsantner (PR #1597)](https://github.com/gsantner/markor/commit/8fb99feb)
-* [rename string sort 'Sort by' -> sort_by, by @gsantner](https://github.com/gsantner/markor/commit/d69e1abf)
-* [markdown: Support and display YAML front-matter block contents, by @fgtham @gsantner (PR #1597)](https://github.com/gsantner/markor/commit/dac68bf4)
-* [Reformat code, optimize imports](https://github.com/gsantner/markor/commit/d9c78be2)
-* [todo.txt: Insert new task start date generally if Auto-Format is enabled, remove special settings option, by @gsantner, closes #1592](https://github.com/gsantner/markor/commit/0b48c2a5)
-* [Per-file toggle for auto-format, by @harshad1, closes #1592 (PR #1611)](https://github.com/gsantner/markor/commit/1a1bdb5b)
-* [markdown: Add admonition extension, by @fgtham @gsantner (PR #1584)](https://github.com/gsantner/markor/commit/a162bd8b)
-* [Markdown: Improve/Fix KaTeX math expression integration, closes #1389, closes #1393, by @fgtham @gsantner (PR #1576)](https://github.com/gsantner/markor/commit/5ac79f9f)
-* [ISSUE_TEMPLATE: improve template](https://github.com/gsantner/markor/commit/757efd40)
-* [Markdown toc: Frontmatter may be followed by optional empty line, by @fgtham, closes #1246 (PR #1589)](https://github.com/gsantner/markor/commit/86742ebc)
-* [ISSUE_TEMPLATE: Add dropdown selection for format](https://github.com/gsantner/markor/commit/c539ae7d)
-* [Update ISSUE_TEMPLATE](https://github.com/gsantner/markor/commit/74c7bb83)
-* [Remove EXTRA_PATH_IS_FOLDER intent parameter everywhere, by @harshad1 (PR #1582)](https://github.com/gsantner/markor/commit/f404ed14)
-* [Improve document handling, by @harshad1 (PR #1579)](https://github.com/gsantner/markor/commit/53f87404)
-* [markdown: Support flowcharts with mermaid, by @fgtham, closes #720 (PR #1581)](https://github.com/gsantner/markor/commit/0812c174)
-* [markdown math/katex: support mhchem (chemistry), by @fgtham (PR #1575)](https://github.com/gsantner/markor/commit/7b84c407)
-* [Fix multiple windows not working in v2.8.5, by @harshad1, closes #1570 (PR #1572)](https://github.com/gsantner/markor/commit/18fa6c64)
+* [Add Yole blog posts markdown documents, by @gsantner](https://github.com/vasic-digital/Yole/commit/ddb41a6e)
+* [Renumber list performance improvement, by @harshad1 (PR #1688)](https://github.com/vasic-digital/Yole/commit/0142c2e1)
+* [Fix: Template is not applied when creating new file, by @tifish (PR #1669)](https://github.com/vasic-digital/Yole/commit/7616818b)
+* [Enable filename text input filter at rename dialog, by @gsantner closes #1668](https://github.com/vasic-digital/Yole/commit/2102dc6e)
+* [Cleaner widget logic, update widget on path change, by @harshad1 (PR #1660)](https://github.com/vasic-digital/Yole/commit/79bcb47a)
+* [Take picture: Change filename template to usual camera format, by @gsantner, #1655](https://github.com/vasic-digital/Yole/commit/7146fb62)
+* [Improve showing selection and related functions, by @harshad1 (PR #1658)](https://github.com/vasic-digital/Yole/commit/0db38d5c)
+* [Improvements to show selection after search / heading etc, by @harshad1, closes #1325 (PR #1653)](https://github.com/vasic-digital/Yole/commit/efb9f6a1)
+* [Replace discussion reference from Matrix to GitHub discussions, by @gsantner](https://github.com/vasic-digital/Yole/commit/3514491d)
+* [Filebrowser: Fix copy/move getCurrentFolder() NullPointer, by @gsantner](https://github.com/vasic-digital/Yole/commit/7a3ffd04)
+* [Fix ArrayIndexOutOfBounds at ShortcutUtils, by @gsantner](https://github.com/vasic-digital/Yole/commit/e746478c)
+* [Filemanager: disable search button at root directory, closes #1652, by @gsantner](https://github.com/vasic-digital/Yole/commit/47de5795)
+* [Base functionality to handle Toolbar (title) clicks & long-clicks, by @gsantner](https://github.com/vasic-digital/Yole/commit/6ac968c5)
+* [Simplify TextAction handling code, by @harshad1 (PR #1626)](https://github.com/vasic-digital/Yole/commit/f2aa4b59)
+* [markdown: Fix rendered list indent with depth 3, closes #1643, by @fgtham (PR #1651)](https://github.com/vasic-digital/Yole/commit/302b022f)
+* [Don't run auto-format immediately on document load, by @gsantner](https://github.com/vasic-digital/Yole/commit/6014327f)
+* [Fix version of AppIntro dependency, by @gsantner, closes #1632](https://github.com/vasic-digital/Yole/commit/285551f2)
+* [Feature: Snippets, by @harshad1, closes #437 (PR #1624)](https://github.com/vasic-digital/Yole/commit/3f7243b0)
+* [Automatically set HTML lang attribute, by @fgtham (PR #1623)](https://github.com/vasic-digital/Yole/commit/cd3d0fec)
+* [TextActions improvements for spacing and save, by @harshad1 (PR #1622)](https://github.com/vasic-digital/Yole/commit/86a55620)
+* [textactions: allow setting lower spacing, by @harshad1 (PR #1621)](https://github.com/vasic-digital/Yole/commit/c7fdadde)
+* [wording improvements](https://github.com/vasic-digital/Yole/commit/b46291f8)
+* [Markdown: Fix wrong indentation of code blocks in checklists, by @fgtham, closes #1600 (PR #1620)](https://github.com/vasic-digital/Yole/commit/98e9e83e)
+* [markdown: YAML front-matter improvements, by @gsantner (PR #1597)](https://github.com/vasic-digital/Yole/commit/8fb99feb)
+* [rename string sort 'Sort by' -> sort_by, by @gsantner](https://github.com/vasic-digital/Yole/commit/d69e1abf)
+* [markdown: Support and display YAML front-matter block contents, by @fgtham @gsantner (PR #1597)](https://github.com/vasic-digital/Yole/commit/dac68bf4)
+* [Reformat code, optimize imports](https://github.com/vasic-digital/Yole/commit/d9c78be2)
+* [todo.txt: Insert new task start date generally if Auto-Format is enabled, remove special settings option, by @gsantner, closes #1592](https://github.com/vasic-digital/Yole/commit/0b48c2a5)
+* [Per-file toggle for auto-format, by @harshad1, closes #1592 (PR #1611)](https://github.com/vasic-digital/Yole/commit/1a1bdb5b)
+* [markdown: Add admonition extension, by @fgtham @gsantner (PR #1584)](https://github.com/vasic-digital/Yole/commit/a162bd8b)
+* [Markdown: Improve/Fix KaTeX math expression integration, closes #1389, closes #1393, by @fgtham @gsantner (PR #1576)](https://github.com/vasic-digital/Yole/commit/5ac79f9f)
+* [ISSUE_TEMPLATE: improve template](https://github.com/vasic-digital/Yole/commit/757efd40)
+* [Markdown toc: Frontmatter may be followed by optional empty line, by @fgtham, closes #1246 (PR #1589)](https://github.com/vasic-digital/Yole/commit/86742ebc)
+* [ISSUE_TEMPLATE: Add dropdown selection for format](https://github.com/vasic-digital/Yole/commit/c539ae7d)
+* [Update ISSUE_TEMPLATE](https://github.com/vasic-digital/Yole/commit/74c7bb83)
+* [Remove EXTRA_PATH_IS_FOLDER intent parameter everywhere, by @harshad1 (PR #1582)](https://github.com/vasic-digital/Yole/commit/f404ed14)
+* [Improve document handling, by @harshad1 (PR #1579)](https://github.com/vasic-digital/Yole/commit/53f87404)
+* [markdown: Support flowcharts with mermaid, by @fgtham, closes #720 (PR #1581)](https://github.com/vasic-digital/Yole/commit/0812c174)
+* [markdown math/katex: support mhchem (chemistry), by @fgtham (PR #1575)](https://github.com/vasic-digital/Yole/commit/7b84c407)
+* [Fix multiple windows not working in v2.8.5, by @harshad1, closes #1570 (PR #1572)](https://github.com/vasic-digital/Yole/commit/18fa6c64)
 * ---------
-* [Yole v2.8.6 update](https://github.com/gsantner/markor/commit/79317e33)
-* [more: Add buildinfo field for last git commit message, by @gsantner](https://github.com/gsantner/markor/commit/01ccc836)
-* [readme: Improve structure and add more information](https://github.com/gsantner/markor/commit/ff7b1356)
-* [readme: Remove codacy github badge](https://github.com/gsantner/markor/commit/371cb8cd)
-* [preview: Open links to folders in filebrowser, closes #967, by @gsantner](https://github.com/gsantner/markor/commit/ba446f48)
-* [ShareInto: Strip common tracking parameters, by @gsantner, closes #1490](https://github.com/gsantner/markor/commit/2b5d05c3)
-* [Editor: Fix crash at activity state restoring, closes #1565, by @gsantner](https://github.com/gsantner/markor/commit/d4d8f410)
-* [ShareInto: Fix newline append issue, closes #1569, by @gsantner](https://github.com/gsantner/markor/commit/440189b0)
-* [Replace Google Play badge](https://github.com/gsantner/markor/commit/3573e63d)
+* [Yole v2.8.6 update](https://github.com/vasic-digital/Yole/commit/79317e33)
+* [more: Add buildinfo field for last git commit message, by @gsantner](https://github.com/vasic-digital/Yole/commit/01ccc836)
+* [readme: Improve structure and add more information](https://github.com/vasic-digital/Yole/commit/ff7b1356)
+* [readme: Remove codacy github badge](https://github.com/vasic-digital/Yole/commit/371cb8cd)
+* [preview: Open links to folders in filebrowser, closes #967, by @gsantner](https://github.com/vasic-digital/Yole/commit/ba446f48)
+* [ShareInto: Strip common tracking parameters, by @gsantner, closes #1490](https://github.com/vasic-digital/Yole/commit/2b5d05c3)
+* [Editor: Fix crash at activity state restoring, closes #1565, by @gsantner](https://github.com/vasic-digital/Yole/commit/d4d8f410)
+* [ShareInto: Fix newline append issue, closes #1569, by @gsantner](https://github.com/vasic-digital/Yole/commit/440189b0)
+* [Replace Google Play badge](https://github.com/vasic-digital/Yole/commit/3573e63d)
 * ---------
-* [Yole v2.8.5 update release](https://github.com/gsantner/markor/commit/cd25950c)
-* [Zim: Fix Android SDK API level error, by @gsantner](https://github.com/gsantner/markor/commit/046d0d31)
-* [Theming: Startup & Activity animations: Quicker, less flashing, closes #1517 #568, by @gsantner](https://github.com/gsantner/markor/commit/c87752a0)
-* [Filebrowser: Allow shown filename multiline expansion, by @gsantner, discussions #1557 #1558 #1559](https://github.com/gsantner/markor/commit/02cd0c36)
-* [Reformat XML files, by @gsantner](https://github.com/gsantner/markor/commit/5a5ce82e)
-* [Support day/night theme system, by @harshad1 @gsantner (PR #1543)](https://github.com/gsantner/markor/commit/9cbe72b0)
-* [Update year 2021->2022](https://github.com/gsantner/markor/commit/9fdc5a1f)
-* [Debloat: Drop todo.txt huuid experiment, by @gsantner](https://github.com/gsantner/markor/commit/f7c81393)
-* [Debloat: Drop redundant launcher shortcut option from editor (new->filebrowser), by @gsantner](https://github.com/gsantner/markor/commit/1dd1cc63)
-* [Reformat code, by @gsantner](https://github.com/gsantner/markor/commit/2e0b788a)
-* [Add launcher shortcuts to folders, by @harshad1 (PR #1549)](https://github.com/gsantner/markor/commit/0c27e81c)
-* [Set MIN_OVERWRITE_LENGTH=2](https://github.com/gsantner/markor/commit/c43bd37f)
-* [filebrowser: Change notebook folder menu icon to home, by @harshad1 (PR #1535)](https://github.com/gsantner/markor/commit/456100c2)
-* [Bugfix: TextActions document can be null, by @harshad1 (PR #1544)](https://github.com/gsantner/markor/commit/e02cd233)
-* [Document menu: Swap search<->save button position, by @gsantner](https://github.com/gsantner/markor/commit/acb073aa)
-* [Directly show view mode in mainactivity (ToDo, QuickNote), by @gsantner](https://github.com/gsantner/markor/commit/c6a4fbe4)
-* [Markdown: soft wrap lines with link, by @gsantner, closes #1536](https://github.com/gsantner/markor/commit/190410b6)
-* [File change state indication & general improvements, by @harshad1 @gsantner (PR #1516)](https://github.com/gsantner/markor/commit/ca6f4908)
-* [Privacy: Add option to disallow screenshots, closes #1174  (PR #1514 by @Zoo-M0 @gsantner)](https://github.com/gsantner/markor/commit/c6af143d)
-* [ShareInto: Only trim line breaks when appending, by @gsantner, closes #1526](https://github.com/gsantner/markor/commit/30ca7997)
-* [Combined storage permission check, restart mainactivity & reload all files after grant, by @gsantner (premerge #1359 #1521)](https://github.com/gsantner/markor/commit/dc9453c0)
-* [Add view mode debugging hint. by @gsantner](https://github.com/gsantner/markor/commit/5b2e12f7)
-* [Update gradle-wrapper, export activites, by @gsantner (premerge #1359 #1521)](https://github.com/gsantner/markor/commit/4b228db2)
+* [Yole v2.8.5 update release](https://github.com/vasic-digital/Yole/commit/cd25950c)
+* [Zim: Fix Android SDK API level error, by @gsantner](https://github.com/vasic-digital/Yole/commit/046d0d31)
+* [Theming: Startup & Activity animations: Quicker, less flashing, closes #1517 #568, by @gsantner](https://github.com/vasic-digital/Yole/commit/c87752a0)
+* [Filebrowser: Allow shown filename multiline expansion, by @gsantner, discussions #1557 #1558 #1559](https://github.com/vasic-digital/Yole/commit/02cd0c36)
+* [Reformat XML files, by @gsantner](https://github.com/vasic-digital/Yole/commit/5a5ce82e)
+* [Support day/night theme system, by @harshad1 @gsantner (PR #1543)](https://github.com/vasic-digital/Yole/commit/9cbe72b0)
+* [Update year 2021->2022](https://github.com/vasic-digital/Yole/commit/9fdc5a1f)
+* [Debloat: Drop todo.txt huuid experiment, by @gsantner](https://github.com/vasic-digital/Yole/commit/f7c81393)
+* [Debloat: Drop redundant launcher shortcut option from editor (new->filebrowser), by @gsantner](https://github.com/vasic-digital/Yole/commit/1dd1cc63)
+* [Reformat code, by @gsantner](https://github.com/vasic-digital/Yole/commit/2e0b788a)
+* [Add launcher shortcuts to folders, by @harshad1 (PR #1549)](https://github.com/vasic-digital/Yole/commit/0c27e81c)
+* [Set MIN_OVERWRITE_LENGTH=2](https://github.com/vasic-digital/Yole/commit/c43bd37f)
+* [filebrowser: Change notebook folder menu icon to home, by @harshad1 (PR #1535)](https://github.com/vasic-digital/Yole/commit/456100c2)
+* [Bugfix: TextActions document can be null, by @harshad1 (PR #1544)](https://github.com/vasic-digital/Yole/commit/e02cd233)
+* [Document menu: Swap search<->save button position, by @gsantner](https://github.com/vasic-digital/Yole/commit/acb073aa)
+* [Directly show view mode in mainactivity (ToDo, QuickNote), by @gsantner](https://github.com/vasic-digital/Yole/commit/c6a4fbe4)
+* [Markdown: soft wrap lines with link, by @gsantner, closes #1536](https://github.com/vasic-digital/Yole/commit/190410b6)
+* [File change state indication & general improvements, by @harshad1 @gsantner (PR #1516)](https://github.com/vasic-digital/Yole/commit/ca6f4908)
+* [Privacy: Add option to disallow screenshots, closes #1174  (PR #1514 by @Zoo-M0 @gsantner)](https://github.com/vasic-digital/Yole/commit/c6af143d)
+* [ShareInto: Only trim line breaks when appending, by @gsantner, closes #1526](https://github.com/vasic-digital/Yole/commit/30ca7997)
+* [Combined storage permission check, restart mainactivity & reload all files after grant, by @gsantner (premerge #1359 #1521)](https://github.com/vasic-digital/Yole/commit/dc9453c0)
+* [Add view mode debugging hint. by @gsantner](https://github.com/vasic-digital/Yole/commit/5b2e12f7)
+* [Update gradle-wrapper, export activites, by @gsantner (premerge #1359 #1521)](https://github.com/vasic-digital/Yole/commit/4b228db2)
 * ---------
-* [Yole update v2.8.4](https://github.com/gsantner/markor/commit/f03ac72a)
-* [Rename markor baseactivity and use everywhere, move OpenEditor activity to subdir, by @gsantner](https://github.com/gsantner/markor/commit/9a8673af)
-* [Reformat code, by @gsantner](https://github.com/gsantner/markor/commit/5d1ce8a6)
-* [Markdown: Support spaces in markdown links and images, closes #1365 (PR #1510), by @tifish @gsantner](https://github.com/gsantner/markor/commit/4195eeff)
-* [ShareInto: Fix todo.txt entry won't appear, by @gsantner, PR #1495](https://github.com/gsantner/markor/commit/06012927)
-* [Add option to control Chrome Custom Tab behaviour, by @gsantner, closes #686 #1385](https://github.com/gsantner/markor/commit/19a06a47)
-* [todo.txt: Add option to save search queries, by @harshad1 (PR #1467)](https://github.com/gsantner/markor/commit/31d4dbeb)
-* [Remove NO_SUGGESTIONS hint from a few dialogs, by @gsantner, closes #1507 #1508](https://github.com/gsantner/markor/commit/5f934962)
-* [Delay inputfilter addition at document load](https://github.com/gsantner/markor/commit/382441c7)
-* [Private AppStorage: Allow to access to files directory only (don't allow access to internals like shared_preferences & databases)](https://github.com/gsantner/markor/commit/2f550012)
-* [Share Into - Format](https://github.com/gsantner/markor/commit/a25e9522)
-* [MainActivity todo/quicknote scroll to bottom via setUserVisibleHint](https://github.com/gsantner/markor/commit/7f3c4bfd)
-* [Remove one setDocumentViewVisibility call, #1502](https://github.com/gsantner/markor/commit/d3e91a8a)
-* [ShareInto format/prefix: Improve wording, restore previous defaultvalue](https://github.com/gsantner/markor/commit/687ef527)
-* [Share into format/prefix customization, by @harshad1, closes #1368 (PR #1495)](https://github.com/gsantner/markor/commit/23f79cf0)
-* [Optimize imports & autoformat](https://github.com/gsantner/markor/commit/93129cbe)
-* [Improve file I/O, by @harshad1 (PR #1489)](https://github.com/gsantner/markor/commit/06ad871d)
-* [Move bundled fonts to thirdparty directory, drop 3 fonts to reduce apk size](https://github.com/gsantner/markor/commit/7dc3b05c)
-* [CI/CD: Makefile: Configurable flavor](https://github.com/gsantner/markor/commit/2492adc6)
-* [CI/CD: Makefile: Add app run job](https://github.com/gsantner/markor/commit/38e8c04a)
+* [Yole update v2.8.4](https://github.com/vasic-digital/Yole/commit/f03ac72a)
+* [Rename markor baseactivity and use everywhere, move OpenEditor activity to subdir, by @gsantner](https://github.com/vasic-digital/Yole/commit/9a8673af)
+* [Reformat code, by @gsantner](https://github.com/vasic-digital/Yole/commit/5d1ce8a6)
+* [Markdown: Support spaces in markdown links and images, closes #1365 (PR #1510), by @tifish @gsantner](https://github.com/vasic-digital/Yole/commit/4195eeff)
+* [ShareInto: Fix todo.txt entry won't appear, by @gsantner, PR #1495](https://github.com/vasic-digital/Yole/commit/06012927)
+* [Add option to control Chrome Custom Tab behaviour, by @gsantner, closes #686 #1385](https://github.com/vasic-digital/Yole/commit/19a06a47)
+* [todo.txt: Add option to save search queries, by @harshad1 (PR #1467)](https://github.com/vasic-digital/Yole/commit/31d4dbeb)
+* [Remove NO_SUGGESTIONS hint from a few dialogs, by @gsantner, closes #1507 #1508](https://github.com/vasic-digital/Yole/commit/5f934962)
+* [Delay inputfilter addition at document load](https://github.com/vasic-digital/Yole/commit/382441c7)
+* [Private AppStorage: Allow to access to files directory only (don't allow access to internals like shared_preferences & databases)](https://github.com/vasic-digital/Yole/commit/2f550012)
+* [Share Into - Format](https://github.com/vasic-digital/Yole/commit/a25e9522)
+* [MainActivity todo/quicknote scroll to bottom via setUserVisibleHint](https://github.com/vasic-digital/Yole/commit/7f3c4bfd)
+* [Remove one setDocumentViewVisibility call, #1502](https://github.com/vasic-digital/Yole/commit/d3e91a8a)
+* [ShareInto format/prefix: Improve wording, restore previous defaultvalue](https://github.com/vasic-digital/Yole/commit/687ef527)
+* [Share into format/prefix customization, by @harshad1, closes #1368 (PR #1495)](https://github.com/vasic-digital/Yole/commit/23f79cf0)
+* [Optimize imports & autoformat](https://github.com/vasic-digital/Yole/commit/93129cbe)
+* [Improve file I/O, by @harshad1 (PR #1489)](https://github.com/vasic-digital/Yole/commit/06ad871d)
+* [Move bundled fonts to thirdparty directory, drop 3 fonts to reduce apk size](https://github.com/vasic-digital/Yole/commit/7dc3b05c)
+* [CI/CD: Makefile: Configurable flavor](https://github.com/vasic-digital/Yole/commit/2492adc6)
+* [CI/CD: Makefile: Add app run job](https://github.com/vasic-digital/Yole/commit/38e8c04a)
 * ---------
-* [Yole v2.8.3](https://github.com/gsantner/markor/commit/adce9627)
-* [Add spellchecking capabilities for strings.xml to Makefile & CI/CD, by @gsantner](https://github.com/gsantner/markor/commit/ac08c4f7)
-* [filemanager: Always load latest fav/recent/popular files when browsing to it](https://github.com/gsantner/markor/commit/d02b9a0d)
-* [ShareInto:: reset modTime after writing, so it's correctly reloaded at time of opening at editor, by @gsantner](https://github.com/gsantner/markor/commit/3d9540e7)
-* [filebrowser::rename file::fix/workaround for Android's filesystem case-insensitive filenaming, by @gsantner, closes #1481](https://github.com/gsantner/markor/commit/7541863d)
-* [Debug builds (aaTest): Properly show version of Yole at 'More' page](https://github.com/gsantner/markor/commit/285d0367)
+* [Yole v2.8.3](https://github.com/vasic-digital/Yole/commit/adce9627)
+* [Add spellchecking capabilities for strings.xml to Makefile & CI/CD, by @gsantner](https://github.com/vasic-digital/Yole/commit/ac08c4f7)
+* [filemanager: Always load latest fav/recent/popular files when browsing to it](https://github.com/vasic-digital/Yole/commit/d02b9a0d)
+* [ShareInto:: reset modTime after writing, so it's correctly reloaded at time of opening at editor, by @gsantner](https://github.com/vasic-digital/Yole/commit/3d9540e7)
+* [filebrowser::rename file::fix/workaround for Android's filesystem case-insensitive filenaming, by @gsantner, closes #1481](https://github.com/vasic-digital/Yole/commit/7541863d)
+* [Debug builds (aaTest): Properly show version of Yole at 'More' page](https://github.com/vasic-digital/Yole/commit/285d0367)
 * ---------
-* [Yole v2.8.2](https://github.com/gsantner/markor/commit/95d45315)
-* [Improve file open/close speed, fix file read/write issues, closes #1470, by @harshad1 @gsantner (PR #1473)](https://github.com/gsantner/markor/commit/07c584e0)
-* [Zim: follow links to other wiki pages, closes #1223, by @fredericjacob (PR #1437)](https://github.com/gsantner/markor/commit/520dee63)
+* [Yole v2.8.2](https://github.com/vasic-digital/Yole/commit/95d45315)
+* [Improve file open/close speed, fix file read/write issues, closes #1470, by @harshad1 @gsantner (PR #1473)](https://github.com/vasic-digital/Yole/commit/07c584e0)
+* [Zim: follow links to other wiki pages, closes #1223, by @fredericjacob (PR #1437)](https://github.com/vasic-digital/Yole/commit/520dee63)
 * ---------
-* [Release update v2.8.1, by @gsantner](https://github.com/gsantner/markor/commit/a2c4d1f4)
-* [Workaround for buggy keyboard at file/folder creation, fixes #1461 (PR #1466 by @gsantner)](https://github.com/gsantner/markor/commit/39220039)
-* [Remove unused class AppCast](https://github.com/gsantner/markor/commit/b0d95b6a)
-* [Fix preference-key based buttons in turkish locale, fixes #1425 # 1443 (PR #1455 @gsantner)](https://github.com/gsantner/markor/commit/bbb0c588)
-* [Fix recently added languages not displayed accordingly (#1454 by @gsantner)](https://github.com/gsantner/markor/commit/c9ffc349)
-* [Fix language preference: Properly show all languages (PR #1453 by @gsantner)](https://github.com/gsantner/markor/commit/7ff1f138)
-* [Add language Odia/Oriya (India), Update translations (PR #1446 #1451)](https://github.com/gsantner/markor/commit/b5513b0d)
-* [ZimWiki: Syntax highlighting for code, global setting (PR #1434 by @fredericjacob)](https://github.com/gsantner/markor/commit/3bc417c3)
-* [Markdown: Individual table of contents level options (PR #1427 by @fredericjacob @gsantner)](https://github.com/gsantner/markor/commit/2005fa48)
-* [Update crowdin config](https://github.com/gsantner/markor/commit/129f07e0)
-* [Translation update (PR #1429)](https://github.com/gsantner/markor/commit/62f21259)
-* [filebrowser: Improve performance a lot (speed of file list appearing)](https://github.com/gsantner/markor/commit/83a4e2f7)
-* [filebrowser:sort: use compareToIgnoreCase for name comparision](https://github.com/gsantner/markor/commit/aa5b5439)
-* [Browse todo.txt file by various filters (PR #1408 by @harshad1)](https://github.com/gsantner/markor/commit/7e680df2)
-* [todotxt: Save priority on done by pri:X kv (PR #1420 by @harshad1)](https://github.com/gsantner/markor/commit/a4719b7a)
-* [Allow to install APK files from filebrowser on click, by @gsantner (PR #1417)](https://github.com/gsantner/markor/commit/3d5fc9c2)
-* [Automatically find FileProvider, by @gsantner](https://github.com/gsantner/markor/commit/f101beda)
-* [ShareUtils:: mark fileProviderAuthority static](https://github.com/gsantner/markor/commit/fc9269b6)
+* [Release update v2.8.1, by @gsantner](https://github.com/vasic-digital/Yole/commit/a2c4d1f4)
+* [Workaround for buggy keyboard at file/folder creation, fixes #1461 (PR #1466 by @gsantner)](https://github.com/vasic-digital/Yole/commit/39220039)
+* [Remove unused class AppCast](https://github.com/vasic-digital/Yole/commit/b0d95b6a)
+* [Fix preference-key based buttons in turkish locale, fixes #1425 # 1443 (PR #1455 @gsantner)](https://github.com/vasic-digital/Yole/commit/bbb0c588)
+* [Fix recently added languages not displayed accordingly (#1454 by @gsantner)](https://github.com/vasic-digital/Yole/commit/c9ffc349)
+* [Fix language preference: Properly show all languages (PR #1453 by @gsantner)](https://github.com/vasic-digital/Yole/commit/7ff1f138)
+* [Add language Odia/Oriya (India), Update translations (PR #1446 #1451)](https://github.com/vasic-digital/Yole/commit/b5513b0d)
+* [ZimWiki: Syntax highlighting for code, global setting (PR #1434 by @fredericjacob)](https://github.com/vasic-digital/Yole/commit/3bc417c3)
+* [Markdown: Individual table of contents level options (PR #1427 by @fredericjacob @gsantner)](https://github.com/vasic-digital/Yole/commit/2005fa48)
+* [Update crowdin config](https://github.com/vasic-digital/Yole/commit/129f07e0)
+* [Translation update (PR #1429)](https://github.com/vasic-digital/Yole/commit/62f21259)
+* [filebrowser: Improve performance a lot (speed of file list appearing)](https://github.com/vasic-digital/Yole/commit/83a4e2f7)
+* [filebrowser:sort: use compareToIgnoreCase for name comparision](https://github.com/vasic-digital/Yole/commit/aa5b5439)
+* [Browse todo.txt file by various filters (PR #1408 by @harshad1)](https://github.com/vasic-digital/Yole/commit/7e680df2)
+* [todotxt: Save priority on done by pri:X kv (PR #1420 by @harshad1)](https://github.com/vasic-digital/Yole/commit/a4719b7a)
+* [Allow to install APK files from filebrowser on click, by @gsantner (PR #1417)](https://github.com/vasic-digital/Yole/commit/3d5fc9c2)
+* [Automatically find FileProvider, by @gsantner](https://github.com/vasic-digital/Yole/commit/f101beda)
+* [ShareUtils:: mark fileProviderAuthority static](https://github.com/vasic-digital/Yole/commit/fc9269b6)
 
 
 
@@ -544,7 +544,7 @@ This update includes many quality improvements and additions for Zim Wiki:
 - Support file generation on older Android versions
 
 If you don't know how the Zim format & syntax works, Yole also includes a reference template  
-that gives you an overview. It is available from the `+ (New file)` dialog in the app or from [GitHub](https://github.com/gsantner/markor/tree/master/samples).
+that gives you an overview. It is available from the `+ (New file)` dialog in the app or from [GitHub](https://github.com/vasic-digital/Yole/tree/master/samples).
 
 ![Zim](doc/assets/2020-12-20-zim-reference2.webp)
 
@@ -620,7 +620,7 @@ The Yole community has been asking for Zim & Wiki Text support a long time, now 
 It is implemented at full glance including syntax highlighting (edit mode), text actions & converter (view mode).
 
 If you don't know how the Zim format & syntax works, Yole also includes a reference template  
-that gives you an overview. It is available from the `+ (New file)` dialog in the app or from [GitHub](https://github.com/gsantner/markor/tree/master/samples).
+that gives you an overview. It is available from the `+ (New file)` dialog in the app or from [GitHub](https://github.com/vasic-digital/Yole/tree/master/samples).
 
 ### How does it look like?
 
@@ -640,7 +640,7 @@ So beside Markdown you can now also use Zim for taking notes, keeping journals, 
 | Text Style   | **Bold**, *Italic*, <u>Underline</u>, ~~Striketrough~~, <sup>Superscript</sup>, <sub>Subscript</sub>                                     |
 | Color        | <mark>Marked (Highlighted)</mark>, <span style='color: #ff8b46;'>Foreground</span>, <span style='background: #00ff00;'>Background</span>  |
 | Special      | Headings 1-5, `Code (inline & block)`                                                                                                   |
-| References   | [Web links](https://github.com/gsantner/markor/pull/1098), Files & Wiki entries, Images                                             |
+| References   | [Web links](https://github.com/vasic-digital/Yole/pull/1098), Files & Wiki entries, Images                                             |
 
 **Notice:** This is the first version of Yole with Zim support. Improvements, potentials fixes & more features to come!
 
@@ -705,7 +705,7 @@ You can install the test app (Yole) beside Yole.
 
 This means you can see in-development features & try them before any update is released.  
 Not only builds of merged changes are available for download, but also from upcoming changes of <i>not-yet-</i>merged pull requests.  
-[Open a build to download apk, build & test logs, apk info & more.](https://github.com/gsantner/markor/actions).  
+[Open a build to download apk, build & test logs, apk info & more.](https://github.com/vasic-digital/Yole/actions).  
 
 ## Per file settings
 Some file specific options were added to the editor toolbar menu.  
@@ -1184,7 +1184,7 @@ Do you want multiple Notebooks? Favourite multiple folders and set the start fol
 - Add word count to document info dialog
 
 #### Update statistics
-* Two first-time-contributors and zero previous contributors improved the source code of the Yole project in this update. [Learn how you can improve the project by code](https://github.com/gsantner/markor#contributions)
+* Two first-time-contributors and zero previous contributors improved the source code of the Yole project in this update. [Learn how you can improve the project by code](https://github.com/vasic-digital/Yole#contributions)
 * In this update totally 72 commits were made, 130 changed files, 5.001 additions and 2.249 deletions.
 * There were totally 7 minor releases in prepartion of this update.
 * 36 new strings were added for translation. 67 contributors are now translating the Yole project. [Help by translating Yole into your language](https://crowdin.com/project/markor).  

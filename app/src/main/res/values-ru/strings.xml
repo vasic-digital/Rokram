@@ -457,7 +457,7 @@ work. If not, see <https://creativecommons.org/publicdomain/zero/1.0/>.
     <string name="error_could_not_open_file">Ошибка: Не удалось открыть файл.</string>
     <string name="document_error_clip">Произошла ошибка: текст скопирован в буфер обмена.</string>
     <string name="wont_save_min_length">Файлы содержащие менее %d символов не сохраняются автоматически во избежание случайного удаления данных.</string>
-    <string name="advanced_filtering_help"><![CDATA[<small><a href="https://www.github.com/gsantner/markor/discussions/1940">Расширенный синтаксис фильтрации</a></small>]]></string>
+    <string name="advanced_filtering_help"><![CDATA[<small><a href="https://www.github.com/vasic-digital/Yole/discussions/1940">Расширенный синтаксис фильтрации</a></small>]]></string>
     <string name="filter">Фильтр</string>
     <string name="text_case">Регистр</string>
     <string name="toggle_case">Переключать регистр (напр., Слово-&gt;СЛОВО-&gt;слово)</string>

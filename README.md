@@ -1,8 +1,8 @@
-[![GitHub releases](https://img.shields.io/github/tag/gsantner/markor.svg)](https://github.com/gsantner/markor/releases)
-[![GitHub downloads](https://img.shields.io/github/downloads/gsantner/markor/total.svg?logo=github&logoColor=lime)](https://github.com/gsantner/markor/releases)
+[![GitHub releases](https://img.shields.io/github/tag/vasic-digital/Yole.svg)](https://github.com/vasic-digital/Yole/releases)
+[![GitHub downloads](https://img.shields.io/github/downloads/vasic-digital/Yole/total.svg?logo=github&logoColor=lime)](https://github.com/vasic-digital/Yole/releases)
 [![Translate on Crowdin](https://img.shields.io/badge/translate-crowdin-green.svg)](https://crowdin.com/project/markor)
-[![Community Discussion](https://img.shields.io/badge/chat-community-blue.svg)](https://github.com/gsantner/markor/discussions)
-[![GitHub CI](https://github.com/gsantner/markor/workflows/CI/badge.svg)](https://github.com/gsantner/markor/actions)
+[![Community Discussion](https://img.shields.io/badge/chat-community-blue.svg)](https://github.com/vasic-digital/Yole/discussions)
+[![GitHub CI](https://github.com/vasic-digital/Yole/workflows/CI/badge.svg)](https://github.com/vasic-digital/Yole/actions)
 
 
 # Yole
@@ -10,7 +10,7 @@
 <b>Text editor - Notes &amp; ToDo (for Android)</b>.
 <br/>Simple and lightweight, supporting Markdown, todo.txt, Zim & more!<br/><br/>
 
-**Download:**  [F-Droid](https://f-droid.org/repository/browse/?fdid=net.gsantner.markor), [GitHub](https://github.com/gsantner/markor/releases/latest)
+**Download:**  [F-Droid](https://f-droid.org/repository/browse/?fdid=net.gsantner.markor), [GitHub](https://github.com/vasic-digital/Yole/releases/latest)
 
 **Current Version:** v2.15.1
 
@@ -21,8 +21,8 @@ It is versatile at working with text; it can also be used for keeping bookmarks,
 Created files are interoperable with any other plaintext software on any platform.
 Yole is openly developed free software that accepts community contributions.
 
-![Screenshots](https://raw.githubusercontent.com/gsantner/markor/master/metadata/en-US/phoneScreenshots/99-123.jpg)  
-![Screenshots](https://raw.githubusercontent.com/gsantner/markor/master/metadata/en-US/phoneScreenshots/99-456.jpg)  
+![Screenshots](https://raw.githubusercontent.com/vasic-digital/Yole/master/metadata/en-US/phoneScreenshots/99-123.jpg)  
+![Screenshots](https://raw.githubusercontent.com/vasic-digital/Yole/master/metadata/en-US/phoneScreenshots/99-456.jpg)  
 
 ## Features
 📱 **Cross-Platform Support**: Native applications for Android, Desktop (Windows/macOS/Linux), iOS, and Web
@@ -135,11 +135,11 @@ There is no dedicated view mode implemented.
 
 ## Contribute
 * **Programming**  
-  The project is always open for contributions and welcomes merge requests. Take a look at our [issue tracker](https://github.com/gsantner/markor/issues) for open issues, especially "[good first issues](https://github.com/gsantner/markor/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22)".
+  The project is always open for contributions and welcomes merge requests. Take a look at our [issue tracker](https://github.com/vasic-digital/Yole/issues) for open issues, especially "[good first issues](https://github.com/vasic-digital/Yole/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22)".
 * **Feature requests & discussions**  
-  Start a discussion [here](https://github.com/gsantner/markor/discussions).
+  Start a discussion [here](https://github.com/vasic-digital/Yole/discussions).
 * **Bug reports**  
-  Report issues [here](https://github.com/gsantner/markor/issues). Please [search](https://github.com/gsantner/markor/issues?q=) for similar issues & [requests](https://github.com/gsantner/markor/discussions?discussions_q=) first. If it's not a bug, please head to discussions.
+  Report issues [here](https://github.com/vasic-digital/Yole/issues). Please [search](https://github.com/vasic-digital/Yole/issues?q=) for similar issues & [requests](https://github.com/vasic-digital/Yole/discussions?discussions_q=) first. If it's not a bug, please head to discussions.
 * **Localization**  
   Translate on [Crowdin](https://crowdin.com/project/markor) (free).
 
@@ -176,7 +176,7 @@ Use the _auto reformat_ menu option of Android Studio before committing or befor
 * **Testing**: JUnit 4 with AssertJ assertions
 
 ### Resources
-* Project repository: [Changelog](CHANGELOG.md) | [Issues](https://github.com/gsantner/markor/issues?q=is%3Aissue+is%3Aopen) | [Discussions](https://github.com/gsantner/markor/discussions) | [License](/LICENSE.txt) | [GitHub Releases](https://github.com/gsantner/markor/releases) | [Makefile](Makefile)
+* Project repository: [Changelog](CHANGELOG.md) | [Issues](https://github.com/vasic-digital/Yole/issues?q=is%3Aissue+is%3Aopen) | [Discussions](https://github.com/vasic-digital/Yole/discussions) | [License](/LICENSE.txt) | [GitHub Releases](https://github.com/vasic-digital/Yole/releases) | [Makefile](Makefile)
 * F-Droid: [Listing](https://f-droid.org/packages/net.gsantner.markor) | [Wiki](https://f-droid.org/wiki/page/net.gsantner.markor) | [Metadata](https://gitlab.com/fdroid/fdroiddata/blob/master/metadata/net.gsantner.markor.yml) | [Build log](https://f-droid.org/wiki/page/net.gsantner.markor/lastbuild)
 
 

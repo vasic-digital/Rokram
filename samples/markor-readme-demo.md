@@ -20,7 +20,7 @@
 - [x] No. 1 Markdown app on Google Play
 - [x] Also available on Aptoide, F-Droid & GitHub
 
-Project page: <https://github.com/gsantner/markor>
+Project page: <https://github.com/vasic-digital/Yole>
 
-![Yole Logo](https://raw.githubusercontent.com/gsantner/markor/master/app/src/main/ic_launcher-web.png)
+![Yole Logo](https://raw.githubusercontent.com/vasic-digital/Yole/master/app/src/main/ic_launcher-web.png)
 

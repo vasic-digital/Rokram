@@ -196,7 +196,7 @@ I use
 [Syncthing](https://syncthing.net/)
 to keep my notes directory in sync between my machines and my phone.
 I also use the
-[Yole](https://github.com/gsantner/markor)
+[Yole](https://github.com/vasic-digital/Yole)
 app to manage and edit the notes on my phone.
 This app is nice because it makes it easy to navigate my notes
 directory and the built in editor formats Markdown files nicely.
