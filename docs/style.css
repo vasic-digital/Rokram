@@ -162,6 +162,7 @@ body::before {
     width: 150px;
     height: 150px;
     border-radius: 25px;
+    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 50%, #dbeafe 100%);
     box-shadow: 0 15px 35px rgba(220, 38, 38, 0.3);
     animation: yole-float 8s ease-in-out infinite;
     border: 6px solid rgba(255, 255, 255, 0.6);
@@ -950,6 +951,7 @@ body.yole-dark-mode .yole-theme-toggle:hover {
 }
 
 body.yole-dark-mode .yole-logo {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
     box-shadow: 0 15px 35px rgba(113, 29, 33, 0.3);
 }
 
