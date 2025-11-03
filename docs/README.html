@@ -5,8 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Yole - README</title>
     <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
+    <div class="yole-theme-toggle-container">
+        <button id="yole-theme-toggle" class="yole-theme-toggle" aria-label="Toggle dark mode">
+            <i class="yole-theme-icon yole-moon-icon">🌙</i>
+            <i class="yole-theme-icon yole-sun-icon">☀️</i>
+        </button>
+    </div>
+
     <nav>
         <a href="index.html">Home</a> |
         <a href="QUICK_START.html">Quick Start</a> |
@@ -19,16 +27,16 @@
         <p><strong>Text editor - Notes &amp; ToDo (for Android, Desktop, iOS & Web)</strong></p>
         <p>Simple and lightweight, supporting Markdown, todo.txt, Zim & more!</p>
 
-        <h2>Download</h2>
+        <h2>📥 Download</h2>
         <ul>
-            <li><a href="https://f-droid.org/repository/browse/?fdid=net.gsantner.markor">F-Droid</a></li>
-            <li><a href="https://github.com/gsantner/markor/releases/latest">GitHub</a></li>
+            <li><a href="https://f-droid.org/repository/browse/?fdid=net.gsantner.markor">🤖 F-Droid</a></li>
+            <li><a href="https://github.com/gsantner/markor/releases/latest">📦 GitHub</a></li>
         </ul>
 
-        <h2>Current Version</h2>
+        <h2>ℹ️ Current Version</h2>
         <p>v2.15.1</p>
 
-        <h2>Features</h2>
+        <h2>⭐ Features</h2>
         <ul>
             <li>📝 Create notes and manage your to-do list using simple markup formats</li>
             <li>🌲 Work completely offline -- whenever, wherever</li>
@@ -42,18 +50,53 @@
             <li>💾 Auto-Save with options for undo/redo</li>
         </ul>
 
-        <h2>Supported Formats</h2>
+        <h2>📄 Supported Formats</h2>
         <p>Markdown, todo.txt, Zim/WikiText, Plaintext, CSV, LaTeX, reStructuredText, TaskPaper, Textile, Creole, TiddlyWiki, Jupyter, R Markdown, AsciiDoc, Org-mode, ics, ini, json, toml, vcf, yaml</p>
 
-        <h2>Contribute</h2>
+        <h2>🤝 Contribute</h2>
         <p>The project welcomes contributions. Check our <a href="CONTRIBUTING.html">contributing guide</a>.</p>
 
-        <h2>Develop</h2>
+        <h2>⚙️ Develop</h2>
         <p>Clone and build using Gradle. See <a href="QUICK_START.html">Quick Start</a> for details.</p>
     </main>
 
     <footer>
         <p>&copy; 2025 Yole Project</p>
     </footer>
+
+    <script>
+        // Yole theme toggle functionality
+        const yoleThemeToggle = document.getElementById('yole-theme-toggle');
+        const yoleBody = document.body;
+
+        // Check for saved theme or system preference
+        const yoleSavedTheme = localStorage.getItem('yole-theme');
+        const yoleSystemPrefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+        if (yoleSavedTheme === 'dark' || (!yoleSavedTheme && yoleSystemPrefersDark)) {
+            yoleBody.classList.add('yole-dark-mode');
+            yoleThemeToggle.classList.add('yole-dark-theme');
+        }
+
+        // Listen for system theme changes
+        if (window.matchMedia) {
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+                if (!localStorage.getItem('yole-theme')) {
+                    yoleBody.classList.toggle('yole-dark-mode', e.matches);
+                    yoleThemeToggle.classList.toggle('yole-dark-theme', e.matches);
+                }
+            });
+        }
+
+        // Toggle theme on button click
+        yoleThemeToggle.addEventListener('click', () => {
+            yoleBody.classList.toggle('yole-dark-mode');
+            yoleThemeToggle.classList.toggle('yole-dark-theme');
+            
+            // Save preference to localStorage
+            const yoleIsDark = yoleBody.classList.contains('yole-dark-mode');
+            localStorage.setItem('yole-theme', yoleIsDark ? 'dark' : 'light');
+        });
+    </script>
 </body>
 </html>

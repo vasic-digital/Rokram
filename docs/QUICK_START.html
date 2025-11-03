@@ -5,8 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Yole - Quick Start Guide</title>
     <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
+    <div class="yole-theme-toggle-container">
+        <button id="yole-theme-toggle" class="yole-theme-toggle" aria-label="Toggle dark mode">
+            <i class="yole-theme-icon yole-moon-icon">🌙</i>
+            <i class="yole-theme-icon yole-sun-icon">☀️</i>
+        </button>
+    </div>
+
     <nav>
         <a href="index.html">Home</a> |
         <a href="README.html">README</a> |
@@ -18,25 +26,25 @@
         <h1>Yole - Quick Start Guide</h1>
         <p>Get started with Yole in 5 minutes across all platforms.</p>
 
-        <h2>Platform Setup</h2>
+        <h2>⚙️ Platform Setup</h2>
 
-        <h3>Android</h3>
+        <h3>🤖 Android</h3>
         <pre><code>./gradlew :androidApp:assembleDebug
 adb install androidApp/build/outputs/apk/debug/androidApp-debug.apk</code></pre>
 
-        <h3>Desktop</h3>
+        <h3>🖥️ Desktop</h3>
         <pre><code>./gradlew :desktopApp:run</code></pre>
 
-        <h3>Web</h3>
+        <h3>🌐 Web</h3>
         <pre><code>./gradlew :webApp:wasmJsBrowserRun</code></pre>
 
-        <h3>iOS</h3>
+        <h3>📱 iOS</h3>
         <p>Open <code>iosApp/iosApp.xcodeproj</code> in Xcode and build.</p>
 
-        <h2>Supported Formats</h2>
+        <h2>📄 Supported Formats</h2>
         <p>Yole supports 18+ markup formats including Markdown, todo.txt, CSV, LaTeX, and more.</p>
 
-        <h2>Development Commands</h2>
+        <h2>⌨️ Development Commands</h2>
         <pre><code># Build all
 ./gradlew clean build
 
@@ -47,5 +55,40 @@ adb install androidApp/build/outputs/apk/debug/androidApp-debug.apk</code></pre>
     <footer>
         <p>&copy; 2025 Yole Project</p>
     </footer>
+
+    <script>
+        // Yole theme toggle functionality
+        const yoleThemeToggle = document.getElementById('yole-theme-toggle');
+        const yoleBody = document.body;
+
+        // Check for saved theme or system preference
+        const yoleSavedTheme = localStorage.getItem('yole-theme');
+        const yoleSystemPrefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+        if (yoleSavedTheme === 'dark' || (!yoleSavedTheme && yoleSystemPrefersDark)) {
+            yoleBody.classList.add('yole-dark-mode');
+            yoleThemeToggle.classList.add('yole-dark-theme');
+        }
+
+        // Listen for system theme changes
+        if (window.matchMedia) {
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+                if (!localStorage.getItem('yole-theme')) {
+                    yoleBody.classList.toggle('yole-dark-mode', e.matches);
+                    yoleThemeToggle.classList.toggle('yole-dark-theme', e.matches);
+                }
+            });
+        }
+
+        // Toggle theme on button click
+        yoleThemeToggle.addEventListener('click', () => {
+            yoleBody.classList.toggle('yole-dark-mode');
+            yoleThemeToggle.classList.toggle('yole-dark-theme');
+            
+            // Save preference to localStorage
+            const yoleIsDark = yoleBody.classList.contains('yole-dark-mode');
+            localStorage.setItem('yole-theme', yoleIsDark ? 'dark' : 'light');
+        });
+    </script>
 </body>
 </html>
