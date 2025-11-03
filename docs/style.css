@@ -952,7 +952,7 @@ body.yole-dark-mode .yole-theme-toggle:hover {
 body.yole-dark-mode .yole-logo {
     background: linear-gradient(135deg, rgba(15, 23, 42, 0.15) 0%, rgba(30, 41, 59, 0.15) 50%, rgba(51, 65, 85, 0.15) 100%);
     box-shadow: 0 15px 35px rgba(113, 29, 33, 0.3);
-    filter: drop-shadow(2px 2px 4px rgba(255, 255, 255, 0.3));
+    filter: drop-shadow(1px 1px 2px rgba(255, 255, 255, 0.8));
 }
 
 body.yole-dark-mode nav {
