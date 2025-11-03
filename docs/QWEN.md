@@ -101,7 +101,7 @@ cd yole
 - Cross-platform compatibility
 
 ## Migration History
-The project initially started as a fork of Markor, then underwent a Kotlin Multiplatform migration which was later partially reversed. Current architecture maintains KMP shared code for cross-platform functionality but also includes platform-specific native implementations for optimal performance.
+The project initially started as a fork of Yole, then underwent a Kotlin Multiplatform migration which was later partially reversed. Current architecture maintains KMP shared code for cross-platform functionality but also includes platform-specific native implementations for optimal performance.
 
 ## Development Conventions
 - Follow Kotlin coding conventions
@@ -127,4 +127,4 @@ The source code is available at:
 - GitHub: https://github.com/gsantner/markor
 - F-Droid: https://f-droid.org/repository/browse/?fdid=net.gsantner.markor
 
-This project appears to be a fork or alternative name for the Markor project, which is a well-known open-source note-taking app, with extensive Kotlin Multiplatform support added for cross-platform functionality.
+This project appears to be a fork or alternative name for the Yole project, which is a well-known open-source note-taking app, with extensive Kotlin Multiplatform support added for cross-platform functionality.

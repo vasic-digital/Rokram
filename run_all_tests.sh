@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "=== Markor Comprehensive Test Suite ==="
+echo "=== Yole Comprehensive Test Suite ==="
 echo "Running all tests with 100% success requirement"
 echo
 

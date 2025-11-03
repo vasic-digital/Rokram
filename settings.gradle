@@ -17,7 +17,7 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = 'Markor'
+rootProject.name = 'Yole'
 
 // NEW: Kotlin Multiplatform shared module
 include ':shared'

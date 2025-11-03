@@ -11,7 +11,7 @@ package digital.vasic.yole.format.csv
  * Configuration for CSV file format.
  *
  * Implementation detail for csv support. This file should be not have dependencies to
- * android and to Markor-Architecture.
+ * android and to Yole-Architecture.
  */
 data class CsvConfig(
     val fieldDelimiterChar: Char,

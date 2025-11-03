@@ -18,7 +18,7 @@ import org.apache.commons.lang3.StringUtils
 import kotlin.math.abs
 
 /**
- * Part of Markor-Architecture implementing SyntaxHighlighting for csv.
+ * Part of Yole-Architecture implementing SyntaxHighlighting for csv.
  */
 class CsvSyntaxHighlighter(appSettings: AppSettings) : MarkdownSyntaxHighlighter(appSettings) {
 

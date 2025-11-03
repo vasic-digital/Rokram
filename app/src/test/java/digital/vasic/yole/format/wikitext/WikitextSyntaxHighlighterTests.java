@@ -561,9 +561,9 @@ public class WikitextSyntaxHighlighterTests {
         @Test
         public void webLinkInSentence() {
             pattern = WikitextSyntaxHighlighter.LINK;
-            Matcher matcher = pattern.matcher("Visit [[https://github.com/gsantner/markor|Markor on Github]] now!");
+            Matcher matcher = pattern.matcher("Visit [[https://github.com/gsantner/markor|Yole on Github]] now!");
             assertThat(matcher.find()).isTrue();
-            assertThat(matcher.group()).isEqualTo("[[https://github.com/gsantner/markor|Markor on Github]]");
+            assertThat(matcher.group()).isEqualTo("[[https://github.com/gsantner/markor|Yole on Github]]");
         }
 
         @Test

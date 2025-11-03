@@ -105,7 +105,7 @@ public class SettingsActivity extends YoleBaseActivity {
         super.onStop();
     }
 
-    public static abstract class MarkorSettingsFragment extends GsPreferenceFragmentBase<AppSettings> {
+    public static abstract class YoleSettingsFragment extends GsPreferenceFragmentBase<AppSettings> {
         @Override
         protected AppSettings getAppSettings(Context context) {
             return AppSettings.get(context);
@@ -138,7 +138,7 @@ public class SettingsActivity extends YoleBaseActivity {
         super.onBackPressed();
     }
 
-    public static class SettingsFragmentMaster extends MarkorSettingsFragment {
+    public static class SettingsFragmentMaster extends YoleSettingsFragment {
         public static final String TAG = "SettingsFragmentMaster";
 
         @Override

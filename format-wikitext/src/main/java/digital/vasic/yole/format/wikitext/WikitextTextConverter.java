@@ -35,7 +35,7 @@ import java.util.regex.Pattern;
 @SuppressWarnings("WeakerAccess")
 public class WikitextTextConverter extends TextConverterBase {
     /**
-     * First, convert Wikitext to regular Markor markdown. Then, calls the regular converter.
+     * First, convert Wikitext to regular Yole markdown. Then, calls the regular converter.
      *
      * @param markup    Markup text
      * @param context   Android Context

@@ -460,7 +460,7 @@ object GsStorageUtils {
         if (action == Intent.ACTION_VIEW || action == Intent.ACTION_EDIT ||
             action == Intent.ACTION_SEND || action == Intent.ACTION_SEND_MULTIPLE) {
 
-            // Markor, SimpleMobileTools FileManager
+            // Yole, SimpleMobileTools FileManager
             if (receivingIntent.hasExtra(GsResourceUtils.EXTRA_FILEPATH.also { tmps = it })) {
                 result = checkPath(receivingIntent.getStringExtra(tmps))
             }

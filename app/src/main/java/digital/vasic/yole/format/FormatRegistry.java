@@ -76,7 +76,7 @@ public class FormatRegistry {
     public final static EmbedBinaryTextConverter CONVERTER_EMBEDBINARY = new EmbedBinaryTextConverter();
     public final static OrgmodeTextConverter CONVERTER_ORGMODE = new OrgmodeTextConverter();
 
-    // File extensions that are known not to be supported by Markor
+    // File extensions that are known not to be supported by Yole
     private static final List<String> EXTERNAL_FILE_EXTENSIONS = Collections.singletonList(".pdf");
 
     public static class Format {

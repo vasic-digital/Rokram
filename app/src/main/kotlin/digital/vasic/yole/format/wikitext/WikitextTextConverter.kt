@@ -28,7 +28,7 @@ import java.util.regex.Pattern
  */
 class WikitextTextConverter : TextConverterBase() {
     /**
-     * First, convert Wikitext to regular Markor markdown. Then, calls the regular converter.
+     * First, convert Wikitext to regular Yole markdown. Then, calls the regular converter.
      *
      * @param markup    Markup text
      * @param context   Android Context

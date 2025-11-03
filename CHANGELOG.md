@@ -175,8 +175,8 @@
 ### v2.9 ([Details](https://github.com/gsantner/markor/blob/master/NEWS.md#markor-v29---snippets-templates-graphs-charts-diagrams-yaml-front-matter-chemistry))
 - Updates are officially only available from GitHub and F-Droid as of now
 - New feature: Snippets
-- Discussion forum & questions now on Markor GitHub Discussion
-- Faster Markor application startup with less flashing
+- Discussion forum & questions now on Yole GitHub Discussion
+- Faster Yole application startup with less flashing
 - Improve performance at filebrowser and editor
 - Allow to install APK files from filebrowser on click
 - Markdown Table of Contents options
@@ -184,7 +184,7 @@
 - Under the hood improvements for I/O, widgets & syntax highlighting
 - todo.txt: Better browsing at editor with dialog & saved search queries
 - Settings option to enable/disable Chrome Custom Tabs
-- Privacy settings option to disallow screenshots of Markor
+- Privacy settings option to disallow screenshots of Yole
 - Debloat & drop experimental/unused features, i.e. todo.txt huuid
 - Support Android Day/Night theme system
 - Filebrowser: Show full filename (multiline allowed instead of singleline only)
@@ -231,7 +231,7 @@
 - Editor/Viewer: Back arrow (top menu) finish activity, #1165 by @gsantner
 - Editor: Per-file option to enable/disable syntax highlighting, #1168 by @harshad1
 - Share-Into: Add launcher, #1184 by @gsantner
-- Markdown: Apply Markor Table of Content config for custom `[TOC]: #` too, #1189 by @gsantner
+- Markdown: Apply Yole Table of Content config for custom `[TOC]: #` too, #1189 by @gsantner
 - Editor: Improve writing to sdcard, #1192 by @gsantner
 - Zim: Support file generation on `Android<7/Java=6`, #1194 by @gsantner
 - Zim: Editor: Support Table of contents (top menu), #1186 by @fredericjacob
@@ -264,7 +264,7 @@
 - Use GitHub Actions for CI/CD #1151
 - Add template for Zettelkasten #1156
 - Add Nord editor color scheme #1134
-- Allow to select folder when create new file via share into Markor #1138
+- Allow to select folder when create new file via share into Yole #1138
 - Improve license dialog readability #1119
 - General improvements, fixes and translations
 
@@ -274,7 +274,7 @@
 - Fix search sometimes not working when chaging from view to edit mode
 - Rework Indent & Move lines Actions
 - Add settings option to control todo.txt completition date auto insert
-- All new todo.txt support in Markor
+- All new todo.txt support in Yole
 - Add many languages to view-mode code highlighting
 - Add xlf format (plaintext)
 - Remove colored highlighting from changelog dialog
@@ -376,8 +376,8 @@
 - Recursive file & folder search
 - Search button in editor, viewer and file browser
 - Always export PDF and images with light theme and white background (improves printing)
-- Show dialog on for textfiles to choose open in Markor or other app
-- Setting to set file extensions to always load in Markor
+- Show dialog on for textfiles to choose open in Yole or other app
+- Setting to set file extensions to always load in Yole
 - Always view files starting with "index."
 - Setting to configure wrap mode (=line breaking)
 - Menu option for reload file (editor/viewer)
@@ -408,7 +408,7 @@
 ### v1.7 ([Details](https://github.com/gsantner/markor/blob/master/NEWS.md#markor-v17---custom-fonts-linkbox-with-markdown))
 - Improved app color theme for better readability  
 - Load custom fonts from file  
-  - Markor bundles 5 additional open fonts  
+  - Yole bundles 5 additional open fonts  
   - Copy custom fonts to folder: 'Notebook/.app/fonts/'  
 - Links shared from e.g. browsers are automatically converted to Markdown syntax if possible  
 - LinkBox is now listed on the main view bottom bar  
@@ -426,7 +426,7 @@
 ### v1.6 ([Details](https://github.com/gsantner/markor/blob/master/NEWS.md#markor-v16---datetime-dialog---jekyll-and-katex-improvements))
 **New features:**  
 - TextAction: Insert date/time  
-- Add website title when sharing into Markor, if browser supports it  
+- Add website title when sharing into Yole, if browser supports it  
   - Website title + URL formatted in Markdown format if possible
 
 **Improved:**  
@@ -650,7 +650,7 @@
   - Blockquote RTL compatibility
 
 **Fixed:**  
-- Crash when Markor put to background and huge file is loaded
+- Crash when Yole put to background and huge file is loaded
   - Document contents are not stored into resume cache anymore if they are too big
   - Make no major differences for huge files, just undo/redo history is cleared when switchting away
 
@@ -694,7 +694,7 @@
 ### v0.3.3
 - Add support for editing files from most file managers
 - Allow to open from Own/NextCloud
-- Hints about using Markor with Dropbox
+- Hints about using Yole with Dropbox
 - Allow to set document folder outside of internal storage
 - Fix import dialog orientation crash
 - Add option to start editing on bottom
@@ -806,7 +806,7 @@
 
 ### v0.1.0
 - Initial release
-- Start of community project Markor
+- Start of community project Yole
 - Fork of writeily-pro
 - Different branding
 - New initial features

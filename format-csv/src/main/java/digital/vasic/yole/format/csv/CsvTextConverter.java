@@ -31,7 +31,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Part of Markor-Architecture implementing Preview/Export for csv.
+ * Part of Yole-Architecture implementing Preview/Export for csv.
  * <p>
  * Converts csv to md and let
  * {@link  TextConverterBase#convertMarkup(String, Context, boolean, boolean, File)}

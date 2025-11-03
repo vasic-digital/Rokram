@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "=== Markor Build Verification Script ==="
+echo "=== Yole Build Verification Script ==="
 echo "Verifying modular architecture and format implementations"
 echo
 

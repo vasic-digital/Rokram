@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-**Yole** is a fork of Markor - a versatile Android text editor supporting 18+ markup formats including Markdown, todo.txt, CSV, WikiText, LaTeX, reStructuredText, and more. The app has been refactored from a monolithic structure into a modular architecture with separate modules for each format.
+**Yole** is a fork of Yole - a versatile Android text editor supporting 18+ markup formats including Markdown, todo.txt, CSV, WikiText, LaTeX, reStructuredText, and more. The app has been refactored from a monolithic structure into a modular architecture with separate modules for each format.
 
 **Key Characteristics:**
 - Android application (Java 11, minSdk 18, targetSdk 35)

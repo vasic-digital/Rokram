@@ -247,8 +247,8 @@ Brief description of changes
 
 ## License
 
-By contributing to Markor, you agree that your contributions will be licensed under the same license as the project (Apache 2.0 for code, CC0 1.0 for translations and samples).
+By contributing to Yole, you agree that your contributions will be licensed under the same license as the project (Apache 2.0 for code, CC0 1.0 for translations and samples).
 
 ---
 
-Thank you for contributing to Markor! Your help makes this project better for everyone. 🎉
+Thank you for contributing to Yole! Your help makes this project better for everyone. 🎉

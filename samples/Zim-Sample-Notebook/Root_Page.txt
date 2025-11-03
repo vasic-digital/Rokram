@@ -79,7 +79,7 @@ We also have _{subscript} and ^{superscript}.
 
 ===== Links =====
 
-This is an embedded web link: [[https://github.com/gsantner/markor|Markor on Github]]
+This is an embedded web link: [[https://github.com/gsantner/markor|Yole on Github]]
 
 To link relatively **down** the hierarchy to a sub page from the current page, use a "+" in front of the path to the page:
 [[+Sub Page 1|Sub-page link to Sub Page 1]]

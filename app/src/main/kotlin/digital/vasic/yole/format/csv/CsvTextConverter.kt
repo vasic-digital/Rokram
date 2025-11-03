@@ -21,7 +21,7 @@ import java.io.StringReader
 import kotlin.math.max
 
 /**
- * Part of Markor-Architecture implementing Preview/Export for csv.
+ * Part of Yole-Architecture implementing Preview/Export for csv.
  *
  * Converts csv to md and let
  * [TextConverterBase.convertMarkup]
