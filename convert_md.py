@@ -22,7 +22,7 @@ def convert_md_to_html(md_file, html_file, title):
         <a href="../README.html">README</a>
     </nav>
 
-    <main>
+    <main style="padding: 20px;">
         {html_content}
     </main>
 
@@ -41,7 +41,11 @@ files = [
     ('doc/2020-09-26-vimwiki-sync-plaintext-to-do-and-notes-todotxt-markdown.md', 'docs/doc/2020-09-26-vimwiki-sync-plaintext-to-do-and-notes-todotxt-markdown.html', 'VimWiki Sync Guide'),
     ('doc/2020-04-04-syncthing-file-sync-setup-how-to-use-with-markor.md', 'docs/doc/2020-04-04-syncthing-file-sync-setup-how-to-use-with-markor.html', 'Syncthing Setup'),
     ('doc/2019-07-16-using-markor-to-write-on-an-android-device-plaintextproject.md', 'docs/doc/2019-07-16-using-markor-to-write-on-an-android-device-plaintextproject.html', 'Android Writing Guide'),
-    ('doc/2018-05-15-pandoc-vim-markdown-how-i-take-notes-vaughan.md', 'docs/doc/2018-05-15-pandoc-vim-markdown-how-i-take-notes-vaughan.html', 'Pandoc Integration')
+    ('doc/2018-05-15-pandoc-vim-markdown-how-i-take-notes-vaughan.md', 'docs/doc/2018-05-15-pandoc-vim-markdown-how-i-take-notes-vaughan.html', 'Pandoc Integration'),
+    ('FORMAT_DOCUMENTATION.md', 'docs/FORMAT_DOCUMENTATION.html', 'Format Documentation'),
+    ('QUICK_START.md', 'docs/QUICK_START.html', 'Quick Start'),
+    ('TESTING_STRATEGY.md', 'docs/TESTING_STRATEGY.html', 'Testing Strategy'),
+    ('CHANGELOG.md', 'docs/CHANGELOG.html', 'Changelog')
 ]
 
 for md, html, title in files:
