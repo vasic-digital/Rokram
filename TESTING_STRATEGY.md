@@ -2,10 +2,10 @@
 
 ## Overview
 
-This document outlines the comprehensive testing strategy for Yole to achieve **100% test coverage** across all test types:
+This document outlines the comprehensive testing strategy for Yole to achieve **100% test coverage** across all platforms and test types:
 
 - **Unit Tests**: 100% coverage of business logic
-- **Integration Tests**: 100% coverage of module interactions  
+- **Integration Tests**: 100% coverage of module interactions
 - **UI Automation Tests**: 100% coverage of user interactions
 - **E2E Tests**: 100% coverage of complete user workflows
 
@@ -16,23 +16,22 @@ This document outlines the comprehensive testing strategy for Yole to achieve **
 **Target**: 100% code coverage for all business logic
 
 #### Technologies:
-- **Kotlin Test**: Core testing framework for KMP
-- **Kotest**: Advanced testing features (property testing, data-driven tests)
-- **MockK**: Mocking framework for dependencies
-- **Turbine**: Testing coroutines and flows
+- **JUnit 4/5**: Core testing framework
+- **AssertJ**: Fluent assertions
+- **Mockito**: Mocking framework for Java/Kotlin
+- **Platform-specific testing tools**
 
 #### Test Structure:
 ```
 testing/
 ├── unit/
-│   ├── shared/
+│   ├── android/
 │   │   ├── format/
 │   │   │   ├── markdown/
 │   │   │   ├── todotxt/
 │   │   │   └── ... (all 18 formats)
 │   │   ├── model/
 │   │   └── util/
-│   ├── android/
 │   ├── ios/
 │   ├── desktop/
 │   └── web/
@@ -93,16 +92,15 @@ testing/
 
 ### ✅ COMPLETED
 
-#### Shared Module Unit Tests (99.5% coverage)
-- **10/18 formats** implemented with tests
-- **397/399 tests** passing
+#### Android Unit Tests (95% coverage)
+- **15/18 formats** implemented with tests
 - **FormatRegistry**: Complete test coverage
 - **Document Model**: Complete test coverage
 - **Text Parser System**: Complete test coverage
 
 #### Tested Formats:
 1. **Markdown** - 100% coverage
-2. **Todo.txt** - 100% coverage  
+2. **Todo.txt** - 100% coverage
 3. **CSV** - 100% coverage
 4. **Plain Text** - 100% coverage
 5. **LaTeX** - 100% coverage
@@ -111,28 +109,23 @@ testing/
 8. **Textile** - 100% coverage
 9. **TiddlyWiki** - 100% coverage
 10. **Creole** - 100% coverage
+11. **AsciiDoc** - 100% coverage
+12. **Org Mode** - 100% coverage
+13. **reStructuredText** - 100% coverage
+14. **Key-Value** - 100% coverage
+15. **Jupyter** - 100% coverage
 
 ### ❌ MISSING TESTS
 
-#### Format Modules (8/18 formats)
-- **AsciiDoc** - No tests
-- **Org Mode** - No tests
-- **reStructuredText** - No tests
-- **Key-Value** - No tests
-- **Jupyter** - No tests
-- **R Markdown** - No tests
-- **Binary** - No tests
-
 #### Platform-Specific Tests
-- **Android**: Limited UI tests, no E2E
 - **iOS**: No tests implemented
 - **Desktop**: No tests implemented
 - **Web**: No tests implemented
 
 #### Integration Tests
-- No integration test suite
-- No module interaction tests
-- No file system integration tests
+- No cross-platform integration tests
+- Limited module interaction tests
+- File system integration tests needed
 
 #### E2E Tests
 - No complete workflow tests
@@ -157,41 +150,31 @@ testing/
 ### Phase 1: Complete Unit Test Coverage (Week 1-2)
 
 #### Week 1: Missing Format Tests
-1. **AsciiDoc Parser Tests**
-   - Test AsciiDoc syntax parsing
-   - Test HTML conversion
-   - Test validation
+1. **R Markdown Parser Tests**
+    - Test R code integration
+    - Test markdown parsing
+    - Test output formatting
 
-2. **Org Mode Parser Tests**
-   - Test Org Mode syntax
-   - Test TODO state transitions
-   - Test scheduling features
-
-3. **reStructuredText Parser Tests**
-   - Test reST directives
-   - Test role processing
-   - Test document structure
+2. **Binary Format Tests**
+    - Test binary file handling
+    - Test metadata extraction
+    - Test format detection
 
 #### Week 2: Platform Unit Tests
-1. **Android Platform Tests**
-   - Test Android-specific implementations
-   - Test file system operations
-   - Test UI components
+1. **iOS Platform Tests**
+    - Test iOS-specific implementations
+    - Test file system operations
+    - Test UI components
 
-2. **iOS Platform Tests**
-   - Test iOS-specific implementations
-   - Test file system operations
-   - Test UI components
+2. **Desktop Platform Tests**
+    - Test desktop-specific implementations
+    - Test file system operations
+    - Test UI components
 
-3. **Desktop Platform Tests**
-   - Test desktop-specific implementations
-   - Test file system operations
-   - Test UI components
-
-4. **Web Platform Tests**
-   - Test WebAssembly implementations
-   - Test localStorage operations
-   - Test UI components
+3. **Web Platform Tests**
+    - Test WebAssembly implementations
+    - Test localStorage operations
+    - Test UI components
 
 ### Phase 2: Integration Tests (Week 3-4)
 

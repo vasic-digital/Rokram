@@ -28,12 +28,44 @@ import digital.vasic.yole.format.todotxt.registerTodoTxtParser
 import digital.vasic.yole.format.wikitext.registerWikitextParser
 
 /**
- * Initializes and registers all format parsers
+ * Initializes and registers all format parsers.
+ * 
+ * This object provides methods to register all available format parsers with the
+ * ParserRegistry. It also provides utilities to check initialization status and
+ * get statistics about registered parsers.
+ *
+ * @example
+ * ```kotlin
+ * // Initialize all parsers
+ * ParserInitializer.registerAllParsers()
+ * 
+ * // Check initialization status
+ * val status = ParserInitializer.getInitializationStatus()
+ * println(status["Markdown"]) // true
+ * 
+ * // Get parser statistics
+ * val stats = ParserInitializer.getParserStatistics()
+ * println(stats["total_parsers"]) // 15
+ * ```
  */
 object ParserInitializer {
     
     /**
-     * Register all available parsers
+     * Register all available parsers with the ParserRegistry.
+     * 
+     * This method should be called during application initialization to ensure
+     * all format parsers are available for use. It registers parsers in a logical
+     * order: core formats first, then wiki formats, technical formats, specialized
+     * formats, data science formats, and finally the binary format.
+     *
+     * @example
+     * ```kotlin
+     * // In application startup
+     * ParserInitializer.registerAllParsers()
+     * 
+     * // Now parsers are available
+     * val parser = ParserRegistry.getParser("markdown")
+     * ```
      */
     fun registerAllParsers() {
         // Core formats
@@ -67,7 +99,25 @@ object ParserInitializer {
     }
     
     /**
-     * Get initialization status
+     * Get initialization status for all formats.
+     * 
+     * This method checks which formats have registered parsers and returns
+     * a status map indicating whether each format is available.
+     * 
+     * @return A map where keys are format names and values indicate if a parser is registered
+     *
+     * @example
+     * ```kotlin
+     * val status = ParserInitializer.getInitializationStatus()
+     * status.forEach { (format, isRegistered) ->
+     *     println("$format: ${if (isRegistered) "✓" else "✗"}")
+     * }
+     * // Output:
+     * // Plain Text: ✓
+     * // Markdown: ✓
+     * // Todo.txt: ✓
+     * // ...
+     * ```
      */
     fun getInitializationStatus(): Map<String, Boolean> {
         val status = mutableMapOf<String, Boolean>()
@@ -81,7 +131,23 @@ object ParserInitializer {
     }
     
     /**
-     * Get parser statistics
+     * Get comprehensive parser statistics.
+     * 
+     * This method returns detailed statistics about the current parser registration
+     * state, including total count, supported formats, and any missing parsers.
+     * 
+     * @return A map containing parser statistics with the following keys:
+     *         - "total_parsers": Int - Total number of registered parsers
+     *         - "supported_formats": List<String> - Names of formats with parsers
+     *         - "missing_formats": List<String> - Names of formats without parsers
+     *
+     * @example
+     * ```kotlin
+     * val stats = ParserInitializer.getParserStatistics()
+     * println("Total parsers: ${stats["total_parsers"]}")
+     * println("Supported formats: ${stats["supported_formats"]}")
+     * println("Missing formats: ${stats["missing_formats"]}")
+     * ```
      */
     fun getParserStatistics(): Map<String, Any> {
         val parsers = ParserRegistry.getAllParsers()

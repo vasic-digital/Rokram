@@ -12,7 +12,37 @@ package digital.vasic.yole.format.todotxt
 import digital.vasic.yole.format.*
 
 /**
- * Represents a single TodoTxt task
+ * Represents a single TodoTxt task.
+ * 
+ * This data class encapsulates all components of a Todo.txt task according to the
+ * official Todo.txt format specification (http://todotxt.org/). It includes priority,
+ * completion status, dates, projects, contexts, and custom key-value metadata.
+ *
+ * @property line Original line text from the file
+ * @property priority Task priority (A-Z), null if no priority
+ * @property description Task description (text without metadata)
+ * @property done Whether task is completed (starts with "x " or "X ")
+ * @property creationDate Creation date (YYYY-MM-DD format)
+ * @property completionDate Completion date (YYYY-MM-DD format)
+ * @property dueDate Due date (due:YYYY-MM-DD format)
+ * @property projects Project tags (prefixed with +)
+ * @property contexts Context tags (prefixed with @)
+ * @property keyValues Key-value pairs (key:value format)
+ *
+ * @example
+ * ```kotlin
+ * val task = TodoTxtTask(
+ *     line = "(A) 2023-01-01 Call mom +Family @phone due:2023-01-15",
+ *     priority = 'A',
+ *     description = "Call mom",
+ *     done = false,
+ *     creationDate = "2023-01-01",
+ *     dueDate = "2023-01-15",
+ *     projects = listOf("Family"),
+ *     contexts = listOf("phone"),
+ *     keyValues = mapOf("due" to "2023-01-15")
+ * )
+ * ```
  */
 data class TodoTxtTask(
     /**
@@ -66,7 +96,9 @@ data class TodoTxtTask(
     val keyValues: Map<String, String> = emptyMap()
 ) {
     /**
-     * Check if task is overdue
+     * Check if task is overdue.
+     * 
+     * @return true if the task has a due date and it's before today, false otherwise
      */
     fun isOverdue(): Boolean {
         val due = dueDate ?: return false
@@ -75,7 +107,9 @@ data class TodoTxtTask(
     }
 
     /**
-     * Check if task is due today
+     * Check if task is due today.
+     * 
+     * @return true if the task has a due date and it's today, false otherwise
      */
     fun isDueToday(): Boolean {
         val due = dueDate ?: return false
@@ -85,7 +119,29 @@ data class TodoTxtTask(
 }
 
 /**
- * TodoTxt format parser
+ * TodoTxt format parser.
+ * 
+ * Implements the Todo.txt format specification (http://todotxt.org/) for parsing
+ * task lists. Supports priorities, completion status, dates, projects, contexts,
+ * and custom key-value metadata. Converts tasks to HTML with appropriate styling
+ * and provides syntax validation.
+ *
+ * @constructor Creates a new TodoTxtParser instance
+ *
+ * @example
+ * ```kotlin
+ * val parser = TodoTxtParser()
+ * val content = """
+ *     (A) Call Mom +Family @phone due:2023-01-15
+ *     x 2023-01-10 Buy groceries
+ *     (B) 2023-01-01 Finish project +work @office
+ * """.trimIndent()
+ * 
+ * val document = parser.parse(content)
+ * val tasks = parser.parseAllTasks(content)
+ * println("Total tasks: ${tasks.size}")
+ * println("Completed: ${tasks.count { it.done }}")
+ * ```
  */
 class TodoTxtParser : TextParser {
     override val supportedFormat: TextFormat
@@ -116,7 +172,17 @@ class TodoTxtParser : TextParser {
     }
 
     /**
-     * Parse all tasks from content
+     * Parse all tasks from content.
+     * 
+     * @param content The Todo.txt content to parse
+     * @return List of parsed TodoTxtTask objects
+     *
+     * @example
+     * ```kotlin
+     * val content = "(A) Task 1\nx Task 2\n(B) Task 3"
+     * val tasks = parser.parseAllTasks(content)
+     * println(tasks.size) // 3
+     * ```
      */
     fun parseAllTasks(content: String): List<TodoTxtTask> {
         return content.lines()
@@ -125,7 +191,26 @@ class TodoTxtParser : TextParser {
     }
 
     /**
-     * Parse a single task line
+     * Parse a single task line according to Todo.txt format specification.
+     * 
+     * The parsing follows this order:
+     * 1. Completion status (x or X)
+     * 2. Completion date (if completed)
+     * 3. Priority (A-Z in parentheses)
+     * 4. Creation date
+     * 5. Description and metadata
+     * 
+     * @param line The task line to parse
+     * @return Parsed TodoTxtTask object
+     *
+     * @example
+     * ```kotlin
+     * val task = parser.parseTask("(A) 2023-01-01 Call mom +Family @phone")
+     * println(task.priority) // 'A'
+     * println(task.description) // "Call mom"
+     * println(task.projects) // ["Family"]
+     * println(task.contexts) // ["phone"]
+     * ```
      */
     fun parseTask(line: String): TodoTxtTask {
         var remaining = line.trim()
@@ -191,7 +276,10 @@ class TodoTxtParser : TextParser {
     }
 
     /**
-     * Extract project tags (+project)
+     * Extract project tags (+project) from a task line.
+     * 
+     * @param line The task line to extract projects from
+     * @return List of project names without the + prefix
      */
     private fun extractProjects(line: String): List<String> {
         return Regex("(?:^|\\s)\\+(\\S+)").findAll(line)
@@ -200,7 +288,10 @@ class TodoTxtParser : TextParser {
     }
 
     /**
-     * Extract context tags (@context)
+     * Extract context tags (@context) from a task line.
+     * 
+     * @param line The task line to extract contexts from
+     * @return List of context names without the @ prefix
      */
     private fun extractContexts(line: String): List<String> {
         return Regex("(?:^|\\s)@(\\S+)").findAll(line)
@@ -209,7 +300,10 @@ class TodoTxtParser : TextParser {
     }
 
     /**
-     * Extract key-value pairs (key:value)
+     * Extract key-value pairs (key:value) from a task line.
+     * 
+     * @param line The task line to extract key-value pairs from
+     * @return Map of key-value pairs
      */
     private fun extractKeyValues(line: String): Map<String, String> {
         return Regex("(\\w+):(\\S+)").findAll(line)
@@ -217,7 +311,14 @@ class TodoTxtParser : TextParser {
     }
 
     /**
-     * Convert tasks to HTML
+     * Convert tasks to HTML with appropriate styling.
+     * 
+     * This method generates HTML with CSS classes for different task states
+     * and components, making it easy to style tasks with CSS.
+     * 
+     * @param tasks List of tasks to convert
+     * @param options Additional options (currently unused)
+     * @return HTML representation of all tasks
      */
     private fun tasksToHtml(tasks: List<TodoTxtTask>, options: Map<String, Any>): String {
         return buildString {
@@ -278,12 +379,19 @@ class TodoTxtParser : TextParser {
     }
 
     companion object {
+        /**
+         * Regular expression pattern for YYYY-MM-DD date format.
+         */
         const val DATE_PATTERN = "\\d{4}-\\d{2}-\\d{2}"
     }
 }
 
 /**
- * Get current date in YYYY-MM-DD format
- * Platform-specific implementation needed
+ * Get current date in YYYY-MM-DD format.
+ * 
+ * This is a platform-specific function implemented via expect/actual
+ * to provide the current date across different platforms.
+ * 
+ * @return Current date in YYYY-MM-DD format
  */
 expect fun getCurrentDate(): String

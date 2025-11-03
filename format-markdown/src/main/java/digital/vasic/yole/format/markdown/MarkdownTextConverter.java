@@ -62,11 +62,26 @@ import java.util.regex.Pattern;
 
 import other.com.vladsch.flexmark.ext.katex.FlexmarkKatexExtension;
 
+/**
+ * Markdown text converter for Android.
+ * 
+ * This converter handles Markdown markup format using Flexmark-java library for
+ * server-side rendering. It supports CommonMark plus GitHub Flavored Markdown
+ * extensions including tables, task lists, footnotes, mathematical expressions,
+ * and more. The converter also supports presentations, syntax highlighting,
+ * and various output formats.
+ * 
+ * @author Gregor Santner
+ * @since 2018
+ */
 @SuppressWarnings({"unchecked", "WeakerAccess"})
 public class MarkdownTextConverter extends TextConverterBase {
     //########################
     //## Extensions
     //########################
+    /**
+     * Supported file extensions for Markdown format.
+     */
     public static final String EXT_MARKDOWN__TXT = ".txt";
     public static final String EXT_MARKDOWN__MD_TXT = ".md.txt";
     public static final String EXT_MARKDOWN__MD = ".md";
@@ -79,9 +94,24 @@ public class MarkdownTextConverter extends TextConverterBase {
     public static final String EXT_MARKDOWN__TEXT = ".text";
     public static final String EXT_MARKDOWN__RMD = ".rmd";
 
+    /**
+     * Regular expression pattern for matching Markdown file extensions.
+     */
     public static final String MD_EXTENSIONS_PATTERN_LIST = "((md)|(markdown)|(mkd)|(mdown)|(mkdn)|(txt)|(mdwn)|(mdx)|(text)|(rmd))";
+    
+    /**
+     * Pattern to check if a filename has a Markdown extension.
+     */
     public static final Pattern PATTERN_HAS_FILE_EXTENSION_FOR_THIS_FORMAT = Pattern.compile("((?i).*\\." + MD_EXTENSIONS_PATTERN_LIST + "$)");
+    
+    /**
+     * Pattern to extract Markdown extension from filename.
+     */
     public static final Pattern MD_EXTENSION_PATTERN = Pattern.compile("((?i)\\." + MD_EXTENSIONS_PATTERN_LIST + "$)");
+    
+    /**
+     * Array of all supported Markdown file extensions.
+     */
     public static final String[] MD_EXTENSIONS = new String[]{
             EXT_MARKDOWN__MD, EXT_MARKDOWN__MARKDOWN, EXT_MARKDOWN__MKD, EXT_MARKDOWN__MDOWN,
             EXT_MARKDOWN__MKDN, EXT_MARKDOWN__TXT, EXT_MARKDOWN__MDWN, EXT_MARKDOWN__TEXT,
@@ -91,12 +121,39 @@ public class MarkdownTextConverter extends TextConverterBase {
     //########################
     //## Injected CSS / JS / HTML
     //########################
+    /**
+     * CSS for basic body styling.
+     */
     public static final String CSS_BODY = CSS_S + "body{margin:0;padding:0.5vh 3.5vw}" + CSS_E;
+    
+    /**
+     * CSS for header underline styling.
+     */
     public static final String CSS_HEADER_UNDERLINE = CSS_S + " .header_no_underline { text-decoration: none; color: " + TOKEN_BW_INVERSE_OF_THEME + "; } h1 < a.header_no_underline { border-bottom: 2px solid #eaecef; } " + CSS_E;
+    
+    /**
+     * CSS for H1 and H2 header underlines.
+     */
     public static final String CSS_H1_H2_UNDERLINE = CSS_S + " h1,h2 { border-bottom: 2px solid " + TOKEN_BW_INVERSE_OF_THEME_HEADER_UNDERLINE + "; } " + CSS_E;
+    
+    /**
+     * CSS for blockquote vertical line styling.
+     */
     public static final String CSS_BLOCKQUOTE_VERTICAL_LINE = CSS_S + "blockquote{padding:0px 14px;border-" + TOKEN_TEXT_DIRECTION + ":3.5px solid #dddddd;margin:4px 0}" + CSS_E;
+    
+    /**
+     * CSS for task list items without bullets.
+     */
     public static final String CSS_LIST_TASK_NO_BULLET = CSS_S + ".task-list-item { list-style-type:none; text-indent: -1.4em; } li.task-list-item > pre, li.task-list-item > ul > li { text-indent: 0pt; }" + CSS_E;
+    
+    /**
+     * CSS for GitLab video caption styling.
+     */
     public static final String CSS_GITLAB_VIDEO_CAPTION = CSS_S + ".video-container > p { margin: 0; }" + CSS_E;
+    
+    /**
+     * CSS for link soft wrapping and auto-breaking lines.
+     */
     public static final String CSS_LINK_SOFT_WRAP_AUTOBREAK_LINES = CSS_S + "p > a { word-break:break-all; }" + CSS_E;
 
     public static final String CSS_TOC_STYLE = CSS_S + ".markor-table-of-contents { border: 1px solid " + TOKEN_BW_INVERSE_OF_THEME + "; border-radius: 2px; } .markor-table-of-contents > h1 { padding-left: 14px; margin-bottom: -8px; border-bottom: 1px solid " + TOKEN_BW_INVERSE_OF_THEME + "; } .markor-table-of-contents-list li { margin-left: -12px; } .markor-table-of-contents-list a { text-decoration: none; }" + CSS_E;
@@ -172,6 +229,21 @@ public class MarkdownTextConverter extends TextConverterBase {
     //########################
     //## Methods
     //########################
+    /**
+     * Convert Markdown markup to HTML.
+     * 
+     * This method uses Flexmark-java to convert Markdown content to HTML with
+     * extensive support for CommonMark and GitHub Flavored Markdown extensions.
+     * It handles tables, task lists, footnotes, mathematical expressions, syntax
+     * highlighting, presentations, and more.
+     * 
+     * @param markup The Markdown markup content to convert
+     * @param context Android context for accessing resources and settings
+     * @param lightMode Whether to use light theme (true) or dark theme (false)
+     * @param enableLineNumbers Whether to enable line numbers in code blocks
+     * @param file The source file (may be null)
+     * @return HTML string with the converted content and appropriate styling
+     */
     @Override
     public String convertMarkup(String markup, Context context, boolean lightMode, boolean enableLineNumbers, File file) {
         final AppSettings as = AppSettings.get(context);
@@ -408,6 +480,17 @@ public class MarkdownTextConverter extends TextConverterBase {
         return sb.toString();
     }
 
+    /**
+     * Check if a file is in Markdown format based on its extension.
+     * 
+     * This method checks for various Markdown file extensions while excluding
+     * plain .txt files unless they specifically end with .md.txt.
+     * 
+     * @param file The file to check (may be null)
+     * @param name The filename (may be null)
+     * @param ext The file extension (without dot)
+     * @return true if the file extension is supported by this converter, false otherwise
+     */
     @Override
     protected boolean isFileOutOfThisFormat(final File file, final String name, final String ext) {
         return (MarkdownTextConverter.PATTERN_HAS_FILE_EXTENSION_FOR_THIS_FORMAT.matcher(name).matches() && !name.endsWith(".txt")) || name.endsWith(".md.txt");

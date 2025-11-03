@@ -1,15 +1,49 @@
-# Markor Modular Architecture
+# Yole Cross-Platform Architecture
 
 ## Overview
 
-Markor has been refactored from a monolithic Android application into a modular architecture supporting 18 different text formats. This document describes the new architecture, module structure, and implementation details.
+Yole is a cross-platform text editor supporting Android, Desktop, iOS, and Web platforms with 18+ text formats. This document describes the architecture, module structure, and implementation details.
 
 ## Module Structure
 
-### Core Modules
+### Platform-Specific Applications
+
+#### `androidApp` - Android Application
+- **Purpose**: Native Android application with modern Android development practices
+- **Key Components**:
+  - Native Android UI components
+  - Android-specific file system access
+  - Platform-optimized performance
+- **Technologies**: AndroidX, Kotlin, modern Android architecture
+
+#### `desktopApp` - Desktop Application
+- **Purpose**: Native desktop application for Windows, macOS, and Linux
+- **Key Components**:
+  - Desktop-specific UI framework
+  - Native file system integration
+  - Cross-platform desktop support
+- **Technologies**: Compose Desktop, Kotlin
+
+#### `iosApp` - iOS Application
+- **Purpose**: Native iOS application
+- **Key Components**:
+  - iOS-specific UI components
+  - iOS file system integration
+  - Apple ecosystem integration
+- **Technologies**: SwiftUI or UIKit, platform-specific development
+
+#### `webApp` - Web Application
+- **Purpose**: Progressive Web App with modern web technologies
+- **Key Components**:
+  - Web-specific UI framework
+  - Browser-based file handling
+  - PWA capabilities
+- **Technologies**: WebAssembly, modern web development
+
+### Legacy Android Modules
 
 #### `commons` - Shared Utilities
-- **Purpose**: Contains shared utilities, base classes, and interfaces used across all modules
+- **Purpose**: Contains shared utilities, base classes, and interfaces used across Android modules
 - **Key Components**:
   - `GsFileUtils` - File operations and utilities
   - `GsContextUtils` - Android context utilities
@@ -19,22 +53,45 @@ Markor has been refactored from a monolithic Android application into a modular 
 #### `core` - Core Functionality
 - **Purpose**: Contains reusable editors, syntax highlighters, and text converters
 - **Key Components**:
-  - `FormatRegistry` - Central registry for all supported formats
+  - Android-specific implementations
   - `TextConverterBase` - Base class for text format converters
   - `SyntaxHighlighterBase` - Base class for syntax highlighters
   - `ActionButtonBase` - Base class for format-specific action buttons
 
-#### `app` - Main Application
-- **Purpose**: Contains screens, activities, and UI components
+#### `app` - Legacy Android Application
+- **Purpose**: Legacy Android application (being phased out)
 - **Key Components**:
   - `MainActivity` - Main application screen
   - `DocumentActivity` - Document editing/viewing
   - `SettingsActivity` - Application settings
-  - All Android-specific UI components
+  - Legacy Android UI components
 
 ### Format Modules
 
-Each format is implemented as a separate module with the following structure:
+#### Platform-Specific Format Implementations
+Each format is implemented natively for each platform:
+
+```
+format-[name]/
+├── src/main/java/digital/vasic/yole/format/[name]/  # Android implementation
+│   ├── [Name]TextConverter.java      # HTML conversion
+│   ├── [Name]SyntaxHighlighter.java  # Editor highlighting
+│   └── [Name]ActionButtons.java      # Toolbar actions
+├── src/test/java/                    # Unit tests
+└── src/androidTest/java/             # Integration tests
+```
+
+Platform-specific implementations are maintained separately for optimal performance and native integration.
+shared/src/commonMain/kotlin/digital/vasic/yole/format/[name]/
+├── [Name]Parser.kt                   # Common parsing logic
+└── Platform-specific implementations
+    ├── androidMain/[Name]Parser.android.kt
+    ├── desktopMain/[Name]Parser.desktop.kt
+    └── iosMain/[Name]Parser.ios.kt
+```
+
+#### Legacy Android Format Modules
+Each format also has a legacy Android module for UI-specific components:
 
 ```
 format-[name]/
@@ -158,17 +215,28 @@ format-[name]/
 
 ### Format Registration
 
-All formats are registered in `FormatRegistry.java` with:
+Formats are registered in platform-specific registries:
 
-```java
-public static final List<Format> FORMATS = Arrays.asList(
-    new Format(FORMAT_LATEX, R.string.latex, ".tex", CONVERTER_LATEX),
-    new Format(FORMAT_RESTRUCTUREDTEXT, R.string.restructuredtext, ".rst", CONVERTER_RESTRUCTUREDTEXT),
-    // ... other formats
-);
+```kotlin
+object FormatRegistry {
+    private val formats = mutableMapOf<String, TextFormat>()
+
+    fun registerFormat(format: TextFormat) {
+        formats[format.name] = format
+    }
+
+    fun getFormat(name: String): TextFormat? = formats[name]
+}
 ```
 
-### Text Conversion Pipeline
+### Text Parsing Pipeline
+
+1. **File Detection**: `TextFormat.detectFormat(content: String, extension: String)`
+2. **Markup Parsing**: `TextParser.parse(content: String): Document`
+3. **Platform Rendering**: Platform-specific converters to HTML/other formats
+4. **Syntax Highlighting**: Platform-specific syntax highlighters
+
+### Android Pipeline
 
 1. **File Detection**: `TextConverter.isFileOutOfThisFormat()`
 2. **Markup Parsing**: `TextConverter.convertMarkupToHtml()`
@@ -177,78 +245,107 @@ public static final List<Format> FORMATS = Arrays.asList(
 
 ### Testing Strategy
 
-#### Unit Tests
+#### Platform-Specific Tests
+- `androidApp/src/test/`: Android unit tests
+- `desktopApp/src/test/`: Desktop unit tests
+- `iosApp/src/test/`: iOS unit tests
+- `webApp/src/test/`: Web unit tests
+
+#### Legacy Android Tests
 - Format detection accuracy
 - Markup conversion correctness
 - Syntax highlighting patterns
 - Action button functionality
-
-#### Integration Tests
-- Module interaction
-- Format conversion pipelines
 - UI component integration
 
 #### E2E Tests
 - Full application workflows
 - Real device/emulator testing
-- AI-powered QA validation
+- Cross-platform compatibility testing
 
 ## Build System
 
 ### Gradle Configuration
-- Multi-module project with 20+ modules
-- Shared build logic in root `build.gradle`
+- Multi-platform project with 25+ modules
+- Version catalog for dependency management (`libs.versions.toml`)
+- Shared build logic in root `build.gradle.kts`
 - Module-specific dependencies
 - Automated testing pipeline
 
-### Dependencies
+### Platform Dependencies
+- **Android**: AndroidX, Material Design, Kotlin
+- **Desktop**: Compose Desktop, Kotlin
+- **iOS**: Platform-specific frameworks
+- **Web**: WebAssembly, modern web technologies
+
+### Legacy Android Dependencies
 - **Core**: AndroidX, Material Design
 - **Markdown**: Flexmark library
 - **CSV**: OpenCSV
 - **Math**: KaTeX (via WebView)
 - **Testing**: JUnit, AssertJ, Espresso
 
-## Migration Guide
+## Development Guide
 
-### From Monolithic to Modular
+### Platform Development
 
-1. **Code Organization**:
-   - Move shared code to `commons`
-   - Move format implementations to separate modules
-   - Keep UI code in `app` module
+1. **Android Development**:
+    - Use `androidApp/` module for modern Android development
+    - Follow Android development best practices
+    - Test on various Android devices and versions
 
-2. **Dependency Management**:
-   - Update all imports to use new package structure
-   - Add module dependencies in `build.gradle` files
-   - Ensure proper dependency flow (commons → core → format modules → app)
+2. **Desktop Development**:
+    - Use `desktopApp/` module for cross-platform desktop
+    - Test on Windows, macOS, and Linux
+    - Ensure native look and feel
 
-3. **Testing**:
-   - Run `./run_all_tests.sh` for comprehensive testing
-   - Ensure 100% test success rate
-   - Use AI QA for E2E validation
+3. **iOS Development**:
+    - Use `iosApp/` module for iOS development
+    - Follow iOS development guidelines
+    - Test on various iOS devices
+
+4. **Web Development**:
+    - Use `webApp/` module for PWA development
+    - Ensure responsive design
+    - Test across modern browsers
+
+### Code Organization
+- Keep platform-specific code in respective app modules
+- Share common utilities through `commons/` module
+- Use `core/` for shared Android functionality
+- Maintain format modules for extensibility
 
 ## Future Enhancements
 
 ### Planned Features
 - Plugin system for third-party formats
-- Cloud synchronization for all formats
+- Cloud synchronization for all platforms
 - Advanced format conversion between types
 - Collaborative editing support
+- AI-powered features
 
 ### Performance Optimizations
 - Lazy loading of format modules
 - Caching of converted content
 - Background processing for large files
+- Platform-specific optimizations
 
 ## Contributing
 
 When adding new formats:
 
+### Platform-Specific Implementation
 1. Create new `format-[name]` module
-2. Implement the three required classes
-3. Add to `FormatRegistry.FORMATS`
-4. Update string resources
-5. Add comprehensive tests
+2. Implement platform-specific parsers and converters
+3. Add to platform-specific `FormatRegistry`
+4. Update string resources for each platform
+5. Add comprehensive tests for each platform
 6. Update documentation
 
-See `format-latex` as a reference implementation.
+### Cross-Platform Considerations
+- Ensure consistent behavior across platforms
+- Handle platform-specific file system differences
+- Test on all target platforms
+- Maintain performance optimizations
+
+See existing format modules as reference implementations.

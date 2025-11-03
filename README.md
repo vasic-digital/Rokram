@@ -12,18 +12,21 @@
 
 **Download:**  [F-Droid](https://f-droid.org/repository/browse/?fdid=net.gsantner.markor), [GitHub](https://github.com/gsantner/markor/releases/latest)
 
-Markor is a TextEditor for Android.
+**Current Version:** v2.15.1
+
+Yole is a cross-platform text editor supporting Android, Desktop (Windows/macOS/Linux), iOS, and Web platforms.
 This project aims to make an editor that is versatile, flexible, and lightweight.
-Markor utilizes simple markup formats like Markdown and todo.txt for note-taking and list management.
+Yole utilizes simple markup formats like Markdown and todo.txt for note-taking and list management.
 It is versatile at working with text; it can also be used for keeping bookmarks, copying to clipboard, fast opening a link from text and lots more.
 Created files are interoperable with any other plaintext software on any platform.
-Markor is openly developed free software that accepts community contributions.
+Yole is openly developed free software that accepts community contributions.
 
 ![Screenshots](https://raw.githubusercontent.com/gsantner/markor/master/metadata/en-US/phoneScreenshots/99-123.jpg)  
 ![Screenshots](https://raw.githubusercontent.com/gsantner/markor/master/metadata/en-US/phoneScreenshots/99-456.jpg)  
 
 ## Features
-📝 Create notes and manage your to-do list using simple markup formats
+📱 **Cross-Platform Support**: Native applications for Android, Desktop (Windows/macOS/Linux), iOS, and Web
+<br/>📝 Create notes and manage your to-do list using simple markup formats
 <br/>🌲 Work completely offline -- whenever, wherever
 <br/>👌 Compatible with any other plaintext software on any platform -- edit with notepad or vim, filter with grep, convert to PDF or create a zip archive
 <br/>
@@ -34,7 +37,7 @@ Markor is openly developed free software that accepts community contributions.
 <br/>📓 QuickNote: Fast accessible for keeping notes
 <br/>☑️ To-Do: Write down your to-do
 <br/>🖍 Formats: Markdown, todo.txt, Zim/WikiText, Plaintext, [csv](doc/2023-06-02-csv-readme.md), LaTeX, reStructuredText, TaskPaper, Textile, Creole, TiddlyWiki, Jupyter, R Markdown, AsciiDoc, Org-mode, ics, ini, json, toml, vcf, yaml
-<br/>📋 Copy to clipboard: Copy any text, including text shared into Markor
+<br/>📋 Copy to clipboard: Copy any text, including text shared into Yole
 <br/>💡 Notebook is the root folder of documents and can be changed to any location on the filesystem. QuickNote and To-Do are textfiles
 <br/>
 <br/>🎨 Highly customizable, dark theme available
@@ -42,10 +45,22 @@ Markor is openly developed free software that accepts community contributions.
 <br/>👌 No ads or unnecessary permissions
 <br/>🌎 Language selection -- use other language than on the system
 <br/>
-<br/>🔃 Markor is an offline app. It works with sync apps, but they have to do syncing respectively.
-<br/>🔒 Can encrypt your textfiles with AES256. You need to set a password at the settings and use Android device with version Marshmallow or newer. You can use [jpencconverter](https://gitlab.com/opensource21/jpencconverter) to encrypt/decrypt on desktop. Be aware that only the text is encrypted not pictures or attachments.
+<br/>🔃 Yole is an offline app. It works with sync apps, but they have to do syncing respectively.
+<br/>🔒 Can encrypt your textfiles with AES256. You need to set a password at the settings and use device with appropriate OS version. You can use [jpencconverter](https://gitlab.com/opensource21/jpencconverter) to encrypt/decrypt on desktop. Be aware that only the text is encrypted not pictures or attachments.
 
-## New features in the latest update - Markor v2.11 - AsciiDoc, CSV and Org-Mode, Todo.txt advanced search, Line numbers
+## New features in the latest update - Yole v2.15.1 - Modern Android Architecture
+
+### Modern Android Architecture
+Yole has been updated with modern Android development practices:
+- **Modular Architecture**: Clean separation of concerns with dedicated modules
+- **Format Modules**: Modular format support in separate `format-*` modules
+- **Improved Performance**: Optimized for Android with latest tooling
+- **Modern Toolchain**: Updated to latest Android and Kotlin versions
+
+### Previous Major Features (v2.11)
+- **AsciiDoc, CSV, and Org-Mode** support
+- **Todo.txt advanced search** functionality
+- **Line numbers** in editor and view modes
 
 ### Line number support
 
@@ -89,12 +104,13 @@ There is no dedicated view mode implemented.
   * [Format: Markdown](README.md#format-markdown)
   * [Format: todo.txt](README.md#format-todotxt)
 * [**More**](doc)
-  * [Synced plaintext TODO and notes - Vim / Vimwiki, Markor Android, Syncthing, GTD (Pitt)](doc/2020-09-26-vimwiki-sync-plaintext-to-do-and-notes-todotxt-markdown.md)
-  * [Markor: How to synchronize files with Syncthing (wmww,tengucrow)](doc/2020-04-04-syncthing-file-sync-setup-how-to-use-with-markor.md)
-  * [Using Markor to Write (and More) on an Android Device (The Plain Text Project)](doc/2019-07-16-using-markor-to-write-on-an-android-device-plaintextproject.md)
+  * [Synced plaintext TODO and notes - Vim / Vimwiki, Yole Android, Syncthing, GTD (Pitt)](doc/2020-09-26-vimwiki-sync-plaintext-to-do-and-notes-todotxt-markdown.md)
+  * [Yole: How to synchronize files with Syncthing (wmww,tengucrow)](doc/2020-04-04-syncthing-file-sync-setup-how-to-use-with-markor.md)
+  * [Using Yole to Write (and More) on an Android Device (The Plain Text Project)](doc/2019-07-16-using-markor-to-write-on-an-android-device-plaintextproject.md)
   * [How I Take Notes With Vim, Markdown, and Pandoc (Vaughan)](doc/2018-05-15-pandoc-vim-markdown-how-i-take-notes-vaughan.md)
 * [**NEWS**](NEWS.md)
-  * [Markor v2.11 - AsciiDoc, CSV and Org-Mode, Todo.txt advanced search](NEWS.md#markor-v211---asciidoc-csv-and-org-mode-todotxt-advanced-search-line-numbers) 
+  * [Yole v2.15.1 - Modern Android Architecture Update](NEWS.md#yole-v2151---modern-android-architecture-update)
+  * [Markor v2.11 - AsciiDoc, CSV and Org-Mode, Todo.txt advanced search](NEWS.md#markor-v211---asciidoc-csv-and-org-mode-todotxt-advanced-search-line-numbers)
   * [Markor v2.10 - Custom file templates, Share Into automatically remove URL tracking parameters](NEWS.md#markor-v210---custom-file-templates-share-into-automatically-remove-url-tracking-parameters)
   * [Markor v2.9 - Snippets, Templates, Graphs, Charts, Diagrams, YAML front-matter, Chemistry](NEWS.md#markor-v29---snippets-templates-graphs-charts-diagrams-yaml-front-matter-chemistry)
   * [Markor v2.8 - Multi-selection for todo.txt dialogs](NEWS.md#markor-v28---multi-selection-for-todotxt-dialogs)
@@ -132,23 +148,32 @@ Clone the project using git. Then open the project in [Android Studio](https://d
 You may also use any other plaintext editor of your preference.
 
 There is a Makefile in the project which makes it easy to test, lint, build, install & run the application on your device. See the Makefile for reference.
-You can find binaries (.apk), logs, test results & other outputs in the dist/ directory.  
+You can find binaries (.apk), logs, test results & other outputs in the dist/ directory.
 Example: `make all install run`.
 
-The project code style is the [AOSP Java Code Style](https://source.android.com/source/code-style#follow-field-naming-conventions). Use the _auto reformat_ menu option of Android Studio before commiting or before you create the pull request.
+The project uses modern Android development with the following code style:
+- **Language**: Kotlin with Java 8+ compatibility
+- **Code Style**: Follow [Kotlin coding conventions](https://kotlinlang.org/docs/coding-conventions.html)
+- **Imports**: Group standard Android, androidx, third-party, then project imports
+- **Naming**: CamelCase for classes, lowerCamelCase for methods/variables, UPPER_SNAKE_CASE for constants
+- **File Headers**: Include SPDX license header and maintainer info
+
+Use the _auto reformat_ menu option of Android Studio before committing or before you create the pull request.
 
 ### Technologies / Dependencies
-* Java, Android SDK, AndroidX
-* No dependency on NDK, 1 APK = all Android supported Architectures
-* Editor: Advanced component based on Android EditText
-* Preview: Android WebView
-* Editor syntax highlighting: Custom implementation for all supported formats
-* Markdown parser: [flexmark-java](https://github.com/vsch/flexmark-java/wiki/Extensions)
-* Zim/WikiText parser: Custom implementation, transpiling to Markdown
-* todo.txt parser: Custom implementation
-* Binary support: WebView html img/audio/video with support for most common formats
-* CI/CD: GitHub Actions
-* Build system: Gradle, Makefile
+* **Android**: AndroidX, modern Android development practices
+* **Cross-Platform**: Separate native applications for each platform
+* **No dependency on NDK**, optimized APKs for Android architectures
+* **Editor**: Advanced component based on Android EditText
+* **Preview**: Android WebView
+* **Editor syntax highlighting**: Custom implementation for all supported formats
+* **Markdown parser**: [flexmark-java](https://github.com/vsch/flexmark-java/wiki/Extensions)
+* **Zim/WikiText parser**: Custom implementation, transpiling to Markdown
+* **todo.txt parser**: Custom implementation
+* **Binary support**: WebView html img/audio/video with support for most common formats
+* **CI/CD**: GitHub Actions
+* **Build system**: Gradle with version catalog, Makefile
+* **Testing**: JUnit 4 with AssertJ assertions
 
 ### Resources
 * Project repository: [Changelog](CHANGELOG.md) | [Issues](https://github.com/gsantner/markor/issues?q=is%3Aissue+is%3Aopen) | [Discussions](https://github.com/gsantner/markor/discussions) | [License](/LICENSE.txt) | [GitHub Releases](https://github.com/gsantner/markor/releases) | [Makefile](Makefile)

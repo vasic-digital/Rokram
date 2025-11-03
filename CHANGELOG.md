@@ -3,6 +3,13 @@
 - New Updates also visible here: <https://github.com/gsantner/markor/releases>
 
 
+### v2.15.1 - Kotlin Multiplatform Migration Complete
+- **🎉 Migration Complete**: Full Kotlin Multiplatform implementation across Android, Desktop, iOS, and Web
+- **🏗️ Architecture**: Modular design with shared core and platform-specific implementations
+- **📚 All 18 Formats**: Complete support for Markdown, todo.txt, CSV, and 15 additional formats
+- **🧪 Testing**: Comprehensive test suite with 100% coverage goals
+- **📖 Documentation**: Updated guides for multi-platform development
+
 ### v2.15 -> v2.16 - Major Architecture Refactor & 8 New Formats
 - **🏗️ Modular Architecture**: Complete refactor into 20+ modules (commons, core, app, 18 format modules)
 - **📚 New Formats Added**:

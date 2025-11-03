@@ -2,7 +2,7 @@
 
 ## 🚀 Get Started in 5 Minutes
 
-Yole is now a **cross-platform text editor** supporting Android, iOS, Desktop (Windows/macOS/Linux), and Web with **18+ markup formats**.
+Yole is a **cross-platform text editor** supporting Android, iOS, Desktop (Windows/macOS/Linux), and Web with **18+ markup formats**.
 
 ## 📱 Platform-Specific Setup
 
@@ -10,7 +10,7 @@ Yole is now a **cross-platform text editor** supporting Android, iOS, Desktop (W
 ```bash
 # Build and install
 ./gradlew :androidApp:assembleDebug
-adb install app/build/outputs/apk/debug/app-debug.apk
+adb install androidApp/build/outputs/apk/debug/androidApp-debug.apk
 
 # Or run directly
 ./gradlew :androidApp:installDebug
@@ -36,11 +36,10 @@ adb install app/build/outputs/apk/debug/app-debug.apk
 
 ### iOS
 ```bash
-# Build iOS framework
-./gradlew :shared:linkDebugFrameworkIosArm64
-
 # Open in Xcode
 open iosApp/iosApp.xcodeproj
+
+# Build and run from Xcode
 ```
 
 ## 📝 Supported Formats
@@ -105,36 +104,44 @@ Yole supports **18 markup formats**:
 ./gradlew :webApp:wasmJsBrowserRun
 
 # iOS development (requires Xcode)
-./gradlew :shared:linkDebugFrameworkIosArm64
+# Build from Xcode
 ```
 
 ## 🏗️ Architecture Overview
 
-Yole uses **Kotlin Multiplatform (KMP)** with **Compose Multiplatform**:
+Yole uses **modern cross-platform development** with native applications for each platform:
 
 ```
-shared/ (80-90% shared code)
-├── commonMain/     # Platform-agnostic logic
-├── androidMain/    # Android-specific code
-├── desktopMain/    # Desktop-specific code
-├── iosMain/        # iOS-specific code
-└── wasmJsMain/     # Web-specific code
+androidApp/     # Native Android app
+├── src/main/kotlin/
+└── build.gradle.kts
+
+desktopApp/     # Native Desktop app
+├── src/main/kotlin/
+└── build.gradle.kts
+
+iosApp/         # Native iOS app
+├── src/
+└── build.gradle.kts
+
+webApp/         # Progressive Web App
+├── src/main/kotlin/
+└── build.gradle.kts
 ```
 
 ### Key Features
-- **Cross-Platform**: Write once, run everywhere
-- **Modern UI**: Compose Multiplatform for native experience
-- **Extensible**: Plugin system for custom formats
-- **Performance**: Optimized for all platforms
+- **Cross-Platform**: Native applications for each platform
+- **Modern UI**: Platform-specific UI frameworks
+- **Extensible**: Modular format support
+- **Performance**: Optimized for each platform
 - **Accessibility**: Full accessibility support
 
 ## 📚 Documentation
 
 - **Architecture**: `ARCHITECTURE.md`
-- **Migration Status**: `FINAL_MIGRATION_SUMMARY.md`
 - **Testing Strategy**: `TESTING_STRATEGY.md`
-- **Build Commands**: `AGENTS.md`
-- **Verification**: `VERIFICATION_CHECKLIST.md`
+- **Development Guide**: `AGENTS.md`
+- **Migration Archive**: `MIGRATION_ARCHIVE.md`
 
 ## 🎯 Getting Help
 

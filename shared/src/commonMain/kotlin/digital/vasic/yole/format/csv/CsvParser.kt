@@ -12,7 +12,26 @@ package digital.vasic.yole.format.csv
 import digital.vasic.yole.format.*
 
 /**
- * CSV configuration
+ * Configuration for CSV parsing.
+ * 
+ * This data class defines how CSV files should be parsed, including the delimiter
+ * character, quote character, and whether the first row contains headers.
+ *
+ * @property delimiter Character used to separate fields (default: ',')
+ * @property quote Character used to quote fields containing delimiters (default: '"')
+ * @property hasHeader Whether the first row contains column headers (default: true)
+ *
+ * @example
+ * ```kotlin
+ * val config = CsvConfig(
+ *     delimiter = ';',
+ *     quote = '"',
+ *     hasHeader = true
+ * )
+ * 
+ * val parser = CsvParser()
+ * val table = parser.parseCsv(content, config)
+ * ```
  */
 data class CsvConfig(
     val delimiter: Char = ',',
@@ -21,7 +40,19 @@ data class CsvConfig(
 ) {
     companion object {
         /**
-         * Infer CSV configuration from first line
+         * Infer CSV configuration from the first line of content.
+         * 
+         * This method analyzes the first line to determine the most likely
+         * delimiter and quote character based on common patterns.
+         * 
+         * @param firstLine The first line of CSV content
+         * @return Inferred CsvConfig object
+         *
+         * @example
+         * ```kotlin
+         * val config = CsvConfig.infer("name;age;city")
+         * println(config.delimiter) // ';'
+         * ```
          */
         fun infer(firstLine: String): CsvConfig {
             // Try common delimiters
@@ -45,19 +76,68 @@ data class CsvConfig(
 }
 
 /**
- * Represents a parsed CSV table
+ * Represents a parsed CSV table.
+ * 
+ * This data class contains the parsed CSV data along with optional headers
+ * and the configuration used for parsing. It provides convenient accessors
+ * for row and column counts.
+ *
+ * @property rows List of rows, where each row is a list of string values
+ * @property headers Optional list of column headers (null if no header row)
+ * @property config The CsvConfig used to parse this table
+ *
+ * @example
+ * ```kotlin
+ * val table = CsvTable(
+ *     rows = listOf(listOf("John", "30"), listOf("Jane", "25")),
+ *     headers = listOf("Name", "Age")
+ * )
+ * 
+ * println(table.rowCount) // 2
+ * println(table.columnCount) // 2
+ * println(table.headers?.first()) // "Name"
+ * ```
  */
 data class CsvTable(
     val rows: List<List<String>>,
     val headers: List<String>? = null,
     val config: CsvConfig = CsvConfig()
 ) {
+    /**
+     * Number of data rows (excluding header row if present).
+     */
     val rowCount: Int get() = rows.size
+    
+    /**
+     * Number of columns in the table.
+     */
     val columnCount: Int get() = headers?.size ?: rows.firstOrNull()?.size ?: 0
 }
 
 /**
- * CSV format parser
+ * CSV format parser.
+ * 
+ * Implements CSV (Comma-Separated Values) parsing with support for custom delimiters,
+ * quote characters, and optional header rows. The parser handles escaped quotes,
+ * embedded delimiters, and empty fields. Converts CSV data to HTML tables and
+ * provides validation for malformed CSV structure.
+ *
+ * @constructor Creates a new CsvParser instance
+ *
+ * @example
+ * ```kotlin
+ * val parser = CsvParser()
+ * val content = """
+ *     Name,Age,City
+ *     John,30,New York
+ *     Jane,25,Los Angeles
+ * """.trimIndent()
+ * 
+ * val document = parser.parse(content)
+ * val table = parser.parseCsv(content)
+ * println("Rows: ${table.rowCount}")
+ * println("Columns: ${table.columnCount}")
+ * ```
  */
 class CsvParser : TextParser {
     override val supportedFormat: TextFormat
@@ -94,7 +174,21 @@ class CsvParser : TextParser {
     }
 
     /**
-     * Parse CSV content into a table
+     * Parse CSV content into a structured table.
+     * 
+     * This method parses CSV content according to the provided configuration,
+     * handling quoted fields, escaped quotes, and custom delimiters.
+     * 
+     * @param content The CSV content to parse
+     * @param config The CSV configuration to use (default: standard CSV)
+     * @return A CsvTable containing the parsed data and optional headers
+     *
+     * @example
+     * ```kotlin
+     * val config = CsvConfig(delimiter = ';', hasHeader = true)
+     * val table = parser.parseCsv(csvContent, config)
+     * println(table.headers) // ["Name", "Age", "City"]
+     * ```
      */
     fun parseCsv(content: String, config: CsvConfig = CsvConfig()): CsvTable {
         val lines = content.lines().filter { it.isNotBlank() && !it.trim().startsWith("#") }
@@ -121,7 +215,24 @@ class CsvParser : TextParser {
     }
 
     /**
-     * Parse a single CSV line into fields
+     * Parse a single CSV line into individual fields.
+     * 
+     * This method handles the complexities of CSV parsing including:
+     * - Quoted fields containing delimiters
+     * - Escaped quotes (double quotes within quoted fields)
+     * - Empty fields
+     * - Fields with leading/trailing whitespace
+     * 
+     * @param line The CSV line to parse
+     * @param delimiter The delimiter character (default: ',')
+     * @param quote The quote character (default: '"')
+     * @return List of field values as strings
+     *
+     * @example
+     * ```kotlin
+     * val fields = parser.parseLine("John,\"Doe, Jr.\",30")
+     * println(fields) // ["John", "Doe, Jr.", "30"]
+     * ```
      */
     fun parseLine(line: String, delimiter: Char = ',', quote: Char = '"'): List<String> {
         val fields = mutableListOf<String>()
@@ -167,7 +278,15 @@ class CsvParser : TextParser {
     }
 
     /**
-     * Convert CSV table to HTML
+     * Convert CSV table to HTML with styling.
+     * 
+     * This method generates an HTML table with appropriate CSS classes for
+     * styling. Headers are rendered in <thead> with <th> tags, while data
+     * rows are in <tbody> with <td> tags. Empty cells are rendered with
+     * non-breaking spaces to maintain table structure.
+     * 
+     * @param table The CsvTable to convert
+     * @return HTML representation of the table with embedded CSS
      */
     private fun tableToHtml(table: CsvTable): String {
         return buildString {
@@ -210,7 +329,23 @@ class CsvParser : TextParser {
     }
 
     /**
-     * Convert CSV to Markdown table format
+     * Convert CSV table to Markdown table format.
+     * 
+     * This method converts the parsed CSV data into GitHub Flavored Markdown
+     * table format, which is widely supported for documentation and README files.
+     * 
+     * @param table The CsvTable to convert
+     * @return Markdown table representation
+     *
+     * @example
+     * ```kotlin
+     * val markdown = parser.toMarkdownTable(table)
+     * println(markdown)
+     * // Output:
+     * // | Name | Age |
+     * // |------|-----|
+     * // | John | 30  |
+     * ```
      */
     fun toMarkdownTable(table: CsvTable): String {
         return buildString {

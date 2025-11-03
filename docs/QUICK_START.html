@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yole - Quick Start Guide</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav>
+        <a href="index.html">Home</a> |
+        <a href="README.html">README</a> |
+        <a href="ARCHITECTURE.html">Architecture</a> |
+        <a href="CONTRIBUTING.html">Contributing</a>
+    </nav>
+
+    <main>
+        <h1>Yole - Quick Start Guide</h1>
+        <p>Get started with Yole in 5 minutes across all platforms.</p>
+
+        <h2>Platform Setup</h2>
+
+        <h3>Android</h3>
+        <pre><code>./gradlew :androidApp:assembleDebug
+adb install androidApp/build/outputs/apk/debug/androidApp-debug.apk</code></pre>
+
+        <h3>Desktop</h3>
+        <pre><code>./gradlew :desktopApp:run</code></pre>
+
+        <h3>Web</h3>
+        <pre><code>./gradlew :webApp:wasmJsBrowserRun</code></pre>
+
+        <h3>iOS</h3>
+        <p>Open <code>iosApp/iosApp.xcodeproj</code> in Xcode and build.</p>
+
+        <h2>Supported Formats</h2>
+        <p>Yole supports 18+ markup formats including Markdown, todo.txt, CSV, LaTeX, and more.</p>
+
+        <h2>Development Commands</h2>
+        <pre><code># Build all
+./gradlew clean build
+
+# Run tests
+./gradlew test</code></pre>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Yole Project</p>
+    </footer>
+</body>
+</html>

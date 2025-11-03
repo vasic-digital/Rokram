@@ -11,7 +11,27 @@ package digital.vasic.yole.format
 
 /**
  * Represents a text format supported by Yole.
- * This is the KMP version of FormatRegistry.Format.
+ * 
+ * This data class encapsulates all metadata about a supported text format,
+ * including its identifier, human-readable name, file extensions, and detection
+ * patterns. This is the KMP version of FormatRegistry.Format.
+ *
+ * @property id Unique format identifier (e.g., "markdown", "todotxt", "latex")
+ * @property name Human-readable format name (e.g., "Markdown", "Todo.txt", "LaTeX")
+ * @property defaultExtension Default file extension with dot (e.g., ".md", ".txt", ".tex")
+ * @property extensions Supported file extensions for this format
+ * @property detectionPatterns Format detection patterns (e.g., file content patterns)
+ *
+ * @example
+ * ```kotlin
+ * val markdownFormat = TextFormat(
+ *     id = "markdown",
+ *     name = "Markdown",
+ *     defaultExtension = ".md",
+ *     extensions = listOf(".md", ".markdown", ".mkd"),
+ *     detectionPatterns = listOf("^#+ ", "^\\[.*\\]\\(.*\\)")
+ * )
+ * ```
  */
 data class TextFormat(
     /**
@@ -40,7 +60,12 @@ data class TextFormat(
     val detectionPatterns: List<String> = emptyList()
 ) {
     companion object {
-        // Standard format identifiers
+        /**
+         * Standard format identifiers used throughout the application.
+         * 
+         * These constants provide a centralized way to reference format IDs
+         * and help avoid string literals throughout the codebase.
+         */
         const val ID_UNKNOWN = "unknown"
         const val ID_PLAINTEXT = "plaintext"
         const val ID_MARKDOWN = "markdown"

@@ -12,8 +12,33 @@ package digital.vasic.yole.format.markdown
 import digital.vasic.yole.format.*
 
 /**
- * Markdown format parser
- * Supports CommonMark + GitHub Flavored Markdown (GFM) extensions
+ * Markdown format parser.
+ * 
+ * Supports CommonMark + GitHub Flavored Markdown (GFM) extensions including
+ * tables, task lists, strikethrough, footnotes, and more. This parser converts
+ * Markdown markup to HTML for display and provides syntax validation.
+ *
+ * @constructor Creates a new MarkdownParser instance
+ *
+ * @example
+ * ```kotlin
+ * val parser = MarkdownParser()
+ * val content = """
+ *     # Hello World
+ *     
+ *     This is **bold** and *italic* text.
+ *     
+ *     - [x] Completed task
+ *     - [ ] Pending task
+ *     
+ *     | Column 1 | Column 2 |
+ *     |----------|----------|
+ *     | Cell 1   | Cell 2   |
+ * """.trimIndent()
+ * 
+ * val document = parser.parse(content)
+ * val html = parser.toHtml(document)
+ * ```
  */
 class MarkdownParser : TextParser {
     override val supportedFormat: TextFormat
@@ -44,7 +69,21 @@ class MarkdownParser : TextParser {
     }
 
     /**
-     * Convert Markdown to HTML
+     * Convert Markdown content to HTML.
+     * 
+     * This method implements a comprehensive Markdown parser that supports:
+     * - Headers (H1-H6)
+     * - Emphasis (bold, italic, strikethrough)
+     * - Links and images
+     * - Code blocks and inline code
+     * - Blockquotes
+     * - Lists (ordered and unordered)
+     * - Tables (GFM style)
+     * - Task lists
+     * - Horizontal rules
+     * 
+     * @param content The Markdown content to convert
+     * @return HTML representation with embedded CSS styling
      */
     private fun convertToHtml(content: String): String {
         val lines = content.lines()
@@ -239,7 +278,11 @@ class MarkdownParser : TextParser {
     }
 
     /**
-     * Convert a table row
+     * Convert a Markdown table row to HTML.
+     * 
+     * @param line The table row line (starts and ends with |)
+     * @param isHeaderRow Whether this row should be treated as a header row
+     * @return HTML table row with appropriate cell tags
      */
     private fun convertTableRow(line: String, isHeaderRow: Boolean): String {
         val cells = line.trim().substring(1, line.trim().length - 1).split("|")
@@ -254,7 +297,19 @@ class MarkdownParser : TextParser {
     }
 
     /**
-     * Convert inline Markdown markup to HTML
+     * Convert inline Markdown markup to HTML.
+     * 
+     * This method processes inline formatting including:
+     * - Code spans (`code`)
+     * - Links ([text](url))
+     * - Images (![alt](url))
+     * - Task list checkboxes ([ ] and [x])
+     * - Bold text (**text** or __text__)
+     * - Italic text (*text* or _text_)
+     * - Strikethrough text (~~text~~)
+     * 
+     * @param text The text containing inline markup
+     * @return HTML with inline markup converted to appropriate tags
      */
     private fun convertInlineMarkup(text: String): String {
         var result = text
@@ -336,7 +391,10 @@ class MarkdownParser : TextParser {
     }
 
     /**
-     * Extract file extension from filename
+     * Extract file extension from filename.
+     * 
+     * @param filename The filename to extract extension from
+     * @return The file extension with dot (e.g., ".md") or empty string if no extension
      */
     private fun getExtension(filename: String): String {
         val lastDot = filename.lastIndexOf('.')
@@ -390,7 +448,9 @@ class MarkdownParser : TextParser {
     }
 
     companion object {
-        // Supported extensions
+        /**
+         * Supported file extensions for Markdown format.
+         */
         val EXTENSIONS = setOf(".md", ".markdown", ".mdown", ".mkd")
     }
 }
