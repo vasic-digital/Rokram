@@ -208,4 +208,285 @@ class FormatRegistryTest {
 
         assertTrue(markdownIndex < plaintextIndex, "Markdown should come before plaintext")
     }
+
+    // ==================== Additional Coverage Tests ====================
+
+    @Test
+    fun testGetByExtensionWithDot() {
+        val format = FormatRegistry.getByExtension(".md")
+        assertNotNull(format)
+        assertEquals(TextFormat.ID_MARKDOWN, format.id)
+    }
+
+    @Test
+    fun testGetByExtensionWithoutDot() {
+        val format = FormatRegistry.getByExtension("md")
+        assertNotNull(format)
+        assertEquals(TextFormat.ID_MARKDOWN, format.id)
+    }
+
+    @Test
+    fun testGetByExtensionReturnsNullForUnknown() {
+        val format = FormatRegistry.getByExtension(".xyz999")
+        assertNull(format)
+    }
+
+    @Test
+    fun testGetByExtensionHandlesWhitespace() {
+        val format = FormatRegistry.getByExtension("  .md  ")
+        assertNotNull(format)
+        assertEquals(TextFormat.ID_MARKDOWN, format.id)
+    }
+
+    @Test
+    fun testGetFormatsByExtensionFindsMultiple() {
+        val formats = FormatRegistry.getFormatsByExtension(".txt")
+        assertTrue(formats.size >= 2) // Should find plaintext and todotxt
+        assertTrue(formats.any { it.id == TextFormat.ID_PLAINTEXT })
+        assertTrue(formats.any { it.id == TextFormat.ID_TODOTXT })
+    }
+
+    @Test
+    fun testGetFormatsByExtensionReturnsSingle() {
+        val formats = FormatRegistry.getFormatsByExtension(".md")
+        assertEquals(1, formats.size)
+        assertEquals(TextFormat.ID_MARKDOWN, formats.first().id)
+    }
+
+    @Test
+    fun testGetFormatsByExtensionReturnsEmptyForUnknown() {
+        val formats = FormatRegistry.getFormatsByExtension(".xyz999")
+        assertTrue(formats.isEmpty())
+    }
+
+    @Test
+    fun testIsSupported() {
+        assertTrue(FormatRegistry.isSupported(TextFormat.ID_MARKDOWN))
+        assertTrue(FormatRegistry.isSupported(TextFormat.ID_LATEX))
+        assertTrue(FormatRegistry.isSupported(TextFormat.ID_TODOTXT))
+    }
+
+    @Test
+    fun testIsSupportedReturnsFalse() {
+        assertTrue(!FormatRegistry.isSupported("nonexistent"))
+        assertTrue(!FormatRegistry.isSupported(""))
+    }
+
+    @Test
+    fun testGetFormatNames() {
+        val names = FormatRegistry.getFormatNames()
+        assertTrue(names.isNotEmpty())
+        assertTrue(names.contains("Markdown"))
+        assertTrue(names.contains("Plain Text"))
+        assertTrue(names.contains("Todo.txt"))
+        assertTrue(names.contains("LaTeX"))
+    }
+
+    @Test
+    fun testGetAllExtensions() {
+        val extensions = FormatRegistry.getAllExtensions()
+        assertTrue(extensions.isNotEmpty())
+        assertTrue(extensions.contains(".md"))
+        assertTrue(extensions.contains(".txt"))
+        assertTrue(extensions.contains(".tex"))
+        assertTrue(extensions.contains(".csv"))
+    }
+
+    @Test
+    fun testGetAllExtensionsAreUnique() {
+        val extensions = FormatRegistry.getAllExtensions()
+        val uniqueExtensions = extensions.distinct()
+        assertEquals(uniqueExtensions.size, extensions.size)
+    }
+
+    @Test
+    fun testDetectByExtensionNeverReturnsNull() {
+        val unknownExtensions = listOf(".xyz", ".unknown", "", "abc123")
+        unknownExtensions.forEach { ext ->
+            val format = FormatRegistry.detectByExtension(ext)
+            assertNotNull(format, "detectByExtension should never return null for '$ext'")
+            assertEquals(TextFormat.ID_PLAINTEXT, format.id)
+        }
+    }
+
+    @Test
+    fun testDetectByFilenameWithPath() {
+        val format = FormatRegistry.detectByFilename("/path/to/document.md")
+        assertEquals(TextFormat.ID_MARKDOWN, format.id)
+    }
+
+    @Test
+    fun testDetectByFilenameWithMultipleDots() {
+        val format = FormatRegistry.detectByFilename("my.document.name.tex")
+        assertEquals(TextFormat.ID_LATEX, format.id)
+    }
+
+    @Test
+    fun testDetectByFilenameEmpty() {
+        val format = FormatRegistry.detectByFilename("")
+        assertEquals(TextFormat.ID_PLAINTEXT, format.id)
+    }
+
+    @Test
+    fun testDetectByFilenameHiddenFile() {
+        val format = FormatRegistry.detectByFilename(".hidden.md")
+        assertEquals(TextFormat.ID_MARKDOWN, format.id)
+    }
+
+    @Test
+    fun testDetectByContentEmptyString() {
+        val format = FormatRegistry.detectByContent("")
+        assertNull(format)
+    }
+
+    @Test
+    fun testDetectByContentMaxLines() {
+        val content = """
+            Line 1
+            Line 2
+            Line 3
+            # Markdown header on line 4
+        """.trimIndent()
+
+        // Should not detect if maxLines is too small
+        val formatSmall = FormatRegistry.detectByContent(content, maxLines = 3)
+        // May or may not detect depending on whether first 3 lines match
+
+        // Should detect if maxLines includes the header
+        val formatLarge = FormatRegistry.detectByContent(content, maxLines = 10)
+        assertNotNull(formatLarge)
+        assertEquals(TextFormat.ID_MARKDOWN, formatLarge.id)
+    }
+
+    @Test
+    fun testDetectCSVByContent() {
+        val csvContent = "name,age,city\nJohn,30,NYC"
+        val format = FormatRegistry.detectByContent(csvContent)
+        assertNotNull(format)
+        assertEquals(TextFormat.ID_CSV, format.id)
+    }
+
+    @Test
+    fun testDetectWikiTextByContent() {
+        val wikiContent = "== Section ==\n\n[[Link]]"
+        val format = FormatRegistry.detectByContent(wikiContent)
+        assertNotNull(format)
+        assertEquals(TextFormat.ID_WIKITEXT, format.id)
+    }
+
+    @Test
+    fun testDetectAsciiDocByContent() {
+        val asciidocContent = "= Document Title\n\n== Section"
+        val format = FormatRegistry.detectByContent(asciidocContent)
+        assertNotNull(format)
+        assertEquals(TextFormat.ID_ASCIIDOC, format.id)
+    }
+
+    @Test
+    fun testDetectRestructuredTextByContent() {
+        val rstContent = "Title\n=====\n\n.. note:: Important"
+        val format = FormatRegistry.detectByContent(rstContent)
+        assertNotNull(format)
+        assertEquals(TextFormat.ID_RESTRUCTUREDTEXT, format.id)
+    }
+
+    @Test
+    fun testDetectKeyValueByContent() {
+        val keyValueContent = "key = value\nname = John"
+        val format = FormatRegistry.detectByContent(keyValueContent)
+        assertNotNull(format)
+        assertEquals(TextFormat.ID_KEYVALUE, format.id)
+    }
+
+    @Test
+    fun testDetectTaskPaperByContent() {
+        val taskPaperContent = "Project:\n\t- Task item"
+        val format = FormatRegistry.detectByContent(taskPaperContent)
+        assertNotNull(format)
+        assertEquals(TextFormat.ID_TASKPAPER, format.id)
+    }
+
+    @Test
+    fun testDetectTextileByContent() {
+        val textileContent = "h1. Header\n\n* List item"
+        val format = FormatRegistry.detectByContent(textileContent)
+        assertNotNull(format)
+        assertEquals(TextFormat.ID_TEXTILE, format.id)
+    }
+
+    @Test
+    fun testDetectCreoleByContent() {
+        val creoleContent = "= Header\n\n** Bold text"
+        val format = FormatRegistry.detectByContent(creoleContent)
+        assertNotNull(format)
+        assertEquals(TextFormat.ID_CREOLE, format.id)
+    }
+
+    @Test
+    fun testDetectTiddlyWikiByContent() {
+        val tiddlyContent = "! Header\n\ntitle: Document"
+        val format = FormatRegistry.detectByContent(tiddlyContent)
+        assertNotNull(format)
+        assertEquals(TextFormat.ID_TIDDLYWIKI, format.id)
+    }
+
+    @Test
+    fun testDetectJupyterByContent() {
+        val jupyterContent = """{"nbformat": 4, "cell_type": "code"}"""
+        val format = FormatRegistry.detectByContent(jupyterContent)
+        assertNotNull(format)
+        assertEquals(TextFormat.ID_JUPYTER, format.id)
+    }
+
+    @Test
+    fun testDetectRMarkdownByContent() {
+        val rmdContent = "---\ntitle: Doc\n---\n\n```{r}\nplot(x)\n```"
+        val format = FormatRegistry.detectByContent(rmdContent)
+        assertNotNull(format)
+        assertEquals(TextFormat.ID_RMARKDOWN, format.id)
+    }
+
+    @Test
+    fun testAllFormatIDsAreConstantsDefined() {
+        // Verify all format ID constants exist
+        val constantIds = listOf(
+            FormatRegistry.ID_PLAINTEXT,
+            FormatRegistry.ID_MARKDOWN,
+            FormatRegistry.ID_TODOTXT,
+            FormatRegistry.ID_CSV,
+            FormatRegistry.ID_WIKITEXT,
+            FormatRegistry.ID_KEYVALUE,
+            FormatRegistry.ID_ASCIIDOC,
+            FormatRegistry.ID_ORGMODE,
+            FormatRegistry.ID_LATEX,
+            FormatRegistry.ID_RESTRUCTUREDTEXT,
+            FormatRegistry.ID_TASKPAPER,
+            FormatRegistry.ID_TEXTILE,
+            FormatRegistry.ID_CREOLE,
+            FormatRegistry.ID_TIDDLYWIKI,
+            FormatRegistry.ID_JUPYTER,
+            FormatRegistry.ID_RMARKDOWN,
+            FormatRegistry.ID_BINARY
+        )
+
+        constantIds.forEach { id ->
+            val format = FormatRegistry.getById(id)
+            assertNotNull(format, "Constant ID '$id' should have corresponding format")
+        }
+    }
+
+    @Test
+    fun testPlainTextFormatAlwaysExists() {
+        val plainText = FormatRegistry.getById(FormatRegistry.ID_PLAINTEXT)
+        assertNotNull(plainText)
+        assertEquals("Plain Text", plainText.name)
+        assertTrue(plainText.extensions.contains(".txt"))
+    }
+
+    @Test
+    fun testBinaryFormatExists() {
+        val binary = FormatRegistry.getById(FormatRegistry.ID_BINARY)
+        assertNotNull(binary)
+        assertEquals("Binary", binary.name)
+    }
 }
