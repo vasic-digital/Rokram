@@ -17,6 +17,13 @@
 - **Current Baseline**: ~15% estimated (goal: >80%)
 - **Note**: Reports are generated per module. Use `koverHtmlReport` for combined coverage.
 
+## API Documentation (Dokka)
+- **Generate Docs**: `./gradlew :shared:dokkaHtml` → Output: `shared/build/dokka/html/`
+- **View Docs**: `open shared/build/dokka/html/index.html`
+- **Publish to Website**: `mkdir -p docs/api && cp -r shared/build/dokka/html/* docs/api/`
+- **Key Classes**: FormatRegistry, TextFormat, Document (all in `shared` module)
+- **Note**: FormatRegistry and TextFormat already have comprehensive KDoc documentation
+
 ## Code Style Guidelines
 - **Language**: Kotlin with Java 8+ compatibility, platform-specific languages
 - **Package structure**: `digital.vasic.yole.*` for app code, `net.gsantner.opoc.*` for shared utilities

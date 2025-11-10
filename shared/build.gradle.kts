@@ -16,6 +16,7 @@ plugins {
     kotlin("plugin.compose")
     id("com.android.library")
     id("org.jetbrains.compose")
+    id("org.jetbrains.dokka")
 }
 
 kotlin {

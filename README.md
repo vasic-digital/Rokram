@@ -24,6 +24,16 @@
 | **iOS** | 🚧 In Development | Coming Q2 2026 |
 | **Web** (PWA) | 🚧 In Development | Coming Q3 2026 |
 
+## Documentation
+
+📚 **[API Documentation](docs/api/)** - Comprehensive API reference for developers
+<br/>🏗️ **[Architecture Guide](ARCHITECTURE.md)** - System design and module structure
+<br/>🧪 **[Testing Strategy](TESTING_STRATEGY.md)** - Test coverage and methodology
+<br/>📝 **[Format Documentation](FORMAT_DOCUMENTATION.md)** - All 18+ supported formats
+<br/>🤝 **[Contributing Guide](CONTRIBUTING.md)** - How to contribute to the project
+
+---
+
 Yole is a cross-platform text editor with Android as the primary production platform.
 This project aims to make an editor that is versatile, flexible, and lightweight.
 Yole utilizes simple markup formats like Markdown and todo.txt for note-taking and list management.

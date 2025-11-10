@@ -157,9 +157,22 @@ ext {
 }
 
 // Configure Dokka for API documentation
-tasks.register("dokkaHtmlMultiModule") {
+// Note: Dokka plugin must be applied to modules to generate documentation
+// Run: ./gradlew dokkaHtml (for single module) or ./gradlew :shared:dokkaHtml
+// Output: build/dokka/html/
+
+tasks.register("generateApiDocs") {
     group = "documentation"
     description = "Generate API documentation for all modules"
+    doLast {
+        println("Generating API documentation...")
+        println("Run: ./gradlew :shared:dokkaHtml")
+        println("Output will be in: shared/build/dokka/html/")
+        println("")
+        println("To copy to docs/api/ for publishing:")
+        println("mkdir -p docs/api")
+        println("cp -r shared/build/dokka/html/* docs/api/")
+    }
 }
 
 // Configure Kover for code coverage

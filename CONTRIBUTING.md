@@ -84,6 +84,22 @@ All source files must include SPDX license header:
 - Write instrumented tests for Android-specific code
 - Aim for high test coverage on core functionality
 
+### Build Configuration
+
+#### Gradle Build Files
+**IMPORTANT:** This project uses **Kotlin DSL only** for Gradle build configuration.
+
+- ✅ Use `build.gradle.kts` (Kotlin DSL)
+- ❌ Do NOT use `build.gradle` (Groovy DSL)
+- All modules must use `.gradle.kts` files
+- Legacy Groovy build files have been removed
+
+**Rationale:** Kotlin DSL provides:
+- Type-safe build scripts
+- Better IDE support
+- Kotlin language features
+- Consistency with project language
+
 ### Building and Linting
 
 #### Build Commands
