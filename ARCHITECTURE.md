@@ -4,6 +4,20 @@
 
 Yole is a cross-platform text editor supporting Android, Desktop, iOS, and Web platforms with 18+ text formats. This document describes the architecture, module structure, and implementation details.
 
+## Current Platform Status (November 2025)
+
+| Platform | Status | Notes |
+|----------|--------|-------|
+| **Android** | ✅ Production Ready | Fully functional with comprehensive test coverage |
+| **Desktop** | ⚠️ Beta (30% complete) | Basic implementation, needs completion and testing |
+| **iOS** | 🚧 Disabled | iOS targets temporarily disabled in `shared/build.gradle.kts:41` due to compilation issues. Requires resolution before re-enabling |
+| **Web** | 🚧 Stub (0% complete) | Build configuration complete, but no source implementation. Infrastructure in place for future development |
+
+**Critical Issues:**
+- **iOS**: All iOS targets (`iosX64`, `iosArm64`, `iosSimulatorArm64`) commented out. TODO at line 41 of `shared/build.gradle.kts`: "Re-enable iOS targets once basic compilation is working"
+- **Web**: `webApp/src/main/` has no source code despite complete build configuration
+- **Core Module**: Investigation needed - main source directory structure unclear
+
 ## Module Structure
 
 ### Platform-Specific Applications

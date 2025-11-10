@@ -75,57 +75,101 @@ Verify modular architecture:
 
 ### Module Structure
 
-**Core Modules:**
+**Important:** This is a **Kotlin Multiplatform (KMP)** project. The format system is in the `shared` module, not `core`.
 
-1. **commons** - Shared utilities and base classes
+**Kotlin Multiplatform Modules:**
+
+1. **shared** - Kotlin Multiplatform shared code (PRIMARY MODULE)
+   - Location: `shared/src/commonMain/kotlin/digital/vasic/yole/`
+   - **FormatRegistry** - `shared/src/commonMain/kotlin/digital/vasic/yole/format/FormatRegistry.kt`
+   - **Format Parsers** - `shared/src/commonMain/kotlin/digital/vasic/yole/format/[format]/`
+   - **Models** - `shared/src/commonMain/kotlin/digital/vasic/yole/model/Document.kt`
+   - Contains all cross-platform business logic
+   - Platform-specific implementations in androidMain/, desktopMain/, iosMain/, wasmJsMain/
+
+**Platform Applications:**
+
+2. **androidApp** - Native Android application
+   - Activities: `MainActivity`, etc.
+   - Compose UI components
+   - Android-specific UI code
+   - Uses shared module for business logic
+
+3. **desktopApp** - Desktop application (Windows/macOS/Linux)
+   - Compose Desktop UI
+   - Platform: JVM
+   - Status: Beta (30% complete)
+
+4. **iosApp** - iOS application
+   - SwiftUI + Kotlin Multiplatform
+   - Status: Disabled (compilation issues)
+
+5. **webApp** - Progressive Web App
+   - Kotlin/Wasm + Compose for Web
+   - Status: Stub (0% complete)
+
+**Legacy Android Modules:**
+
+6. **commons** - Android shared utilities
    - `GsFileUtils` - File operations
    - `GsContextUtils` - Android context utilities
    - `GsCollectionUtils` - Collection helpers
-   - Provides foundation for all other modules
+   - Location: `commons/src/main/kotlin/net/gsantner/opoc/`
 
-2. **core** - Format system infrastructure
-   - `FormatRegistry` - Central registry for all 18 formats
-   - `TextConverterBase` - Base class for HTML conversion
-   - `SyntaxHighlighterBase` - Base class for syntax highlighting
-   - `ActionButtonBase` - Base class for toolbar actions
-   - `AppSettings`, `Document` - Core models
+7. **core** - Legacy encryption module
+   - **Contains ONLY third-party encryption code**
+   - JavaPasswordbasedCryption.java - AES256 encryption
+   - PasswordStore.java - Password storage
+   - Location: `core/thirdparty/java/`
+   - **Note:** Does NOT contain FormatRegistry (that's in shared module)
 
-3. **app** - Main application
-   - Activities: `MainActivity`, `DocumentActivity`, `SettingsActivity`
-   - Fragments: `DocumentEditAndViewFragment`, etc.
-   - All UI and Android-specific code
+**Format System:**
 
-**Format Modules:**
-
-Each format is a separate module with this structure:
+All formats are now in the `shared` module as parsers, not separate modules:
 ```
-format-[name]/
-├── src/main/java/digital/vasic/yole/format/[name]/
-│   ├── [Name]TextConverter.java      # HTML conversion
-│   ├── [Name]SyntaxHighlighter.java  # Editor highlighting
-│   └── [Name]ActionButtons.java      # Toolbar actions
-├── src/test/java/                    # Unit tests
-└── build.gradle                      # Module dependencies
+shared/src/commonMain/kotlin/digital/vasic/yole/format/
+├── FormatRegistry.kt              # Central registry
+├── TextFormat.kt                  # Format metadata
+├── markdown/MarkdownParser.kt     # Markdown parsing
+├── todotxt/TodoTxtParser.kt       # Todo.txt parsing
+├── csv/CsvParser.kt               # CSV parsing
+├── latex/LatexParser.kt           # LaTeX parsing
+├── asciidoc/AsciidocParser.kt     # AsciiDoc parsing
+├── orgmode/OrgModeParser.kt       # Org Mode parsing
+├── wikitext/WikitextParser.kt     # WikiText parsing
+├── restructuredtext/RestructuredTextParser.kt
+├── taskpaper/TaskpaperParser.kt
+├── textile/TextileParser.kt
+├── creole/CreoleParser.kt
+├── tiddlywiki/TiddlyWikiParser.kt
+├── jupyter/JupyterParser.kt
+├── rmarkdown/RMarkdownParser.kt
+├── plaintext/PlaintextParser.kt
+└── keyvalue/KeyValueParser.kt
 ```
 
-**Supported Formats:**
+**Supported Formats (16 registered):**
 - markdown, todotxt, csv, wikitext, keyvalue, asciidoc, orgmode, plaintext
 - latex, restructuredtext, taskpaper, textile, creole, tiddlywiki, jupyter, rmarkdown
 
 ### Dependency Flow
 
 ```
-commons → core → format modules → app
+commons (Android utils)
+   ↓
+shared (KMP core) ← Contains FormatRegistry and parsers
+   ↓
+androidApp / desktopApp / iosApp / webApp (Platform UIs)
 ```
 
-- App module depends on core and all format modules
-- Format modules depend on core (and transitively on commons)
-- Core depends on commons
-- **Important:** Never create circular dependencies
+- Platform apps depend on shared module for business logic
+- shared module contains all format logic (FormatRegistry, parsers)
+- commons provides Android-specific utilities
+- core provides encryption utilities (independent)
 
 ### Format Registration
 
-All formats must be registered in `core/src/main/java/digital/vasic/yole/format/FormatRegistry.java`:
+All formats are registered in `shared/src/commonMain/kotlin/digital/vasic/yole/format/FormatRegistry.kt`:
 
 ```java
 public static final List<Format> FORMATS = Arrays.asList(

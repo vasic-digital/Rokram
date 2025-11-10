@@ -1,5 +1,6 @@
 [![GitHub releases](https://img.shields.io/github/tag/vasic-digital/Yole.svg)](https://github.com/vasic-digital/Yole/releases)
 [![GitHub downloads](https://img.shields.io/github/downloads/vasic-digital/Yole/total.svg?logo=github&logoColor=lime)](https://github.com/vasic-digital/Yole/releases)
+[![Code Coverage](https://img.shields.io/badge/coverage-15%25-red.svg)](build/reports/kover/html/index.html)
 [![Translate on Crowdin](https://img.shields.io/badge/translate-crowdin-green.svg)](https://crowdin.com/project/markor)
 [![Community Discussion](https://img.shields.io/badge/chat-community-blue.svg)](https://github.com/vasic-digital/Yole/discussions)
 [![GitHub CI](https://github.com/vasic-digital/Yole/workflows/CI/badge.svg)](https://github.com/vasic-digital/Yole/actions)
@@ -14,7 +15,16 @@
 
 **Current Version:** v2.15.1
 
-Yole is a cross-platform text editor supporting Android, Desktop (Windows/macOS/Linux), iOS, and Web platforms.
+## Platform Support Status
+
+| Platform | Status | Availability |
+|----------|--------|--------------|
+| **Android** | ✅ Production | [F-Droid](https://f-droid.org/repository/browse/?fdid=digital.vasic.yole), [GitHub Releases](https://github.com/vasic-digital/Yole/releases/latest) |
+| **Desktop** (Windows/macOS/Linux) | ⚠️ Beta | Build from [source](https://github.com/vasic-digital/Yole) |
+| **iOS** | 🚧 In Development | Coming Q2 2026 |
+| **Web** (PWA) | 🚧 In Development | Coming Q3 2026 |
+
+Yole is a cross-platform text editor with Android as the primary production platform.
 This project aims to make an editor that is versatile, flexible, and lightweight.
 Yole utilizes simple markup formats like Markdown and todo.txt for note-taking and list management.
 It is versatile at working with text; it can also be used for keeping bookmarks, copying to clipboard, fast opening a link from text and lots more.

@@ -10,6 +10,13 @@
 - **Single test**: `./gradlew test --tests "digital.vasic.yole.format.todotxt.TodoTxtQuerySyntaxTests.ParseQuery"`
 - **Clean**: `./gradlew clean` or `make clean`
 
+## Code Coverage (Kover)
+- **HTML Report**: `./gradlew koverHtmlReport` → View: `open build/reports/kover/html/index.html`
+- **XML Report**: `./gradlew koverXmlReport` → Output: `build/reports/kover/report.xml`
+- **Run Tests with Coverage**: `./gradlew test koverHtmlReport`
+- **Current Baseline**: ~15% estimated (goal: >80%)
+- **Note**: Reports are generated per module. Use `koverHtmlReport` for combined coverage.
+
 ## Code Style Guidelines
 - **Language**: Kotlin with Java 8+ compatibility, platform-specific languages
 - **Package structure**: `digital.vasic.yole.*` for app code, `net.gsantner.opoc.*` for shared utilities
