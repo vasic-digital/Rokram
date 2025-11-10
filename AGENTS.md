@@ -24,6 +24,16 @@
 - **Key Classes**: FormatRegistry, TextFormat, Document (all in `shared` module)
 - **Note**: FormatRegistry and TextFormat already have comprehensive KDoc documentation
 
+## Test Generation
+- **Generate Tests**: `./scripts/generate_format_tests.sh <format-name> <extension>`
+- **Example**: `./scripts/generate_format_tests.sh Markdown .md`
+- **Dry Run**: `./scripts/generate_format_tests.sh "Org Mode" .org --dry-run`
+- **Custom Options**: `--package <name>`, `--class <name>`, `--templates <list>`
+- **Available Templates**: ParserTest, IntegrationTest, MockKExample, KotestPropertyTest
+- **Output**: `shared/src/commonTest/kotlin/digital/vasic/yole/format/<package>/`
+- **Documentation**: See `docs/TESTING_GUIDE.md` for complete testing documentation
+- **Note**: Generated tests use placeholder content - customize with format-specific samples
+
 ## Code Style Guidelines
 - **Language**: Kotlin with Java 8+ compatibility, platform-specific languages
 - **Package structure**: `digital.vasic.yole.*` for app code, `net.gsantner.opoc.*` for shared utilities
