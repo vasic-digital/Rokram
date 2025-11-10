@@ -1,9 +1,11 @@
 [![GitHub releases](https://img.shields.io/github/tag/vasic-digital/Yole.svg)](https://github.com/vasic-digital/Yole/releases)
 [![GitHub downloads](https://img.shields.io/github/downloads/vasic-digital/Yole/total.svg?logo=github&logoColor=lime)](https://github.com/vasic-digital/Yole/releases)
+[![GitHub CI](https://github.com/vasic-digital/Yole/workflows/CI/badge.svg)](https://github.com/vasic-digital/Yole/actions)
+[![Tests & Coverage](https://github.com/vasic-digital/Yole/workflows/Tests%20%26%20Coverage/badge.svg)](https://github.com/vasic-digital/Yole/actions)
+[![Lint & Docs](https://github.com/vasic-digital/Yole/workflows/Lint%20%26%20Docs/badge.svg)](https://github.com/vasic-digital/Yole/actions)
 [![Code Coverage](https://img.shields.io/badge/coverage-15%25-red.svg)](build/reports/kover/html/index.html)
 [![Translate on Crowdin](https://img.shields.io/badge/translate-crowdin-green.svg)](https://crowdin.com/project/markor)
 [![Community Discussion](https://img.shields.io/badge/chat-community-blue.svg)](https://github.com/vasic-digital/Yole/discussions)
-[![GitHub CI](https://github.com/vasic-digital/Yole/workflows/CI/badge.svg)](https://github.com/vasic-digital/Yole/actions)
 
 
 # Yole

@@ -34,6 +34,55 @@
 - **Documentation**: See `docs/TESTING_GUIDE.md` for complete testing documentation
 - **Note**: Generated tests use placeholder content - customize with format-specific samples
 
+## CI/CD Workflows
+
+### GitHub Actions
+- **Main Build**: `.github/workflows/build-android-project.yml` - Builds Android APK on every push/PR
+- **Tests & Coverage**: `.github/workflows/test-and-coverage.yml` - Runs all tests + Kover coverage
+- **Lint & Docs**: `.github/workflows/lint-and-docs.yml` - Code quality checks + Dokka generation
+- **PR Validation**: `.github/workflows/pr-validation.yml` - Comprehensive PR checks before merge
+
+### Workflow Triggers
+- **Push to master/main/develop**: Triggers tests, coverage, lint, and docs workflows
+- **Pull Requests**: Triggers all workflows including PR validation (build, test, lint, size check, security)
+- **Manual**: All workflows except main build support manual triggering via Actions tab
+
+### CI Commands (Run Locally)
+```bash
+# Simulate CI build
+./gradlew clean build
+
+# Run CI test suite
+./gradlew test koverXmlReport
+
+# Run CI lint checks
+./gradlew lintDebug detekt ktlintCheck
+
+# Generate CI documentation
+./gradlew :shared:dokkaHtml
+```
+
+### Artifacts & Reports
+- **Test Reports**: Available in Actions → Workflow → Artifacts (14-30 days retention)
+- **Coverage Reports**: Uploaded to Codecov + workflow artifacts
+- **Lint Reports**: Android Lint, Detekt, KtLint results in artifacts
+- **API Docs**: Auto-published to GitHub Pages on master branch
+
+### Configuration Files
+- **codecov.yml**: Coverage reporting configuration (target: 80% project, 70% patch)
+- **.github/workflows/README.md**: Complete CI/CD documentation
+
+### Required Secrets
+- `CODECOV_TOKEN` - For uploading coverage reports (get from codecov.io)
+- `GITHUB_TOKEN` - Auto-provided for GitHub Pages publishing
+
+### CI Status Badges
+```markdown
+![CI Build](https://github.com/vasic-digital/Yole/workflows/CI/badge.svg)
+![Tests](https://github.com/vasic-digital/Yole/workflows/Tests%20%26%20Coverage/badge.svg)
+![Lint](https://github.com/vasic-digital/Yole/workflows/Lint%20%26%20Docs/badge.svg)
+```
+
 ## Code Style Guidelines
 - **Language**: Kotlin with Java 8+ compatibility, platform-specific languages
 - **Package structure**: `digital.vasic.yole.*` for app code, `net.gsantner.opoc.*` for shared utilities
