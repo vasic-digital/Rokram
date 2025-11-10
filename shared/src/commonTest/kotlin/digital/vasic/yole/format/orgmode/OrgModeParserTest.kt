@@ -3,20 +3,20 @@
  * SPDX-FileCopyrightText: 2025 Milos Vasic
  * SPDX-License-Identifier: Apache-2.0
  *
- * Unit tests for KeyValue parser
+ * Unit tests for Org Mode parser
  *
  *########################################################*/
-package digital.vasic.yole.format.keyvalue
+package digital.vasic.yole.format.orgmode
 
 import digital.vasic.yole.format.FormatRegistry
-import digital.vasic.yole.format.keyvalue.KeyvalueParser
+import digital.vasic.yole.format.orgmode.OrgModeParser
 import org.junit.Test
 import org.assertj.core.api.Assertions.assertThat
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
 /**
- * Unit tests for KeyValue format parser.
+ * Unit tests for Org Mode format parser.
  *
  * Tests cover:
  * - Format detection by extension
@@ -25,46 +25,46 @@ import kotlin.test.assertTrue
  * - Empty input handling
  * - Special characters
  */
-class KeyvalueParserTest {
+class OrgModeParserTest {
 
-    private val parser = KeyvalueParser()
+    private val parser = OrgModeParser()
 
     // ==================== Format Detection Tests ====================
 
     @Test
-    fun `should detect KeyValue format by extension`() {
-        val format = FormatRegistry.getByExtension(".ini")
+    fun `should detect Org Mode format by extension`() {
+        val format = FormatRegistry.getByExtension(".org")
 
         assertNotNull(format)
-        assertThat(format.id).isEqualTo(FormatRegistry.ID_KEYVALUE)
-        assertThat(format.name).isEqualTo("KeyValue")
+        assertThat(format.id).isEqualTo(FormatRegistry.ID_ORG_MODE)
+        assertThat(format.name).isEqualTo("Org Mode")
     }
 
     @Test
-    fun `should detect KeyValue format by filename`() {
-        val format = FormatRegistry.detectByFilename("test.ini")
+    fun `should detect Org Mode format by filename`() {
+        val format = FormatRegistry.detectByFilename("test.org")
 
         assertNotNull(format)
-        assertThat(format.id).isEqualTo(FormatRegistry.ID_KEYVALUE)
+        assertThat(format.id).isEqualTo(FormatRegistry.ID_ORG_MODE)
     }
 
     @Test
-    fun `should support all KeyValue extensions`() {
-        val extensions = listOf(".ini")
+    fun `should support all Org Mode extensions`() {
+        val extensions = listOf(".org")
 
         extensions.forEach { ext ->
             val format = FormatRegistry.getByExtension(ext)
             assertNotNull(format, "Extension $ext should be recognized")
-            assertThat(format.id).isEqualTo(FormatRegistry.ID_KEYVALUE)
+            assertThat(format.id).isEqualTo(FormatRegistry.ID_ORG_MODE)
         }
     }
 
     // ==================== Basic Parsing Tests ====================
 
     @Test
-    fun `should parse basic KeyValue content`() {
+    fun `should parse basic Org Mode content`() {
         val content = """
-            Sample KeyValue content here
+            Sample Org Mode content here
         """.trimIndent()
 
         val result = parser.parse(content)
@@ -90,7 +90,7 @@ class KeyvalueParserTest {
 
     @Test
     fun `should handle single line input`() {
-        val content = "Single line of KeyValue"
+        val content = "Single line of Org Mode"
 
         val result = parser.parse(content)
 
@@ -102,13 +102,13 @@ class KeyvalueParserTest {
     @Test
     fun `should detect format by content patterns`() {
         val content = """
-            Sample KeyValue content here
+            Sample Org Mode content here
         """.trimIndent()
 
         val format = FormatRegistry.detectByContent(content)
 
         assertNotNull(format)
-        assertThat(format.id).isEqualTo(FormatRegistry.ID_KEYVALUE)
+        assertThat(format.id).isEqualTo(FormatRegistry.ID_ORG_MODE)
     }
 
     @Test
@@ -117,9 +117,9 @@ class KeyvalueParserTest {
 
         val format = FormatRegistry.detectByContent(plainText)
 
-        // Should detect as plaintext, not KeyValue
+        // Should detect as plaintext, not Org Mode
         if (format != null) {
-            assertThat(format.id).isNotEqualTo(FormatRegistry.ID_KEYVALUE)
+            assertThat(format.id).isNotEqualTo(FormatRegistry.ID_ORG_MODE)
         }
     }
 
@@ -151,7 +151,7 @@ class KeyvalueParserTest {
     @Test
     fun `should handle malformed input gracefully`() {
         val malformed = """
-            Malformed KeyValue content
+            Malformed Org Mode content
         """.trimIndent()
 
         // Should not throw exception
@@ -161,7 +161,7 @@ class KeyvalueParserTest {
 
     @Test
     fun `should handle very long input`() {
-        val longContent = "Single line of KeyValue\n".repeat(10000)
+        val longContent = "Single line of Org Mode\n".repeat(10000)
 
         val result = parser.parse(longContent)
 
@@ -203,19 +203,19 @@ class KeyvalueParserTest {
 
     @Test
     fun `should integrate with FormatRegistry`() {
-        val format = FormatRegistry.getById(FormatRegistry.ID_KEYVALUE)
+        val format = FormatRegistry.getById(FormatRegistry.ID_ORG_MODE)
 
         assertNotNull(format)
-        assertThat(format.name).isEqualTo("KeyValue")
-        assertThat(format.defaultExtension).isEqualTo(".ini")
+        assertThat(format.name).isEqualTo("Org Mode")
+        assertThat(format.defaultExtension).isEqualTo(".org")
     }
 
     @Test
     fun `should be registered in FormatRegistry`() {
         val allFormats = FormatRegistry.formats
-        val keyvalueFormat = allFormats.find { it.id == FormatRegistry.ID_KEYVALUE }
+        val org modeFormat = allFormats.find { it.id == FormatRegistry.ID_ORG_MODE }
 
-        assertNotNull(keyvalueFormat)
-        assertThat(keyvalueFormat.name).isEqualTo("KeyValue")
+        assertNotNull(org modeFormat)
+        assertThat(org modeFormat.name).isEqualTo("Org Mode")
     }
 }

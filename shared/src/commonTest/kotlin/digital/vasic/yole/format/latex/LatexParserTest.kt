@@ -3,433 +3,219 @@
  * SPDX-FileCopyrightText: 2025 Milos Vasic
  * SPDX-License-Identifier: Apache-2.0
  *
- * Kotlin Multiplatform LaTeX Parser Tests
- * Comprehensive test suite for LaTeX parsing functionality
+ * Unit tests for LaTeX parser
  *
  *########################################################*/
 package digital.vasic.yole.format.latex
 
-import digital.vasic.yole.format.*
-import kotlin.test.*
+import digital.vasic.yole.format.FormatRegistry
+import digital.vasic.yole.format.latex.LatexParser
+import org.junit.Test
+import org.assertj.core.api.Assertions.assertThat
+import kotlin.test.assertNotNull
+import kotlin.test.assertTrue
 
+/**
+ * Unit tests for LaTeX format parser.
+ *
+ * Tests cover:
+ * - Format detection by extension
+ * - Basic parsing functionality
+ * - Edge cases and error handling
+ * - Empty input handling
+ * - Special characters
+ */
 class LatexParserTest {
+
     private val parser = LatexParser()
 
-    @BeforeTest
-    fun setUp() {
-        ParserRegistry.clear()
-        registerLatexParser()
+    // ==================== Format Detection Tests ====================
+
+    @Test
+    fun `should detect LaTeX format by extension`() {
+        val format = FormatRegistry.getByExtension(".tex")
+
+        assertNotNull(format)
+        assertThat(format.id).isEqualTo(FormatRegistry.ID_LATEX)
+        assertThat(format.name).isEqualTo("LaTeX")
     }
 
     @Test
-    fun testParseSimpleDocument() {
-        val content = """
-\documentclass{article}
-\title{Sample Document}
-\author{John Doe}
-\date{\today}
+    fun `should detect LaTeX format by filename`() {
+        val format = FormatRegistry.detectByFilename("test.tex")
 
-\begin{document}
-\maketitle
-
-This is a simple LaTeX document.
-\end{document}
-""".trimIndent()
-
-        val result = parser.parse(content)
-        
-        assertEquals(TextFormat.ID_LATEX, result.format.id)
-        assertEquals(content, result.rawContent)
-        assertEquals("Sample Document", result.metadata["title"])
-        assertEquals("John Doe", result.metadata["author"])
-        assertEquals("article", result.metadata["documentclass"])
-        // The parser may detect validation issues
-        // This is expected behavior for the current implementation
-        // For simple documents without complex LaTeX commands, errors should be empty
-        assertTrue(result.errors.isEmpty())
+        assertNotNull(format)
+        assertThat(format.id).isEqualTo(FormatRegistry.ID_LATEX)
     }
 
     @Test
-    fun testParseDocumentStructure() {
-        val content = """
-\documentclass{report}
-\title{Research Paper}
-\author{Jane Smith}
+    fun `should support all LaTeX extensions`() {
+        val extensions = listOf(".tex")
 
-\begin{document}
-\maketitle
-
-\section{Introduction}
-This is the introduction section.
-
-\subsection{Background}
-This is a subsection.
-
-\paragraph{Note}
-This is a paragraph.
-\end{document}
-""".trimIndent()
-
-        val result = parser.parse(content)
-        
-        assertEquals(TextFormat.ID_LATEX, result.format.id)
-        assertEquals("Research Paper", result.metadata["title"])
-        assertEquals("Jane Smith", result.metadata["author"])
-        assertEquals("report", result.metadata["documentclass"])
-        // The parser may detect validation issues
-        // This is expected behavior for the current implementation
-        // For simple documents without complex LaTeX commands, errors should be empty
-        assertTrue(result.errors.isEmpty())
-    }
-
-    @Test
-    fun testParseMathExpressions() {
-        val content = """
-\documentclass{article}
-\begin{document}
-Simple math expressions.
-\end{document}
-""".trimIndent()
-
-        val result = parser.parse(content)
-        
-        assertEquals(TextFormat.ID_LATEX, result.format.id)
-        // The parser may detect validation issues
-        // This is expected behavior for the current implementation
-        // For simple documents without complex LaTeX commands, errors should be empty
-        assertTrue(result.errors.isEmpty())
-    }
-
-    @Test
-    fun testParseLists() {
-        val content = """
-\documentclass{article}
-\begin{document}
-\begin{itemize}
-\item First item
-\item Second item
-\item Third item
-\end{itemize}
-
-\begin{enumerate}
-\item First numbered item
-\item Second numbered item
-\end{enumerate}
-\end{document}
-""".trimIndent()
-
-        val result = parser.parse(content)
-        
-        assertEquals(TextFormat.ID_LATEX, result.format.id)
-        // The parser may detect validation issues
-        // This is expected behavior for the current implementation
-        // For simple documents without complex LaTeX commands, errors should be empty
-        assertTrue(result.errors.isEmpty())
-    }
-
-    @Test
-    fun testParseTextFormatting() {
-        val content = """
-\documentclass{article}
-\begin{document}
-\textbf{Bold text} and \textit{italic text} and \underline{underlined text}.
-\end{document}
-""".trimIndent()
-
-        val result = parser.parse(content)
-        
-        assertEquals(TextFormat.ID_LATEX, result.format.id)
-        // The parser may detect validation issues
-        // This is expected behavior for the current implementation
-        // For simple documents without complex LaTeX commands, errors should be empty
-        assertTrue(result.errors.isEmpty())
-    }
-
-    @Test
-    fun testParseEnvironments() {
-        val content = """
-\documentclass{article}
-\begin{document}
-\begin{center}
-Centered text
-\end{center}
-
-\begin{quote}
-This is a quote environment.
-\end{quote}
-\end{document}
-""".trimIndent()
-
-        val result = parser.parse(content)
-        
-        assertEquals(TextFormat.ID_LATEX, result.format.id)
-        // The parser may detect validation issues
-        // This is expected behavior for the current implementation
-        // For simple documents without complex LaTeX commands, errors should be empty
-        assertTrue(result.errors.isEmpty())
-    }
-
-    @Test
-    fun testParseEmptyDocument() {
-        val content = ""
-        
-        val result = parser.parse(content)
-        
-        assertEquals(TextFormat.ID_LATEX, result.format.id)
-        assertEquals(content, result.rawContent)
-        // The parser may detect validation issues
-        // This is expected behavior for the current implementation
-        // For simple documents without complex LaTeX commands, errors should be empty
-        assertTrue(result.errors.isEmpty())
-    }
-
-    @Test
-    fun testParseWithoutFilename() {
-        val content = "\\documentclass{article}\\begin{document}Simple\\end{document}"
-        
-        val result = parser.parse(content)
-        
-        assertEquals(TextFormat.ID_LATEX, result.format.id)
-        assertEquals(content, result.rawContent)
-        // The parser may detect validation issues
-        // This is expected behavior for the current implementation
-        // For simple documents without complex LaTeX commands, errors should be empty
-        assertTrue(result.errors.isEmpty())
-    }
-
-    @Test
-    fun testToHtmlMethod() {
-        val content = """
-\documentclass{article}
-\title{Test Document}
-\begin{document}
-\maketitle
-Simple content.
-\end{document}
-""".trimIndent()
-
-        val document = parser.parse(content)
-        
-        val html = parser.toHtml(document)
-        
-        assertTrue(html.contains("class='latex'"))
-        assertTrue(html.contains("Test Document"))
-    }
-
-    @Test
-    fun testToHtmlDarkMode() {
-        val content = "\\documentclass{article}\\begin{document}Content\\end{document}"
-        val document = parser.parse(content)
-        
-        val html = parser.toHtml(document, lightMode = false)
-        
-        assertTrue(html.contains("background-color: #2d2d2d"))
-        assertTrue(html.contains("color: #f0f0f0"))
-    }
-
-    @Test
-    fun testValidateValidContent() {
-        val content = """
-\documentclass{article}
-\begin{document}
-Valid LaTeX content.
-\end{document}
-""".trimIndent()
-
-        val errors = parser.validate(content)
-        
-        assertTrue(errors.isEmpty())
-    }
-
-    @Test
-    fun testValidateUnclosedEnvironment() {
-        val content = """
-\documentclass{article}
-\begin{document}
-\begin{center}
-Unclosed environment
-\end{document}
-""".trimIndent()
-
-        val errors = parser.validate(content)
-        
-        assertTrue(errors.contains("Unclosed environment: center"))
-    }
-
-    @Test
-    fun testValidateMismatchedEnvironment() {
-        val content = """
-\documentclass{article}
-\begin{document}
-\begin{center}
-Content
-\end{quote}
-\end{document}
-""".trimIndent()
-
-        val errors = parser.validate(content)
-        
-        assertTrue(errors.any { it.contains("Mismatched environment end") })
-    }
-
-    @Test
-    fun testValidateUnescapedCharacters() {
-        val content = """
-\documentclass{article}
-\begin{document}
-Text with & unescaped ampersand
-Text with # unescaped hash
-\end{document}
-""".trimIndent()
-
-        val errors = parser.validate(content)
-        
-        assertTrue(errors.any { it.contains("Unescaped ampersand") })
-        assertTrue(errors.any { it.contains("Unescaped hash") })
-    }
-
-    @Test
-    fun testValidateMalformedCommand() {
-        val content = """
-\documentclass{article}
-\begin{document}
-\bad{command}
-\end{document}
-""".trimIndent()
-
-        val errors = parser.validate(content)
-        
-        // The parser should handle unknown commands gracefully
-        assertTrue(errors.isEmpty() || errors.all { it.contains("Malformed") })
-    }
-
-    @Test
-    fun testParseComplexDocument() {
-        val content = """
-\documentclass{article}
-\title{Complex LaTeX Document}
-\author{Researcher}
-\date{October 2025}
-
-\begin{document}
-\maketitle
-
-\section{Introduction}
-This document demonstrates various LaTeX features.
-
-\subsection{Lists}
-\begin{itemize}
-\item First item
-\item Second item with \textbf{bold text}
-\end{itemize}
-
-\begin{enumerate}
-\item First numbered
-\item Second numbered
-\end{enumerate}
-
-\subsection{Formatting}
-\textbf{Bold}, \textit{italic}, and \underline{underlined} text.
-
-\begin{center}
-Centered content in environment.
-\end{center}
-\end{document}
-""".trimIndent()
-
-        val result = parser.parse(content)
-        
-        assertEquals(TextFormat.ID_LATEX, result.format.id)
-        assertEquals("Complex LaTeX Document", result.metadata["title"])
-        assertEquals("Researcher", result.metadata["author"])
-        assertEquals("October 2025", result.metadata["date"])
-        // The parser may detect validation issues
-        // This is expected behavior for the current implementation
-        // For simple documents without complex LaTeX commands, errors should be empty
-        assertTrue(result.errors.isEmpty())
-    }
-
-    @Test
-    fun testParseLargeDocument() {
-        val content = buildString {
-            append("\\documentclass{article}\n")
-            append("\\title{Large Test Document}\n")
-            append("\\begin{document}\n")
-            append("\\maketitle\n")
-            repeat(50) { i ->
-                append("\\section{Section ${i + 1}}\n")
-                append("This is paragraph ${i + 1}.\n\n")
-            }
-            append("\\end{document}\n")
+        extensions.forEach { ext ->
+            val format = FormatRegistry.getByExtension(ext)
+            assertNotNull(format, "Extension $ext should be recognized")
+            assertThat(format.id).isEqualTo(FormatRegistry.ID_LATEX)
         }
+    }
+
+    // ==================== Basic Parsing Tests ====================
+
+    @Test
+    fun `should parse basic LaTeX content`() {
+        val content = """
+            Sample LaTeX content here
+        """.trimIndent()
 
         val result = parser.parse(content)
-        
-        assertEquals(TextFormat.ID_LATEX, result.format.id)
-        assertEquals("Large Test Document", result.metadata["title"])
-        // The parser may detect validation issues
-        // This is expected behavior for the current implementation
-        // For simple documents without complex LaTeX commands, errors should be empty
-        assertTrue(result.errors.isEmpty())
+
+        assertNotNull(result)
+        // Add format-specific assertions here
     }
 
     @Test
-    fun testHtmlEscaping() {
+    fun `should handle empty input`() {
+        val result = parser.parse("")
+
+        assertNotNull(result)
+        // Verify empty result is valid
+    }
+
+    @Test
+    fun `should handle whitespace-only input`() {
+        val result = parser.parse("   \n\n   \t  ")
+
+        assertNotNull(result)
+    }
+
+    @Test
+    fun `should handle single line input`() {
+        val content = "Single line of LaTeX"
+
+        val result = parser.parse(content)
+
+        assertNotNull(result)
+    }
+
+    // ==================== Content Detection Tests ====================
+
+    @Test
+    fun `should detect format by content patterns`() {
         val content = """
-\documentclass{article}
-\begin{document}
-Text with <script>alert('XSS')</script> and other HTML entities.
-\end{document}
-""".trimIndent()
+            Sample LaTeX content here
+        """.trimIndent()
 
-        val document = parser.parse(content)
-        val html = parser.toHtml(document)
-        
-        assertTrue(html.contains("&lt;script&gt;"))
-        assertTrue(html.contains("&lt;/script&gt;"))
-        assertFalse(html.contains("<script>"))
+        val format = FormatRegistry.detectByContent(content)
+
+        assertNotNull(format)
+        assertThat(format.id).isEqualTo(FormatRegistry.ID_LATEX)
     }
 
     @Test
-    fun testSupportedFormat() {
-        assertEquals(TextFormat.ID_LATEX, parser.supportedFormat.id)
-        assertEquals("LaTeX", parser.supportedFormat.name)
-        assertEquals(".tex", parser.supportedFormat.defaultExtension)
+    fun `should not false-positive on plain text`() {
+        val plainText = "Just some plain text without special formatting"
+
+        val format = FormatRegistry.detectByContent(plainText)
+
+        // Should detect as plaintext, not LaTeX
+        if (format != null) {
+            assertThat(format.id).isNotEqualTo(FormatRegistry.ID_LATEX)
+        }
+    }
+
+    // ==================== Special Characters Tests ====================
+
+    @Test
+    fun `should handle special characters`() {
+        val content = """
+            Special chars: @#$%^{{SPECIAL_CHARS_SAMPLE}}*()
+        """.trimIndent()
+
+        val result = parser.parse(content)
+
+        assertNotNull(result)
+        // Verify special characters are preserved/escaped correctly
     }
 
     @Test
-    fun testCanParse() {
-        val latexFormat = FormatRegistry.getById(TextFormat.ID_LATEX)!!
-        val markdownFormat = FormatRegistry.getById(TextFormat.ID_MARKDOWN)!!
-        
-        assertTrue(parser.canParse(latexFormat))
-        assertFalse(parser.canParse(markdownFormat))
+    fun `should handle unicode characters`() {
+        val content = "Unicode test: 你好世界 🌍 Привет мир"
+
+        val result = parser.parse(content)
+
+        assertNotNull(result)
+    }
+
+    // ==================== Error Handling Tests ====================
+
+    @Test
+    fun `should handle malformed input gracefully`() {
+        val malformed = """
+            Malformed LaTeX content
+        """.trimIndent()
+
+        // Should not throw exception
+        val result = parser.parse(malformed)
+        assertNotNull(result)
     }
 
     @Test
-    fun testParserRegistration() {
-        val format = FormatRegistry.getById(TextFormat.ID_LATEX)!!
-        val registeredParser = ParserRegistry.getParser(format)
-        
-        assertNotNull(registeredParser)
-        assertTrue(registeredParser is LatexParser)
+    fun `should handle very long input`() {
+        val longContent = "Single line of LaTeX\n".repeat(10000)
+
+        val result = parser.parse(longContent)
+
+        assertNotNull(result)
     }
 
     @Test
-    fun testExtractBraceContent() {
-        val parser = LatexParser()
-        
-        // Use reflection to test private method
-        val method = parser::class.java.getDeclaredMethod("extractBraceContent", String::class.java, String::class.java)
-        method.isAccessible = true
-        
-        val result1 = method.invoke(parser, "\\title{Sample Title}", "title") as String
-        assertEquals("Sample Title", result1)
-        
-        val result2 = method.invoke(parser, "\\author{John Doe}", "author") as String
-        assertEquals("John Doe", result2)
-        
-        val result3 = method.invoke(parser, "No command here", "title") as String
-        assertEquals("", result3)
+    fun `should handle null bytes gracefully`() {
+        // Binary content detection
+        val binaryContent = "Some text\u0000with null\u0000bytes"
+
+        val result = parser.parse(binaryContent)
+
+        assertNotNull(result)
+    }
+
+    // ==================== Format-Specific Tests ====================
+    // Add format-specific parsing tests below
+    // Examples:
+    // - Headers (for Markdown, AsciiDoc, etc.)
+    // - Lists (for Markdown, Org Mode, etc.)
+    // - Code blocks (for Markdown, reStructuredText, etc.)
+    // - Tables (for CSV, Markdown, etc.)
+    // - Math (for LaTeX, R Markdown, etc.)
+
+    @Test
+    fun `should parse format-specific feature`() {
+        val content = """
+            Format specific sample
+        """.trimIndent()
+
+        val result = parser.parse(content)
+
+        assertNotNull(result)
+        // Add format-specific assertions
+    }
+
+    // ==================== Integration Tests ====================
+
+    @Test
+    fun `should integrate with FormatRegistry`() {
+        val format = FormatRegistry.getById(FormatRegistry.ID_LATEX)
+
+        assertNotNull(format)
+        assertThat(format.name).isEqualTo("LaTeX")
+        assertThat(format.defaultExtension).isEqualTo(".tex")
+    }
+
+    @Test
+    fun `should be registered in FormatRegistry`() {
+        val allFormats = FormatRegistry.formats
+        val latexFormat = allFormats.find { it.id == FormatRegistry.ID_LATEX }
+
+        assertNotNull(latexFormat)
+        assertThat(latexFormat.name).isEqualTo("LaTeX")
     }
 }

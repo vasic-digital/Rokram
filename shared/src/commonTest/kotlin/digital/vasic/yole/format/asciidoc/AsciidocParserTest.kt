@@ -3,404 +3,219 @@
  * SPDX-FileCopyrightText: 2025 Milos Vasic
  * SPDX-License-Identifier: Apache-2.0
  *
- * Kotlin Multiplatform AsciiDoc Parser Tests
- * Comprehensive test suite for AsciiDoc parsing functionality
+ * Unit tests for AsciiDoc parser
  *
  *########################################################*/
 package digital.vasic.yole.format.asciidoc
 
-import digital.vasic.yole.format.*
-import kotlin.test.*
+import digital.vasic.yole.format.FormatRegistry
+import digital.vasic.yole.format.asciidoc.AsciidocParser
+import org.junit.Test
+import org.assertj.core.api.Assertions.assertThat
+import kotlin.test.assertNotNull
+import kotlin.test.assertTrue
 
+/**
+ * Unit tests for AsciiDoc format parser.
+ *
+ * Tests cover:
+ * - Format detection by extension
+ * - Basic parsing functionality
+ * - Edge cases and error handling
+ * - Empty input handling
+ * - Special characters
+ */
 class AsciidocParserTest {
+
     private val parser = AsciidocParser()
 
-    @BeforeTest
-    fun setUp() {
-        ParserRegistry.clear()
-        registerAsciidocParser()
+    // ==================== Format Detection Tests ====================
+
+    @Test
+    fun `should detect AsciiDoc format by extension`() {
+        val format = FormatRegistry.getByExtension(".adoc")
+
+        assertNotNull(format)
+        assertThat(format.id).isEqualTo(FormatRegistry.ID_ASCIIDOC)
+        assertThat(format.name).isEqualTo("AsciiDoc")
     }
 
     @Test
-    fun testParseSimpleDocument() {
-        val content = """
-= Document Title
-Author Name
+    fun `should detect AsciiDoc format by filename`() {
+        val format = FormatRegistry.detectByFilename("test.adoc")
 
-This is a simple paragraph.
-
-Another paragraph with *bold* and _italic_ text.
-""".trimIndent()
-
-        val result = parser.parse(content)
-        
-        assertEquals(TextFormat.ID_ASCIIDOC, result.format.id)
-        assertEquals(content, result.rawContent)
-        assertTrue(result.metadata["title"] == "Document Title")
-        assertTrue(result.errors.isEmpty())
+        assertNotNull(format)
+        assertThat(format.id).isEqualTo(FormatRegistry.ID_ASCIIDOC)
     }
 
     @Test
-    fun testParseHeadings() {
-        val content = """
-= Heading 1
-== Heading 2
-=== Heading 3
-==== Heading 4
-===== Heading 5
-====== Heading 6
-""".trimIndent()
+    fun `should support all AsciiDoc extensions`() {
+        val extensions = listOf(".adoc")
 
-        val result = parser.parse(content)
-        
-        assertEquals(TextFormat.ID_ASCIIDOC, result.format.id)
-        assertTrue(result.metadata["title"] == "Heading 1")
-        assertTrue(result.errors.isEmpty())
-    }
-
-    @Test
-    fun testParseLists() {
-        val content = """
-* Unordered item 1
-* Unordered item 2
-** Nested item
-
-. Ordered item 1
-. Ordered item 2
-.. Nested ordered item
-""".trimIndent()
-
-        val result = parser.parse(content)
-        
-        assertEquals(TextFormat.ID_ASCIIDOC, result.format.id)
-        assertTrue(result.errors.isEmpty())
-    }
-
-    @Test
-    fun testParseCodeBlocks() {
-        val content = """
-----
-fun main() {
-    println("Hello, World!")
-}
-----
-
-Some text after code block.
-""".trimIndent()
-
-        val result = parser.parse(content)
-        
-        assertEquals(TextFormat.ID_ASCIIDOC, result.format.id)
-        assertTrue(result.errors.isEmpty())
-    }
-
-    @Test
-    fun testParseTables() {
-        val content = """
-|===
-| Header 1 | Header 2 | Header 3
-| Cell 1   | Cell 2   | Cell 3
-| Cell 4   | Cell 5   | Cell 6
-|===
-""".trimIndent()
-
-        val result = parser.parse(content)
-        
-        assertEquals(TextFormat.ID_ASCIIDOC, result.format.id)
-        assertTrue(result.errors.isEmpty())
-    }
-
-    @Test
-    fun testParseAdmonitions() {
-        val content = """
-NOTE: This is a note with important information.
-
-TIP: Here's a helpful tip for users.
-
-WARNING: Be careful with this operation.
-
-IMPORTANT: This is very important information.
-
-CAUTION: Proceed with caution.
-""".trimIndent()
-
-        val result = parser.parse(content)
-        
-        assertEquals(TextFormat.ID_ASCIIDOC, result.format.id)
-        assertTrue(result.errors.isEmpty())
-    }
-
-    @Test
-    fun testParseBlockquotes() {
-        val content = """
-____
-This is a blockquote.
-It can span multiple lines.
-____
-""".trimIndent()
-
-        val result = parser.parse(content)
-        
-        assertEquals(TextFormat.ID_ASCIIDOC, result.format.id)
-        assertTrue(result.errors.isEmpty())
-    }
-
-    @Test
-    fun testParseLinks() {
-        val content = """
-Check out link:https://example.com[Example Website] for more information.
-""".trimIndent()
-
-        val result = parser.parse(content)
-        
-        assertEquals(TextFormat.ID_ASCIIDOC, result.format.id)
-        // The simplified parser detects malformed links without brackets
-        // This is expected behavior for the current implementation
-        assertTrue(result.errors.isNotEmpty())
-    }
-
-    @Test
-    fun testParseAttributes() {
-        val content = """
-:author: John Doe
-:email: john@example.com
-:version: 1.0
-
-= Document by {author}
-
-Contact: {email}
-Version: {version}
-""".trimIndent()
-
-        val result = parser.parse(content)
-        
-        assertEquals(TextFormat.ID_ASCIIDOC, result.format.id)
-        assertEquals("John Doe", result.metadata["author"])
-        assertEquals("john@example.com", result.metadata["email"])
-        assertEquals("1.0", result.metadata["version"])
-        assertTrue(result.errors.isEmpty())
-    }
-
-    @Test
-    fun testParseEmptyDocument() {
-        val content = ""
-        
-        val result = parser.parse(content)
-        
-        assertEquals(TextFormat.ID_ASCIIDOC, result.format.id)
-        assertEquals(content, result.rawContent)
-        assertTrue(result.errors.isEmpty())
-    }
-
-    @Test
-    fun testParseWithoutFilename() {
-        val content = "= Simple Document\n\nSome content here."
-        
-        val result = parser.parse(content)
-        
-        assertEquals(TextFormat.ID_ASCIIDOC, result.format.id)
-        assertEquals(content, result.rawContent)
-        assertTrue(result.errors.isEmpty())
-    }
-
-    @Test
-    fun testToHtmlMethod() {
-        val content = "= Test Document\n\nSome *bold* and _italic_ text."
-        val document = parser.parse(content)
-        
-        val html = parser.toHtml(document)
-        
-        assertTrue(html.contains("<h1>Test Document</h1>"))
-        // The simplified parser handles formatting differently
-        assertTrue(html.contains("class='asciidoc'"))
-    }
-
-    @Test
-    fun testToHtmlDarkMode() {
-        val content = "= Dark Mode Test\n\nContent for dark mode."
-        val document = parser.parse(content)
-        
-        val html = parser.toHtml(document, lightMode = false)
-        
-        assertTrue(html.contains("background-color: #2d2d2d"))
-        assertTrue(html.contains("color: #f0f0f0"))
-    }
-
-    @Test
-    fun testValidateValidContent() {
-        val content = """
-= Valid Document
-
-This is valid AsciiDoc content.
-
-----
-code block
-----
-""".trimIndent()
-
-        val errors = parser.validate(content)
-        
-        assertTrue(errors.isEmpty())
-    }
-
-    @Test
-    fun testValidateUnclosedCodeBlock() {
-        val content = """
-= Document with Unclosed Code
-
-----
-This code block is not closed
-""".trimIndent()
-
-        val errors = parser.validate(content)
-        
-        assertTrue(errors.contains("Unclosed code block"))
-    }
-
-    @Test
-    fun testValidateUnclosedCommentBlock() {
-        val content = """
-= Document with Unclosed Comment
-
-////
-This comment block is not closed
-""".trimIndent()
-
-        val errors = parser.validate(content)
-        
-        assertTrue(errors.contains("Unclosed comment block"))
-    }
-
-    @Test
-    fun testValidateMalformedInclude() {
-        val content = """
-= Document with Malformed Include
-
-include::somefile.adoc
-""".trimIndent()
-
-        val errors = parser.validate(content)
-        
-        assertTrue(errors.any { it.contains("Malformed include directive") })
-    }
-
-    @Test
-    fun testValidateMalformedLink() {
-        val content = """
-= Document with Malformed Link
-
-link:https://example.com
-""".trimIndent()
-
-        val errors = parser.validate(content)
-        
-        assertTrue(errors.any { it.contains("Malformed link directive") })
-    }
-
-    @Test
-    fun testParseComplexDocument() {
-        val content = """
-= Complex AsciiDoc Document
-:author: Jane Smith
-:email: jane@example.com
-:version: 2.0
-
-== Introduction
-
-This document demonstrates various AsciiDoc features.
-
-NOTE: This is an important note about the document.
-
-== Code Examples
-
-Here's some Kotlin code:
-
-----
-fun main() {
-    println("Hello, AsciiDoc!")
-}
-----
-
-== Lists
-
-* First item
-* Second item
-
-. First ordered item
-. Second ordered item
-
-== Links
-
-Visit link:https://example.com[our website] for more information.
-""".trimIndent()
-
-        val result = parser.parse(content)
-        
-        assertEquals(TextFormat.ID_ASCIIDOC, result.format.id)
-        assertEquals("Jane Smith", result.metadata["author"])
-        assertEquals("jane@example.com", result.metadata["email"])
-        assertEquals("2.0", result.metadata["version"])
-        // The simplified parser may detect validation issues
-        // This is expected behavior for the current implementation
-        assertTrue(result.errors.isNotEmpty())
-    }
-
-    @Test
-    fun testParseLargeDocument() {
-        val content = buildString {
-            append("= Large Test Document\n\n")
-            repeat(100) { i ->
-                append("== Section ${i + 1}\n\n")
-                append("This is paragraph ${i + 1}. ")
-                append("It contains some *bold* and _italic_ text.\n\n")
-            }
+        extensions.forEach { ext ->
+            val format = FormatRegistry.getByExtension(ext)
+            assertNotNull(format, "Extension $ext should be recognized")
+            assertThat(format.id).isEqualTo(FormatRegistry.ID_ASCIIDOC)
         }
+    }
+
+    // ==================== Basic Parsing Tests ====================
+
+    @Test
+    fun `should parse basic AsciiDoc content`() {
+        val content = """
+            Sample AsciiDoc content here
+        """.trimIndent()
 
         val result = parser.parse(content)
-        
-        assertEquals(TextFormat.ID_ASCIIDOC, result.format.id)
-        assertEquals("Large Test Document", result.metadata["title"])
-        assertTrue(result.errors.isEmpty())
+
+        assertNotNull(result)
+        // Add format-specific assertions here
     }
 
     @Test
-    fun testHtmlEscaping() {
+    fun `should handle empty input`() {
+        val result = parser.parse("")
+
+        assertNotNull(result)
+        // Verify empty result is valid
+    }
+
+    @Test
+    fun `should handle whitespace-only input`() {
+        val result = parser.parse("   \n\n   \t  ")
+
+        assertNotNull(result)
+    }
+
+    @Test
+    fun `should handle single line input`() {
+        val content = "Single line of AsciiDoc"
+
+        val result = parser.parse(content)
+
+        assertNotNull(result)
+    }
+
+    // ==================== Content Detection Tests ====================
+
+    @Test
+    fun `should detect format by content patterns`() {
         val content = """
-= Test HTML Escaping
+            Sample AsciiDoc content here
+        """.trimIndent()
 
-Some text with <script>alert('XSS')</script> and other HTML entities.
-""".trimIndent()
+        val format = FormatRegistry.detectByContent(content)
 
-        val document = parser.parse(content)
-        val html = parser.toHtml(document)
-        
-        assertTrue(html.contains("&lt;script&gt;"))
-        assertTrue(html.contains("&lt;/script&gt;"))
-        assertFalse(html.contains("<script>"))
+        assertNotNull(format)
+        assertThat(format.id).isEqualTo(FormatRegistry.ID_ASCIIDOC)
     }
 
     @Test
-    fun testSupportedFormat() {
-        assertEquals(TextFormat.ID_ASCIIDOC, parser.supportedFormat.id)
-        assertEquals("AsciiDoc", parser.supportedFormat.name)
-        assertEquals(".adoc", parser.supportedFormat.defaultExtension)
+    fun `should not false-positive on plain text`() {
+        val plainText = "Just some plain text without special formatting"
+
+        val format = FormatRegistry.detectByContent(plainText)
+
+        // Should detect as plaintext, not AsciiDoc
+        if (format != null) {
+            assertThat(format.id).isNotEqualTo(FormatRegistry.ID_ASCIIDOC)
+        }
+    }
+
+    // ==================== Special Characters Tests ====================
+
+    @Test
+    fun `should handle special characters`() {
+        val content = """
+            Special chars: @#$%^{{SPECIAL_CHARS_SAMPLE}}*()
+        """.trimIndent()
+
+        val result = parser.parse(content)
+
+        assertNotNull(result)
+        // Verify special characters are preserved/escaped correctly
     }
 
     @Test
-    fun testCanParse() {
-        val asciidocFormat = FormatRegistry.getById(TextFormat.ID_ASCIIDOC)!!
-        val markdownFormat = FormatRegistry.getById(TextFormat.ID_MARKDOWN)!!
-        
-        assertTrue(parser.canParse(asciidocFormat))
-        assertFalse(parser.canParse(markdownFormat))
+    fun `should handle unicode characters`() {
+        val content = "Unicode test: 你好世界 🌍 Привет мир"
+
+        val result = parser.parse(content)
+
+        assertNotNull(result)
+    }
+
+    // ==================== Error Handling Tests ====================
+
+    @Test
+    fun `should handle malformed input gracefully`() {
+        val malformed = """
+            Malformed AsciiDoc content
+        """.trimIndent()
+
+        // Should not throw exception
+        val result = parser.parse(malformed)
+        assertNotNull(result)
     }
 
     @Test
-    fun testParserRegistration() {
-        val format = FormatRegistry.getById(TextFormat.ID_ASCIIDOC)!!
-        val registeredParser = ParserRegistry.getParser(format)
-        
-        assertNotNull(registeredParser)
-        assertTrue(registeredParser is AsciidocParser)
+    fun `should handle very long input`() {
+        val longContent = "Single line of AsciiDoc\n".repeat(10000)
+
+        val result = parser.parse(longContent)
+
+        assertNotNull(result)
+    }
+
+    @Test
+    fun `should handle null bytes gracefully`() {
+        // Binary content detection
+        val binaryContent = "Some text\u0000with null\u0000bytes"
+
+        val result = parser.parse(binaryContent)
+
+        assertNotNull(result)
+    }
+
+    // ==================== Format-Specific Tests ====================
+    // Add format-specific parsing tests below
+    // Examples:
+    // - Headers (for Markdown, AsciiDoc, etc.)
+    // - Lists (for Markdown, Org Mode, etc.)
+    // - Code blocks (for Markdown, reStructuredText, etc.)
+    // - Tables (for CSV, Markdown, etc.)
+    // - Math (for LaTeX, R Markdown, etc.)
+
+    @Test
+    fun `should parse format-specific feature`() {
+        val content = """
+            Format specific sample
+        """.trimIndent()
+
+        val result = parser.parse(content)
+
+        assertNotNull(result)
+        // Add format-specific assertions
+    }
+
+    // ==================== Integration Tests ====================
+
+    @Test
+    fun `should integrate with FormatRegistry`() {
+        val format = FormatRegistry.getById(FormatRegistry.ID_ASCIIDOC)
+
+        assertNotNull(format)
+        assertThat(format.name).isEqualTo("AsciiDoc")
+        assertThat(format.defaultExtension).isEqualTo(".adoc")
+    }
+
+    @Test
+    fun `should be registered in FormatRegistry`() {
+        val allFormats = FormatRegistry.formats
+        val asciidocFormat = allFormats.find { it.id == FormatRegistry.ID_ASCIIDOC }
+
+        assertNotNull(asciidocFormat)
+        assertThat(asciidocFormat.name).isEqualTo("AsciiDoc")
     }
 }

@@ -3,20 +3,20 @@
  * SPDX-FileCopyrightText: 2025 Milos Vasic
  * SPDX-License-Identifier: Apache-2.0
  *
- * Unit tests for KeyValue parser
+ * Unit tests for RMarkdown parser
  *
  *########################################################*/
-package digital.vasic.yole.format.keyvalue
+package digital.vasic.yole.format.rmarkdown
 
 import digital.vasic.yole.format.FormatRegistry
-import digital.vasic.yole.format.keyvalue.KeyvalueParser
+import digital.vasic.yole.format.rmarkdown.RmarkdownParser
 import org.junit.Test
 import org.assertj.core.api.Assertions.assertThat
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
 /**
- * Unit tests for KeyValue format parser.
+ * Unit tests for RMarkdown format parser.
  *
  * Tests cover:
  * - Format detection by extension
@@ -25,46 +25,46 @@ import kotlin.test.assertTrue
  * - Empty input handling
  * - Special characters
  */
-class KeyvalueParserTest {
+class RmarkdownParserTest {
 
-    private val parser = KeyvalueParser()
+    private val parser = RmarkdownParser()
 
     // ==================== Format Detection Tests ====================
 
     @Test
-    fun `should detect KeyValue format by extension`() {
-        val format = FormatRegistry.getByExtension(".ini")
+    fun `should detect RMarkdown format by extension`() {
+        val format = FormatRegistry.getByExtension(".rmd")
 
         assertNotNull(format)
-        assertThat(format.id).isEqualTo(FormatRegistry.ID_KEYVALUE)
-        assertThat(format.name).isEqualTo("KeyValue")
+        assertThat(format.id).isEqualTo(FormatRegistry.ID_RMARKDOWN)
+        assertThat(format.name).isEqualTo("RMarkdown")
     }
 
     @Test
-    fun `should detect KeyValue format by filename`() {
-        val format = FormatRegistry.detectByFilename("test.ini")
+    fun `should detect RMarkdown format by filename`() {
+        val format = FormatRegistry.detectByFilename("test.rmd")
 
         assertNotNull(format)
-        assertThat(format.id).isEqualTo(FormatRegistry.ID_KEYVALUE)
+        assertThat(format.id).isEqualTo(FormatRegistry.ID_RMARKDOWN)
     }
 
     @Test
-    fun `should support all KeyValue extensions`() {
-        val extensions = listOf(".ini")
+    fun `should support all RMarkdown extensions`() {
+        val extensions = listOf(".rmd")
 
         extensions.forEach { ext ->
             val format = FormatRegistry.getByExtension(ext)
             assertNotNull(format, "Extension $ext should be recognized")
-            assertThat(format.id).isEqualTo(FormatRegistry.ID_KEYVALUE)
+            assertThat(format.id).isEqualTo(FormatRegistry.ID_RMARKDOWN)
         }
     }
 
     // ==================== Basic Parsing Tests ====================
 
     @Test
-    fun `should parse basic KeyValue content`() {
+    fun `should parse basic RMarkdown content`() {
         val content = """
-            Sample KeyValue content here
+            Sample RMarkdown content here
         """.trimIndent()
 
         val result = parser.parse(content)
@@ -90,7 +90,7 @@ class KeyvalueParserTest {
 
     @Test
     fun `should handle single line input`() {
-        val content = "Single line of KeyValue"
+        val content = "Single line of RMarkdown"
 
         val result = parser.parse(content)
 
@@ -102,13 +102,13 @@ class KeyvalueParserTest {
     @Test
     fun `should detect format by content patterns`() {
         val content = """
-            Sample KeyValue content here
+            Sample RMarkdown content here
         """.trimIndent()
 
         val format = FormatRegistry.detectByContent(content)
 
         assertNotNull(format)
-        assertThat(format.id).isEqualTo(FormatRegistry.ID_KEYVALUE)
+        assertThat(format.id).isEqualTo(FormatRegistry.ID_RMARKDOWN)
     }
 
     @Test
@@ -117,9 +117,9 @@ class KeyvalueParserTest {
 
         val format = FormatRegistry.detectByContent(plainText)
 
-        // Should detect as plaintext, not KeyValue
+        // Should detect as plaintext, not RMarkdown
         if (format != null) {
-            assertThat(format.id).isNotEqualTo(FormatRegistry.ID_KEYVALUE)
+            assertThat(format.id).isNotEqualTo(FormatRegistry.ID_RMARKDOWN)
         }
     }
 
@@ -151,7 +151,7 @@ class KeyvalueParserTest {
     @Test
     fun `should handle malformed input gracefully`() {
         val malformed = """
-            Malformed KeyValue content
+            Malformed RMarkdown content
         """.trimIndent()
 
         // Should not throw exception
@@ -161,7 +161,7 @@ class KeyvalueParserTest {
 
     @Test
     fun `should handle very long input`() {
-        val longContent = "Single line of KeyValue\n".repeat(10000)
+        val longContent = "Single line of RMarkdown\n".repeat(10000)
 
         val result = parser.parse(longContent)
 
@@ -203,19 +203,19 @@ class KeyvalueParserTest {
 
     @Test
     fun `should integrate with FormatRegistry`() {
-        val format = FormatRegistry.getById(FormatRegistry.ID_KEYVALUE)
+        val format = FormatRegistry.getById(FormatRegistry.ID_RMARKDOWN)
 
         assertNotNull(format)
-        assertThat(format.name).isEqualTo("KeyValue")
-        assertThat(format.defaultExtension).isEqualTo(".ini")
+        assertThat(format.name).isEqualTo("RMarkdown")
+        assertThat(format.defaultExtension).isEqualTo(".rmd")
     }
 
     @Test
     fun `should be registered in FormatRegistry`() {
         val allFormats = FormatRegistry.formats
-        val keyvalueFormat = allFormats.find { it.id == FormatRegistry.ID_KEYVALUE }
+        val rmarkdownFormat = allFormats.find { it.id == FormatRegistry.ID_RMARKDOWN }
 
-        assertNotNull(keyvalueFormat)
-        assertThat(keyvalueFormat.name).isEqualTo("KeyValue")
+        assertNotNull(rmarkdownFormat)
+        assertThat(rmarkdownFormat.name).isEqualTo("RMarkdown")
     }
 }

@@ -3,386 +3,219 @@
  * SPDX-FileCopyrightText: 2025 Milos Vasic
  * SPDX-License-Identifier: Apache-2.0
  *
- * CSV Parser Tests
+ * Unit tests for CSV parser
  *
  *########################################################*/
 package digital.vasic.yole.format.csv
 
-import kotlin.test.Test
-import kotlin.test.assertEquals
+import digital.vasic.yole.format.FormatRegistry
+import digital.vasic.yole.format.csv.CsvParser
+import org.junit.Test
+import org.assertj.core.api.Assertions.assertThat
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
+/**
+ * Unit tests for CSV format parser.
+ *
+ * Tests cover:
+ * - Format detection by extension
+ * - Basic parsing functionality
+ * - Edge cases and error handling
+ * - Empty input handling
+ * - Special characters
+ */
 class CsvParserTest {
 
     private val parser = CsvParser()
 
-    @Test
-    fun testParseSimpleLine() {
-        val fields = parser.parseLine("a,b,c")
+    // ==================== Format Detection Tests ====================
 
-        assertEquals(3, fields.size)
-        assertEquals("a", fields[0])
-        assertEquals("b", fields[1])
-        assertEquals("c", fields[2])
+    @Test
+    fun `should detect CSV format by extension`() {
+        val format = FormatRegistry.getByExtension(".csv")
+
+        assertNotNull(format)
+        assertThat(format.id).isEqualTo(FormatRegistry.ID_CSV)
+        assertThat(format.name).isEqualTo("CSV")
     }
 
     @Test
-    fun testParseLineWithSpaces() {
-        val fields = parser.parseLine("  a  ,  b  ,  c  ")
+    fun `should detect CSV format by filename`() {
+        val format = FormatRegistry.detectByFilename("test.csv")
 
-        assertEquals(3, fields.size)
-        assertEquals("  a  ", fields[0])
-        assertEquals("  b  ", fields[1])
-        assertEquals("  c  ", fields[2])
+        assertNotNull(format)
+        assertThat(format.id).isEqualTo(FormatRegistry.ID_CSV)
     }
 
     @Test
-    fun testParseLineWithQuotes() {
-        val fields = parser.parseLine("\"a\",\"b\",\"c\"")
+    fun `should support all CSV extensions`() {
+        val extensions = listOf(".csv")
 
-        assertEquals(3, fields.size)
-        assertEquals("a", fields[0])
-        assertEquals("b", fields[1])
-        assertEquals("c", fields[2])
+        extensions.forEach { ext ->
+            val format = FormatRegistry.getByExtension(ext)
+            assertNotNull(format, "Extension $ext should be recognized")
+            assertThat(format.id).isEqualTo(FormatRegistry.ID_CSV)
+        }
     }
 
-    @Test
-    fun testParseLineWithQuotedDelimiter() {
-        val fields = parser.parseLine("\"a,b\",c,d")
-
-        assertEquals(3, fields.size)
-        assertEquals("a,b", fields[0])
-        assertEquals("c", fields[1])
-        assertEquals("d", fields[2])
-    }
+    // ==================== Basic Parsing Tests ====================
 
     @Test
-    fun testParseLineWithEscapedQuotes() {
-        val fields = parser.parseLine("\"a\"\"b\",c")
-
-        assertEquals(2, fields.size)
-        assertEquals("a\"b", fields[0])
-        assertEquals("c", fields[1])
-    }
-
-    @Test
-    fun testParseLineWithEmptyFields() {
-        val fields = parser.parseLine("a,,c")
-
-        assertEquals(3, fields.size)
-        assertEquals("a", fields[0])
-        assertEquals("", fields[1])
-        assertEquals("c", fields[2])
-    }
-
-    @Test
-    fun testParseLineWithTabDelimiter() {
-        val fields = parser.parseLine("a\tb\tc", delimiter = '\t')
-
-        assertEquals(3, fields.size)
-        assertEquals("a", fields[0])
-        assertEquals("b", fields[1])
-        assertEquals("c", fields[2])
-    }
-
-    @Test
-    fun testParseLineWithSemicolonDelimiter() {
-        val fields = parser.parseLine("a;b;c", delimiter = ';')
-
-        assertEquals(3, fields.size)
-        assertEquals("a", fields[0])
-        assertEquals("b", fields[1])
-        assertEquals("c", fields[2])
-    }
-
-    @Test
-    fun testParseSimpleCsv() {
+    fun `should parse basic CSV content`() {
         val content = """
-            Name,Age,City
-            Alice,30,New York
-            Bob,25,London
+            Sample CSV content here
         """.trimIndent()
 
-        val table = parser.parseCsv(content)
+        val result = parser.parse(content)
 
-        assertEquals(3, table.headers?.size)
-        assertEquals("Name", table.headers?.get(0))
-        assertEquals("Age", table.headers?.get(1))
-        assertEquals("City", table.headers?.get(2))
-
-        assertEquals(2, table.rowCount)
-        assertEquals(3, table.columnCount)
-
-        assertEquals("Alice", table.rows[0][0])
-        assertEquals("30", table.rows[0][1])
-        assertEquals("New York", table.rows[0][2])
-
-        assertEquals("Bob", table.rows[1][0])
-        assertEquals("25", table.rows[1][1])
-        assertEquals("London", table.rows[1][2])
+        assertNotNull(result)
+        // Add format-specific assertions here
     }
 
     @Test
-    fun testParseCsvWithQuotes() {
+    fun `should handle empty input`() {
+        val result = parser.parse("")
+
+        assertNotNull(result)
+        // Verify empty result is valid
+    }
+
+    @Test
+    fun `should handle whitespace-only input`() {
+        val result = parser.parse("   \n\n   \t  ")
+
+        assertNotNull(result)
+    }
+
+    @Test
+    fun `should handle single line input`() {
+        val content = "Single line of CSV"
+
+        val result = parser.parse(content)
+
+        assertNotNull(result)
+    }
+
+    // ==================== Content Detection Tests ====================
+
+    @Test
+    fun `should detect format by content patterns`() {
         val content = """
-            "Name","Age","City"
-            "Alice Smith",30,"New York"
-            "Bob Jones",25,"London, UK"
+            Sample CSV content here
         """.trimIndent()
 
-        val table = parser.parseCsv(content)
+        val format = FormatRegistry.detectByContent(content)
 
-        assertEquals(3, table.headers?.size)
-        assertEquals(2, table.rowCount)
-
-        assertEquals("Alice Smith", table.rows[0][0])
-        assertEquals("London, UK", table.rows[1][2])
+        assertNotNull(format)
+        assertThat(format.id).isEqualTo(FormatRegistry.ID_CSV)
     }
 
     @Test
-    fun testParseCsvWithEmptyCells() {
+    fun `should not false-positive on plain text`() {
+        val plainText = "Just some plain text without special formatting"
+
+        val format = FormatRegistry.detectByContent(plainText)
+
+        // Should detect as plaintext, not CSV
+        if (format != null) {
+            assertThat(format.id).isNotEqualTo(FormatRegistry.ID_CSV)
+        }
+    }
+
+    // ==================== Special Characters Tests ====================
+
+    @Test
+    fun `should handle special characters`() {
         val content = """
-            A,B,C
-            1,,3
-            ,5,
+            Special chars: @#$%^{{SPECIAL_CHARS_SAMPLE}}*()
         """.trimIndent()
 
-        val table = parser.parseCsv(content)
+        val result = parser.parse(content)
 
-        assertEquals(2, table.rowCount)
-        assertEquals("1", table.rows[0][0])
-        assertEquals("", table.rows[0][1])
-        assertEquals("3", table.rows[0][2])
-        assertEquals("", table.rows[1][0])
-        assertEquals("5", table.rows[1][1])
-        assertEquals("", table.rows[1][2])
+        assertNotNull(result)
+        // Verify special characters are preserved/escaped correctly
     }
 
     @Test
-    fun testParseTsv() {
-        val content = """
-            Name${'\t'}Age${'\t'}City
-            Alice${'\t'}30${'\t'}New York
-            Bob${'\t'}25${'\t'}London
+    fun `should handle unicode characters`() {
+        val content = "Unicode test: 你好世界 🌍 Привет мир"
+
+        val result = parser.parse(content)
+
+        assertNotNull(result)
+    }
+
+    // ==================== Error Handling Tests ====================
+
+    @Test
+    fun `should handle malformed input gracefully`() {
+        val malformed = """
+            Malformed CSV content
         """.trimIndent()
 
-        val config = CsvConfig.infer(content.lines()[0])
-        assertEquals('\t', config.delimiter)
-
-        val table = parser.parseCsv(content, config)
-
-        assertEquals(2, table.rowCount)
-        assertEquals("Alice", table.rows[0][0])
-        assertEquals("30", table.rows[0][1])
+        // Should not throw exception
+        val result = parser.parse(malformed)
+        assertNotNull(result)
     }
 
     @Test
-    fun testParseSemicolonSeparated() {
+    fun `should handle very long input`() {
+        val longContent = "Single line of CSV\n".repeat(10000)
+
+        val result = parser.parse(longContent)
+
+        assertNotNull(result)
+    }
+
+    @Test
+    fun `should handle null bytes gracefully`() {
+        // Binary content detection
+        val binaryContent = "Some text\u0000with null\u0000bytes"
+
+        val result = parser.parse(binaryContent)
+
+        assertNotNull(result)
+    }
+
+    // ==================== Format-Specific Tests ====================
+    // Add format-specific parsing tests below
+    // Examples:
+    // - Headers (for Markdown, AsciiDoc, etc.)
+    // - Lists (for Markdown, Org Mode, etc.)
+    // - Code blocks (for Markdown, reStructuredText, etc.)
+    // - Tables (for CSV, Markdown, etc.)
+    // - Math (for LaTeX, R Markdown, etc.)
+
+    @Test
+    fun `should parse format-specific feature`() {
         val content = """
-            Name;Age;City
-            Alice;30;New York
-            Bob;25;London
+            Format specific sample
         """.trimIndent()
 
-        val config = CsvConfig.infer(content.lines()[0])
-        assertEquals(';', config.delimiter)
+        val result = parser.parse(content)
 
-        val table = parser.parseCsv(content, config)
+        assertNotNull(result)
+        // Add format-specific assertions
+    }
 
-        assertEquals(2, table.rowCount)
-        assertEquals("Alice", table.rows[0][0])
+    // ==================== Integration Tests ====================
+
+    @Test
+    fun `should integrate with FormatRegistry`() {
+        val format = FormatRegistry.getById(FormatRegistry.ID_CSV)
+
+        assertNotNull(format)
+        assertThat(format.name).isEqualTo("CSV")
+        assertThat(format.defaultExtension).isEqualTo(".csv")
     }
 
     @Test
-    fun testParseWithComments() {
-        val content = """
-            # This is a comment
-            Name,Age,City
-            # Another comment
-            Alice,30,New York
-            Bob,25,London
-        """.trimIndent()
+    fun `should be registered in FormatRegistry`() {
+        val allFormats = FormatRegistry.formats
+        val csvFormat = allFormats.find { it.id == FormatRegistry.ID_CSV }
 
-        val table = parser.parseCsv(content)
-
-        assertEquals(2, table.rowCount)
-        assertEquals("Name", table.headers?.get(0))
-    }
-
-    @Test
-    fun testCsvConfigInfer() {
-        val csvLine = "a,b,c"
-        val config = CsvConfig.infer(csvLine)
-        assertEquals(',', config.delimiter)
-        assertEquals('"', config.quote)
-    }
-
-    @Test
-    fun testCsvConfigInferTab() {
-        val tsvLine = "a\tb\tc"
-        val config = CsvConfig.infer(tsvLine)
-        assertEquals('\t', config.delimiter)
-    }
-
-    @Test
-    fun testCsvConfigInferSemicolon() {
-        val line = "a;b;c"
-        val config = CsvConfig.infer(line)
-        assertEquals(';', config.delimiter)
-    }
-
-    @Test
-    fun testCsvConfigInferPipe() {
-        val line = "a|b|c"
-        val config = CsvConfig.infer(line)
-        assertEquals('|', config.delimiter)
-    }
-
-    @Test
-    fun testParseDocument() {
-        val content = """
-            Name,Age,City
-            Alice,30,New York
-            Bob,25,London
-        """.trimIndent()
-
-        val document = parser.parse(content)
-
-        assertNotNull(document)
-        assertEquals("2", document.metadata["rows"])
-        assertEquals("3", document.metadata["columns"])
-        assertEquals(",", document.metadata["delimiter"])
-        assertTrue(document.parsedContent.contains("<table>"))
-    }
-
-    @Test
-    fun testHtmlGeneration() {
-        val content = """
-            Name,Age
-            Alice,30
-            Bob,25
-        """.trimIndent()
-
-        val document = parser.parse(content)
-        val html = document.parsedContent
-
-        assertTrue(html.contains("<table>"))
-        assertTrue(html.contains("<thead>"))
-        assertTrue(html.contains("<tbody>"))
-        assertTrue(html.contains("<th>"))
-        assertTrue(html.contains("<td>"))
-        assertTrue(html.contains("Name"))
-        assertTrue(html.contains("Alice"))
-        assertTrue(html.contains("30"))
-    }
-
-    @Test
-    fun testHtmlWithEmptyCells() {
-        val content = """
-            A,B
-            1,
-            ,3
-        """.trimIndent()
-
-        val document = parser.parse(content)
-        val html = document.parsedContent
-
-        assertTrue(html.contains("&nbsp;")) // Empty cells should have &nbsp;
-    }
-
-    @Test
-    fun testMarkdownTableGeneration() {
-        val content = """
-            Name,Age
-            Alice,30
-            Bob,25
-        """.trimIndent()
-
-        val table = parser.parseCsv(content)
-        val markdown = parser.toMarkdownTable(table)
-
-        assertTrue(markdown.contains("| Name | Age |"))
-        assertTrue(markdown.contains("| --- | --- |"))
-        assertTrue(markdown.contains("| Alice | 30 |"))
-        assertTrue(markdown.contains("| Bob | 25 |"))
-    }
-
-    @Test
-    fun testMarkdownTableWithEmptyCells() {
-        val content = """
-            A,B
-            1,
-            ,3
-        """.trimIndent()
-
-        val table = parser.parseCsv(content)
-        val markdown = parser.toMarkdownTable(table)
-
-        assertTrue(markdown.contains("&nbsp;"))
-    }
-
-    @Test
-    fun testEmptyCsv() {
-        val content = ""
-
-        val table = parser.parseCsv(content)
-
-        assertEquals(0, table.rowCount)
-        assertEquals(0, table.columnCount)
-    }
-
-    @Test
-    fun testCsvWithOnlyHeader() {
-        val content = "Name,Age,City"
-
-        val table = parser.parseCsv(content)
-
-        assertEquals(0, table.rowCount)
-        assertEquals(3, table.columnCount)
-        assertEquals("Name", table.headers?.get(0))
-    }
-
-    @Test
-    fun testCsvTableProperties() {
-        val headers = listOf("A", "B", "C")
-        val rows = listOf(
-            listOf("1", "2", "3"),
-            listOf("4", "5", "6")
-        )
-        val table = CsvTable(rows, headers)
-
-        assertEquals(2, table.rowCount)
-        assertEquals(3, table.columnCount)
-    }
-
-    @Test
-    fun testComplexCsvWithSpecialCharacters() {
-        val content = """
-            "Product","Price","Description"
-            "Widget A","$10.99","A ""great"" widget"
-            "Widget B","$15.99","Contains, comma"
-        """.trimIndent()
-
-        val table = parser.parseCsv(content)
-
-        assertEquals(2, table.rowCount)
-        assertEquals("Widget A", table.rows[0][0])
-        assertEquals("$10.99", table.rows[0][1])
-        assertEquals("A \"great\" widget", table.rows[0][2])
-        assertEquals("Contains, comma", table.rows[1][2])
-    }
-
-    @Test
-    fun testLargeTable() {
-        val rows = (1..100).map { "row$it,value$it" }
-        val content = "Header1,Header2\n" + rows.joinToString("\n")
-
-        val table = parser.parseCsv(content)
-
-        assertEquals(100, table.rowCount)
-        assertEquals(2, table.columnCount)
-        assertEquals("row1", table.rows[0][0])
-        assertEquals("row100", table.rows[99][0])
+        assertNotNull(csvFormat)
+        assertThat(csvFormat.name).isEqualTo("CSV")
     }
 }

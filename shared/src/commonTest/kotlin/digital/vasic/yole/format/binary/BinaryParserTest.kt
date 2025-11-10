@@ -3,20 +3,20 @@
  * SPDX-FileCopyrightText: 2025 Milos Vasic
  * SPDX-License-Identifier: Apache-2.0
  *
- * Unit tests for KeyValue parser
+ * Unit tests for Binary parser
  *
  *########################################################*/
-package digital.vasic.yole.format.keyvalue
+package digital.vasic.yole.format.binary
 
 import digital.vasic.yole.format.FormatRegistry
-import digital.vasic.yole.format.keyvalue.KeyvalueParser
+import digital.vasic.yole.format.binary.BinaryParser
 import org.junit.Test
 import org.assertj.core.api.Assertions.assertThat
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
 /**
- * Unit tests for KeyValue format parser.
+ * Unit tests for Binary format parser.
  *
  * Tests cover:
  * - Format detection by extension
@@ -25,46 +25,46 @@ import kotlin.test.assertTrue
  * - Empty input handling
  * - Special characters
  */
-class KeyvalueParserTest {
+class BinaryParserTest {
 
-    private val parser = KeyvalueParser()
+    private val parser = BinaryParser()
 
     // ==================== Format Detection Tests ====================
 
     @Test
-    fun `should detect KeyValue format by extension`() {
-        val format = FormatRegistry.getByExtension(".ini")
+    fun `should detect Binary format by extension`() {
+        val format = FormatRegistry.getByExtension(".bin")
 
         assertNotNull(format)
-        assertThat(format.id).isEqualTo(FormatRegistry.ID_KEYVALUE)
-        assertThat(format.name).isEqualTo("KeyValue")
+        assertThat(format.id).isEqualTo(FormatRegistry.ID_BINARY)
+        assertThat(format.name).isEqualTo("Binary")
     }
 
     @Test
-    fun `should detect KeyValue format by filename`() {
-        val format = FormatRegistry.detectByFilename("test.ini")
+    fun `should detect Binary format by filename`() {
+        val format = FormatRegistry.detectByFilename("test.bin")
 
         assertNotNull(format)
-        assertThat(format.id).isEqualTo(FormatRegistry.ID_KEYVALUE)
+        assertThat(format.id).isEqualTo(FormatRegistry.ID_BINARY)
     }
 
     @Test
-    fun `should support all KeyValue extensions`() {
-        val extensions = listOf(".ini")
+    fun `should support all Binary extensions`() {
+        val extensions = listOf(".bin")
 
         extensions.forEach { ext ->
             val format = FormatRegistry.getByExtension(ext)
             assertNotNull(format, "Extension $ext should be recognized")
-            assertThat(format.id).isEqualTo(FormatRegistry.ID_KEYVALUE)
+            assertThat(format.id).isEqualTo(FormatRegistry.ID_BINARY)
         }
     }
 
     // ==================== Basic Parsing Tests ====================
 
     @Test
-    fun `should parse basic KeyValue content`() {
+    fun `should parse basic Binary content`() {
         val content = """
-            Sample KeyValue content here
+            Sample Binary content here
         """.trimIndent()
 
         val result = parser.parse(content)
@@ -90,7 +90,7 @@ class KeyvalueParserTest {
 
     @Test
     fun `should handle single line input`() {
-        val content = "Single line of KeyValue"
+        val content = "Single line of Binary"
 
         val result = parser.parse(content)
 
@@ -102,13 +102,13 @@ class KeyvalueParserTest {
     @Test
     fun `should detect format by content patterns`() {
         val content = """
-            Sample KeyValue content here
+            Sample Binary content here
         """.trimIndent()
 
         val format = FormatRegistry.detectByContent(content)
 
         assertNotNull(format)
-        assertThat(format.id).isEqualTo(FormatRegistry.ID_KEYVALUE)
+        assertThat(format.id).isEqualTo(FormatRegistry.ID_BINARY)
     }
 
     @Test
@@ -117,9 +117,9 @@ class KeyvalueParserTest {
 
         val format = FormatRegistry.detectByContent(plainText)
 
-        // Should detect as plaintext, not KeyValue
+        // Should detect as plaintext, not Binary
         if (format != null) {
-            assertThat(format.id).isNotEqualTo(FormatRegistry.ID_KEYVALUE)
+            assertThat(format.id).isNotEqualTo(FormatRegistry.ID_BINARY)
         }
     }
 
@@ -151,7 +151,7 @@ class KeyvalueParserTest {
     @Test
     fun `should handle malformed input gracefully`() {
         val malformed = """
-            Malformed KeyValue content
+            Malformed Binary content
         """.trimIndent()
 
         // Should not throw exception
@@ -161,7 +161,7 @@ class KeyvalueParserTest {
 
     @Test
     fun `should handle very long input`() {
-        val longContent = "Single line of KeyValue\n".repeat(10000)
+        val longContent = "Single line of Binary\n".repeat(10000)
 
         val result = parser.parse(longContent)
 
@@ -203,19 +203,19 @@ class KeyvalueParserTest {
 
     @Test
     fun `should integrate with FormatRegistry`() {
-        val format = FormatRegistry.getById(FormatRegistry.ID_KEYVALUE)
+        val format = FormatRegistry.getById(FormatRegistry.ID_BINARY)
 
         assertNotNull(format)
-        assertThat(format.name).isEqualTo("KeyValue")
-        assertThat(format.defaultExtension).isEqualTo(".ini")
+        assertThat(format.name).isEqualTo("Binary")
+        assertThat(format.defaultExtension).isEqualTo(".bin")
     }
 
     @Test
     fun `should be registered in FormatRegistry`() {
         val allFormats = FormatRegistry.formats
-        val keyvalueFormat = allFormats.find { it.id == FormatRegistry.ID_KEYVALUE }
+        val binaryFormat = allFormats.find { it.id == FormatRegistry.ID_BINARY }
 
-        assertNotNull(keyvalueFormat)
-        assertThat(keyvalueFormat.name).isEqualTo("KeyValue")
+        assertNotNull(binaryFormat)
+        assertThat(binaryFormat.name).isEqualTo("Binary")
     }
 }

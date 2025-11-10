@@ -50,7 +50,7 @@ class MarkdownParserTest {
 
     @Test
     fun `should support all Markdown extensions`() {
-        val extensions = listOf(".md")
+        val extensions = listOf(".md", ".markdown", ".mdown", ".mkd")
 
         extensions.forEach { ext ->
             val format = FormatRegistry.getByExtension(ext)
@@ -64,13 +64,21 @@ class MarkdownParserTest {
     @Test
     fun `should parse basic Markdown content`() {
         val content = """
-            Sample Markdown content here
+            # Hello World
+
+            This is a paragraph with **bold** and *italic* text.
+
+            Here's a [link](https://example.com).
         """.trimIndent()
 
         val result = parser.parse(content)
 
         assertNotNull(result)
-        // Add format-specific assertions here
+        assertThat(result.rawContent).isEqualTo(content)
+        assertThat(result.parsedContent).contains("<h1>")
+        assertThat(result.parsedContent).contains("<strong>")
+        assertThat(result.parsedContent).contains("<em>")
+        assertThat(result.parsedContent).contains("<a href=")
     }
 
     @Test
@@ -78,7 +86,8 @@ class MarkdownParserTest {
         val result = parser.parse("")
 
         assertNotNull(result)
-        // Verify empty result is valid
+        assertThat(result.rawContent).isEmpty()
+        assertThat(result.parsedContent).isNotNull()
     }
 
     @Test
@@ -102,7 +111,9 @@ class MarkdownParserTest {
     @Test
     fun `should detect format by content patterns`() {
         val content = """
-            Sample Markdown content here
+            # Markdown Header
+
+            This is **bold** and *italic* text.
         """.trimIndent()
 
         val format = FormatRegistry.detectByContent(content)
@@ -128,13 +139,18 @@ class MarkdownParserTest {
     @Test
     fun `should handle special characters`() {
         val content = """
-            Special chars: @#$%^{{SPECIAL_CHARS_SAMPLE}}*()
+            Special chars: @#$%^&*()
+
+            HTML entities: <div> & "quotes"
         """.trimIndent()
 
         val result = parser.parse(content)
 
         assertNotNull(result)
-        // Verify special characters are preserved/escaped correctly
+        // HTML should be escaped
+        assertThat(result.parsedContent).contains("&lt;")
+        assertThat(result.parsedContent).contains("&gt;")
+        assertThat(result.parsedContent).contains("&amp;")
     }
 
     @Test
@@ -151,12 +167,17 @@ class MarkdownParserTest {
     @Test
     fun `should handle malformed input gracefully`() {
         val malformed = """
-            Malformed Markdown content
+            # Unclosed [bracket
+
+            Mismatched **bold text
+
+            Invalid ![image(url)
         """.trimIndent()
 
         // Should not throw exception
         val result = parser.parse(malformed)
         assertNotNull(result)
+        assertThat(result.parsedContent).isNotNull()
     }
 
     @Test
@@ -179,24 +200,384 @@ class MarkdownParserTest {
     }
 
     // ==================== Format-Specific Tests ====================
-    // Add format-specific parsing tests below
-    // Examples:
-    // - Headers (for Markdown, AsciiDoc, etc.)
-    // - Lists (for Markdown, Org Mode, etc.)
-    // - Code blocks (for Markdown, reStructuredText, etc.)
-    // - Tables (for CSV, Markdown, etc.)
-    // - Math (for LaTeX, R Markdown, etc.)
 
     @Test
-    fun `should parse format-specific feature`() {
+    fun `should parse headers H1 through H6`() {
         val content = """
-            Format specific sample
+            # H1 Header
+            ## H2 Header
+            ### H3 Header
+            #### H4 Header
+            ##### H5 Header
+            ###### H6 Header
         """.trimIndent()
 
         val result = parser.parse(content)
 
         assertNotNull(result)
-        // Add format-specific assertions
+        assertThat(result.parsedContent).contains("<h1>H1 Header</h1>")
+        assertThat(result.parsedContent).contains("<h2>H2 Header</h2>")
+        assertThat(result.parsedContent).contains("<h3>H3 Header</h3>")
+        assertThat(result.parsedContent).contains("<h4>H4 Header</h4>")
+        assertThat(result.parsedContent).contains("<h5>H5 Header</h5>")
+        assertThat(result.parsedContent).contains("<h6>H6 Header</h6>")
+    }
+
+    @Test
+    fun `should parse bold text with double asterisks`() {
+        val content = "This is **bold text** here"
+
+        val result = parser.parse(content)
+
+        assertNotNull(result)
+        assertThat(result.parsedContent).contains("<strong>bold text</strong>")
+    }
+
+    @Test
+    fun `should parse bold text with double underscores`() {
+        val content = "This is __bold text__ here"
+
+        val result = parser.parse(content)
+
+        assertNotNull(result)
+        assertThat(result.parsedContent).contains("<strong>bold text</strong>")
+    }
+
+    @Test
+    fun `should parse italic text with single asterisk`() {
+        val content = "This is *italic text* here"
+
+        val result = parser.parse(content)
+
+        assertNotNull(result)
+        assertThat(result.parsedContent).contains("<em>italic text</em>")
+    }
+
+    @Test
+    fun `should parse italic text with single underscore`() {
+        val content = "This is _italic text_ here"
+
+        val result = parser.parse(content)
+
+        assertNotNull(result)
+        assertThat(result.parsedContent).contains("<em>italic text</em>")
+    }
+
+    @Test
+    fun `should parse strikethrough text`() {
+        val content = "This is ~~strikethrough text~~ here"
+
+        val result = parser.parse(content)
+
+        assertNotNull(result)
+        assertThat(result.parsedContent).contains("<s>strikethrough text</s>")
+    }
+
+    @Test
+    fun `should parse inline code`() {
+        val content = "Use the `println()` function"
+
+        val result = parser.parse(content)
+
+        assertNotNull(result)
+        assertThat(result.parsedContent).contains("<code>println()</code>")
+    }
+
+    @Test
+    fun `should parse fenced code blocks`() {
+        val content = """
+            ```kotlin
+            fun main() {
+                println("Hello World")
+            }
+            ```
+        """.trimIndent()
+
+        val result = parser.parse(content)
+
+        assertNotNull(result)
+        assertThat(result.parsedContent).contains("<pre>")
+        assertThat(result.parsedContent).contains("<code>")
+        assertThat(result.parsedContent).contains("fun main()")
+    }
+
+    @Test
+    fun `should parse unordered lists with dashes`() {
+        val content = """
+            - Item 1
+            - Item 2
+            - Item 3
+        """.trimIndent()
+
+        val result = parser.parse(content)
+
+        assertNotNull(result)
+        assertThat(result.parsedContent).contains("<ul>")
+        assertThat(result.parsedContent).contains("<li>Item 1</li>")
+        assertThat(result.parsedContent).contains("<li>Item 2</li>")
+        assertThat(result.parsedContent).contains("</ul>")
+    }
+
+    @Test
+    fun `should parse unordered lists with asterisks`() {
+        val content = """
+            * Item 1
+            * Item 2
+        """.trimIndent()
+
+        val result = parser.parse(content)
+
+        assertNotNull(result)
+        assertThat(result.parsedContent).contains("<ul>")
+        assertThat(result.parsedContent).contains("<li>Item 1</li>")
+    }
+
+    @Test
+    fun `should parse unordered lists with plus signs`() {
+        val content = """
+            + Item 1
+            + Item 2
+        """.trimIndent()
+
+        val result = parser.parse(content)
+
+        assertNotNull(result)
+        assertThat(result.parsedContent).contains("<ul>")
+        assertThat(result.parsedContent).contains("<li>Item 1</li>")
+    }
+
+    @Test
+    fun `should parse ordered lists`() {
+        val content = """
+            1. First item
+            2. Second item
+            3. Third item
+        """.trimIndent()
+
+        val result = parser.parse(content)
+
+        assertNotNull(result)
+        assertThat(result.parsedContent).contains("<ol>")
+        assertThat(result.parsedContent).contains("<li>First item</li>")
+        assertThat(result.parsedContent).contains("<li>Second item</li>")
+        assertThat(result.parsedContent).contains("</ol>")
+    }
+
+    @Test
+    fun `should parse links`() {
+        val content = "Check out [Example](https://example.com)"
+
+        val result = parser.parse(content)
+
+        assertNotNull(result)
+        assertThat(result.parsedContent).contains("<a href='https://example.com'>Example</a>")
+    }
+
+    @Test
+    fun `should parse images`() {
+        val content = "![Alt text](https://example.com/image.png)"
+
+        val result = parser.parse(content)
+
+        assertNotNull(result)
+        assertThat(result.parsedContent).contains("<img src='https://example.com/image.png' alt='Alt text'/>")
+    }
+
+    @Test
+    fun `should parse blockquotes`() {
+        val content = """
+            > This is a quote
+            > It spans multiple lines
+        """.trimIndent()
+
+        val result = parser.parse(content)
+
+        assertNotNull(result)
+        assertThat(result.parsedContent).contains("<blockquote>")
+        assertThat(result.parsedContent).contains("This is a quote")
+        assertThat(result.parsedContent).contains("</blockquote>")
+    }
+
+    @Test
+    fun `should parse horizontal rules with dashes`() {
+        val content = """
+            Above
+
+            ---
+
+            Below
+        """.trimIndent()
+
+        val result = parser.parse(content)
+
+        assertNotNull(result)
+        assertThat(result.parsedContent).contains("<hr>")
+    }
+
+    @Test
+    fun `should parse horizontal rules with asterisks`() {
+        val content = """
+            Above
+
+            ***
+
+            Below
+        """.trimIndent()
+
+        val result = parser.parse(content)
+
+        assertNotNull(result)
+        assertThat(result.parsedContent).contains("<hr>")
+    }
+
+    @Test
+    fun `should parse horizontal rules with underscores`() {
+        val content = """
+            Above
+
+            ___
+
+            Below
+        """.trimIndent()
+
+        val result = parser.parse(content)
+
+        assertNotNull(result)
+        assertThat(result.parsedContent).contains("<hr>")
+    }
+
+    @Test
+    fun `should parse GFM tables`() {
+        val content = """
+            | Column 1 | Column 2 |
+            |----------|----------|
+            | Cell 1   | Cell 2   |
+            | Cell 3   | Cell 4   |
+        """.trimIndent()
+
+        val result = parser.parse(content)
+
+        assertNotNull(result)
+        assertThat(result.parsedContent).contains("<table>")
+        assertThat(result.parsedContent).contains("<th>Column 1</th>")
+        assertThat(result.parsedContent).contains("<th>Column 2</th>")
+        assertThat(result.parsedContent).contains("<td>Cell 1</td>")
+        assertThat(result.parsedContent).contains("</table>")
+    }
+
+    @Test
+    fun `should parse task lists with unchecked checkboxes`() {
+        val content = "- [ ] Unchecked task"
+
+        val result = parser.parse(content)
+
+        assertNotNull(result)
+        assertThat(result.parsedContent).contains("<input type='checkbox' disabled>")
+    }
+
+    @Test
+    fun `should parse task lists with checked checkboxes`() {
+        val content = "- [x] Checked task"
+
+        val result = parser.parse(content)
+
+        assertNotNull(result)
+        assertThat(result.parsedContent).contains("<input type='checkbox' disabled checked>")
+    }
+
+    @Test
+    fun `should parse complex nested formatting`() {
+        val content = "This is **bold with *italic* inside** text"
+
+        val result = parser.parse(content)
+
+        assertNotNull(result)
+        assertThat(result.parsedContent).contains("<strong>")
+        assertThat(result.parsedContent).contains("<em>")
+    }
+
+    @Test
+    fun `should parse mixed list items`() {
+        val content = """
+            1. Ordered item
+            2. Another ordered
+
+            - Unordered item
+            - Another unordered
+        """.trimIndent()
+
+        val result = parser.parse(content)
+
+        assertNotNull(result)
+        assertThat(result.parsedContent).contains("<ol>")
+        assertThat(result.parsedContent).contains("<ul>")
+    }
+
+    @Test
+    fun `should parse paragraphs separated by blank lines`() {
+        val content = """
+            First paragraph here.
+
+            Second paragraph here.
+        """.trimIndent()
+
+        val result = parser.parse(content)
+
+        assertNotNull(result)
+        // Should have separate paragraph tags
+        val pCount = result.parsedContent.count { it == 'p' }
+        assertTrue(pCount >= 4) // At least 2 opening and 2 closing p tags
+    }
+
+    @Test
+    fun `should handle code blocks with special characters`() {
+        val content = """
+            ```
+            <html>
+              <body>&amp;</body>
+            </html>
+            ```
+        """.trimIndent()
+
+        val result = parser.parse(content)
+
+        assertNotNull(result)
+        // Special characters inside code blocks should be escaped
+        assertThat(result.parsedContent).contains("&lt;html&gt;")
+        assertThat(result.parsedContent).contains("&amp;amp;")
+    }
+
+    @Test
+    fun `should validate and detect unclosed brackets`() {
+        val content = "This has [unclosed bracket"
+
+        val errors = parser.validate(content)
+
+        assertThat(errors).isNotEmpty()
+        assertThat(errors[0]).contains("Unclosed brackets")
+    }
+
+    @Test
+    fun `should validate and detect unclosed parentheses`() {
+        val content = "This has (unclosed paren"
+
+        val errors = parser.validate(content)
+
+        assertThat(errors).isNotEmpty()
+        assertThat(errors[0]).contains("Unclosed parentheses")
+    }
+
+    @Test
+    fun `should validate correctly formed markdown without errors`() {
+        val content = """
+            # Title
+
+            This is [a link](https://example.com) and ![image](test.png).
+        """.trimIndent()
+
+        val errors = parser.validate(content)
+
+        assertThat(errors).isEmpty()
     }
 
     // ==================== Integration Tests ====================
