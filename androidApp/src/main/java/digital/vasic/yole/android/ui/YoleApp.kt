@@ -16,6 +16,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -41,6 +42,12 @@ import digital.vasic.opoc.model.GsSharedPreferencesPropertyBackend
 import digital.vasic.yole.format.FormatRegistry
 import digital.vasic.yole.format.ParserRegistry
 import digital.vasic.yole.format.ParseOptions
+import digital.vasic.yole.ui.pressScale
+import digital.vasic.yole.ui.hoverScale
+import digital.vasic.yole.ui.ScreenTransitions
+import digital.vasic.yole.ui.ListAnimations
+import digital.vasic.yole.ui.LoadingStateWrapper
+import digital.vasic.yole.ui.LoadingAnimations
 import java.io.File
 
 /**
@@ -447,6 +454,167 @@ fun MainScreen() {
     }
 }
 
+/**
+ * Generic empty state component
+ */
+@Composable
+fun EmptyState(
+    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    title: String,
+    description: String,
+    actionLabel: String? = null,
+    onActionClick: (() -> Unit)? = null
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(32.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Icon(
+            imageVector = icon,
+            contentDescription = null,
+            modifier = Modifier.size(64.dp),
+            tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f)
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        Text(
+            text = title,
+            style = MaterialTheme.typography.titleLarge,
+            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(
+            text = description,
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f),
+            textAlign = androidx.compose.ui.text.style.TextAlign.Center
+        )
+        if (actionLabel != null && onActionClick != null) {
+            Spacer(modifier = Modifier.height(24.dp))
+            Button(
+                onClick = onActionClick,
+                modifier = Modifier.pressScale()
+            ) {
+                Text(actionLabel)
+            }
+        }
+    }
+}
+
+/**
+ * Empty file list state
+ */
+@Composable
+fun EmptyFileListState(onCreateFile: () -> Unit) {
+    EmptyState(
+        icon = Icons.Filled.FolderOpen,
+        title = "No files yet",
+        description = "This folder is empty.\nCreate your first file to get started.",
+        actionLabel = "Create File",
+        onActionClick = onCreateFile
+    )
+}
+
+/**
+ * Empty search results state
+ */
+@Composable
+fun EmptySearchState(searchQuery: String) {
+    EmptyState(
+        icon = Icons.Filled.Search,
+        title = "No results found",
+        description = "No files match \"$searchQuery\".\nTry a different search term."
+    )
+}
+
+/**
+ * Empty todo list state
+ */
+@Composable
+fun EmptyTodoListState() {
+    EmptyState(
+        icon = Icons.Filled.CheckCircle,
+        title = "No tasks yet",
+        description = "Add your first task above to get started.\nStay organized and productive!"
+    )
+}
+
+/**
+ * Error state component
+ */
+@Composable
+fun ErrorState(
+    title: String = "Something went wrong",
+    description: String = "An error occurred while loading.\nPlease try again.",
+    actionLabel: String = "Retry",
+    onRetry: () -> Unit
+) {
+    EmptyState(
+        icon = Icons.Filled.Warning,
+        title = title,
+        description = description,
+        actionLabel = actionLabel,
+        onActionClick = onRetry
+    )
+}
+
+/**
+ * Shimmer skeleton for file cards (loading state)
+ */
+@Composable
+fun FileCardSkeleton() {
+    val shimmerProgress = LoadingAnimations.rememberShimmer()
+    val shimmerAlpha = 0.3f + (shimmerProgress * 0.3f) // Animate between 0.3 and 0.6
+
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 2.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Row(horizontalArrangement = Arrangement.Start) {
+                // Icon placeholder
+                Box(
+                    modifier = Modifier
+                        .size(24.dp)
+                        .background(
+                            MaterialTheme.colorScheme.onSurface.copy(alpha = shimmerAlpha),
+                            shape = MaterialTheme.shapes.small
+                        )
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                // Filename placeholder
+                Box(
+                    modifier = Modifier
+                        .width(150.dp)
+                        .height(20.dp)
+                        .background(
+                            MaterialTheme.colorScheme.onSurface.copy(alpha = shimmerAlpha),
+                            shape = MaterialTheme.shapes.small
+                        )
+                )
+            }
+            // File size placeholder
+            Box(
+                modifier = Modifier
+                    .width(60.dp)
+                    .height(16.dp)
+                    .background(
+                        MaterialTheme.colorScheme.onSurface.copy(alpha = shimmerAlpha),
+                        shape = MaterialTheme.shapes.small
+                    )
+            )
+        }
+    }
+}
+
 @Composable
 fun FileBrowserScreen(
     searchQuery: String = "",
@@ -461,9 +629,12 @@ fun FileBrowserScreen(
     val context = LocalContext.current
     var currentDirectory by remember { mutableStateOf<File?>(null) }
     var allFiles by remember { mutableStateOf<List<File>>(emptyList()) }
+    var isLoadingFiles by remember { mutableStateOf(true) }
 
     // Initialize with documents directory
     LaunchedEffect(Unit) {
+        isLoadingFiles = true
+        kotlinx.coroutines.delay(300) // Simulate file system access delay
         val docsDir = File(context.getExternalFilesDir(null)?.parentFile, "Documents")
         if (docsDir.exists()) {
             currentDirectory = docsDir
@@ -473,6 +644,7 @@ fun FileBrowserScreen(
             currentDirectory = context.filesDir
             allFiles = context.filesDir.listFiles()?.toList() ?: emptyList()
         }
+        isLoadingFiles = false
     }
 
     // Filter and sort files
@@ -549,58 +721,91 @@ fun FileBrowserScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // File list
-        LazyColumn(modifier = Modifier.weight(1f)) {
-            items(files) { file ->
-                val isDirectory = file.isDirectory
-                val fileName = file.name
-                val fileSize = if (file.isFile) "${file.length()} bytes" else ""
-
-                Card(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 2.dp),
-                    onClick = {
-                        if (isDirectory) {
-                            // Navigate into directory
-                            currentDirectory = file
-                            allFiles = file.listFiles()?.toList() ?: emptyList()
-                        } else {
-                            // Try to read file content
-                            try {
-                                val content = file.readText()
-                                onFileSelected(fileName, content)
-                            } catch (e: Exception) {
-                                // If reading fails, show empty content
-                                onFileSelected(fileName, "")
-                            }
-                        }
+        // File list with loading state
+        LoadingStateWrapper(
+            isLoading = isLoadingFiles,
+            loadingContent = {
+                // Show shimmer skeleton cards while loading
+                LazyColumn(modifier = Modifier.weight(1f)) {
+                    items(5) { // Show 5 skeleton cards
+                        FileCardSkeleton()
                     }
-                ) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Row(horizontalArrangement = Arrangement.Start) {
-                            Text(
-                                text = if (isDirectory) "📁" else "📄",
-                                style = MaterialTheme.typography.bodyLarge
-                            )
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Text(
-                                text = fileName,
-                                style = MaterialTheme.typography.bodyLarge
-                            )
-                        }
+                }
+            }
+        ) {
+            // Actual file list or empty state
+            if (files.isEmpty()) {
+                // Show appropriate empty state
+                Box(modifier = Modifier.weight(1f).fillMaxWidth()) {
+                    if (searchQuery.isNotEmpty()) {
+                        // Empty search results
+                        EmptySearchState(searchQuery = searchQuery)
+                    } else {
+                        // Empty folder
+                        EmptyFileListState(onCreateFile = { onFileSelected("untitled.txt", "") })
+                    }
+                }
+            } else {
+                // File list
+                LazyColumn(modifier = Modifier.weight(1f)) {
+                    items(files) { file ->
+                        val isDirectory = file.isDirectory
+                        val fileName = file.name
+                        val fileSize = if (file.isFile) "${file.length()} bytes" else ""
 
-                        if (!isDirectory && fileSize.isNotEmpty()) {
-                            Text(
-                                text = fileSize,
-                                style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
-                            )
+                        Card(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 2.dp)
+                                .pressScale(scale = 0.97f), // Add press animation
+                            onClick = {
+                                if (isDirectory) {
+                                    // Navigate into directory with loading state
+                                    isLoadingFiles = true
+                                    currentDirectory = file
+                                    kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.Main).launch {
+                                        kotlinx.coroutines.delay(200) // Brief delay for loading animation
+                                        allFiles = file.listFiles()?.toList() ?: emptyList()
+                                        isLoadingFiles = false
+                                    }
+                                } else {
+                                    // Try to read file content
+                                    try {
+                                        val content = file.readText()
+                                        onFileSelected(fileName, content)
+                                    } catch (e: Exception) {
+                                        // If reading fails, show empty content
+                                        onFileSelected(fileName, "")
+                                    }
+                                }
+                            }
+                        ) {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(16.dp),
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                Row(horizontalArrangement = Arrangement.Start) {
+                                    Text(
+                                        text = if (isDirectory) "📁" else "📄",
+                                        style = MaterialTheme.typography.bodyLarge
+                                    )
+                                    Spacer(modifier = Modifier.width(8.dp))
+                                    Text(
+                                        text = fileName,
+                                        style = MaterialTheme.typography.bodyLarge
+                                    )
+                                }
+
+                                if (!isDirectory && fileSize.isNotEmpty()) {
+                                    Text(
+                                        text = fileSize,
+                                        style = MaterialTheme.typography.bodySmall,
+                                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                                    )
+                                }
+                            }
                         }
                     }
                 }
@@ -616,21 +821,30 @@ fun FileBrowserScreen(
         ) {
             OutlinedButton(
                 onClick = {
-                    // Go up one directory
+                    // Go up one directory with loading state
                     currentDirectory?.parentFile?.let { parent ->
+                        isLoadingFiles = true
                         currentDirectory = parent
-                        allFiles = parent.listFiles()?.toList() ?: emptyList()
+                        kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.Main).launch {
+                            kotlinx.coroutines.delay(200) // Brief delay for loading animation
+                            allFiles = parent.listFiles()?.toList() ?: emptyList()
+                            isLoadingFiles = false
+                        }
                     }
                 },
-                enabled = currentDirectory?.parentFile != null
+                enabled = currentDirectory?.parentFile != null && !isLoadingFiles,
+                modifier = Modifier.pressScale() // Add press animation
             ) {
                 Text("⬆️ Up")
             }
 
-            OutlinedButton(onClick = {
-                // Create new file
-                onFileSelected("untitled.txt", "")
-            }) {
+            OutlinedButton(
+                onClick = {
+                    // Create new file
+                    onFileSelected("untitled.txt", "")
+                },
+                modifier = Modifier.pressScale() // Add press animation
+            ) {
                 Text("➕ New File")
             }
         }
@@ -1308,26 +1522,48 @@ fun TodoScreen() {
                         todoItems = todoItems + newItem
                         newTodoText = ""
                     }
-                }
+                },
+                modifier = Modifier.pressScale() // Add press animation
             ) {
                 Text("Add")
             }
         }
 
-        // Todo list
-        LazyColumn(modifier = Modifier.weight(1f)) {
-            items(todoItems.filter { showCompleted || !it.completed }) { item ->
-                TodoItemRow(
-                    item = item,
-                    onToggleComplete = { completed ->
-                        todoItems = todoItems.map {
-                            if (it.id == item.id) it.copy(completed = completed) else it
-                        }
-                    },
-                    onDelete = {
-                        todoItems = todoItems.filter { it.id != item.id }
-                    }
+        // Todo list or empty state
+        val filteredTodos = todoItems.filter { showCompleted || !it.completed }
+        if (filteredTodos.isEmpty() && todoItems.isEmpty()) {
+            // No todos at all
+            Box(modifier = Modifier.weight(1f).fillMaxWidth()) {
+                EmptyTodoListState()
+            }
+        } else if (filteredTodos.isEmpty()) {
+            // All todos are completed and hidden
+            Box(
+                modifier = Modifier.weight(1f).fillMaxWidth(),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = "All tasks completed! 🎉",
+                    style = MaterialTheme.typography.titleLarge,
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
                 )
+            }
+        } else {
+            // Show todo list
+            LazyColumn(modifier = Modifier.weight(1f)) {
+                items(filteredTodos) { item ->
+                    TodoItemRow(
+                        item = item,
+                        onToggleComplete = { completed ->
+                            todoItems = todoItems.map {
+                                if (it.id == item.id) it.copy(completed = completed) else it
+                            }
+                        },
+                        onDelete = {
+                            todoItems = todoItems.filter { it.id != item.id }
+                        }
+                    )
+                }
             }
         }
     }
@@ -1353,6 +1589,7 @@ fun TodoItemRow(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 4.dp)
+            .pressScale(scale = 0.98f) // Add press animation
     ) {
         Row(
             modifier = Modifier
@@ -1478,7 +1715,9 @@ fun MoreScreen() {
 
         // Settings option
         Card(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .pressScale(scale = 0.98f), // Add press animation
             onClick = { /* TODO: Navigate to settings */ }
         ) {
             Row(
@@ -1504,7 +1743,9 @@ fun MoreScreen() {
 
         // File browser option
         Card(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .pressScale(scale = 0.98f), // Add press animation
             onClick = { /* TODO: Open file browser */ }
         ) {
             Row(
@@ -1530,7 +1771,9 @@ fun MoreScreen() {
 
         // Search option
         Card(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .pressScale(scale = 0.98f), // Add press animation
             onClick = { /* TODO: Open search */ }
         ) {
             Row(
@@ -1556,7 +1799,9 @@ fun MoreScreen() {
 
         // Backup/Restore option
         Card(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .pressScale(scale = 0.98f), // Add press animation
             onClick = { /* TODO: Open backup/restore */ }
         ) {
             Row(
@@ -1582,7 +1827,9 @@ fun MoreScreen() {
 
         // About option
         Card(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .pressScale(scale = 0.98f), // Add press animation
             onClick = { /* TODO: Show about dialog */ }
         ) {
             Row(
