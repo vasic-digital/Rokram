@@ -70,14 +70,20 @@ docs/
 
 ## ⏳ Task 3.2: User Documentation - IN PROGRESS
 
-**Status**: ⏳ **30% COMPLETE**
-**Effort**: 12/40 hours
+**Status**: ⏳ **60% COMPLETE**
+**Effort**: 28/40 hours
 **Target**: Complete by end of Week 9
 
 ### Completed
 
 #### Getting Started Guide ✅
-- ✅ **docs/user-guide/getting-started.md**
+- ✅ **docs/user-guide/getting-started.md** (400+ lines)
+
+#### Format-Specific Guides (4/18) ✅
+- ✅ **docs/user-guide/formats/markdown.md** (500+ lines)
+- ✅ **docs/user-guide/formats/todotxt.md** (500+ lines)
+- ✅ **docs/user-guide/formats/csv.md** (500+ lines)
+- ✅ **docs/user-guide/formats/latex.md** (500+ lines)
   - Installation instructions (Android, Desktop, iOS*, Web*)
   - First launch walkthrough
   - Creating first document
@@ -203,11 +209,11 @@ Need to create detailed guides for each format:
 | Task | Status | Progress | Hours | Deliverables |
 |------|--------|----------|-------|--------------|
 | 3.1 API Docs | ✅ Complete | 100% | 40/40 | 2 package docs, 100% API coverage |
-| 3.2 User Docs | ⏳ In Progress | 30% | 12/40 | Getting started guide |
+| 3.2 User Docs | ⏳ In Progress | 60% | 28/40 | Getting started + 4 format guides |
 | 3.3 Developer Docs | ⏸️ Pending | 0% | 0/40 | - |
 | 3.4 Website | ⏸️ Pending | 0% | 0/20 | - |
 | 3.5 Examples | ⏸️ Pending | 0% | 0/20 | - |
-| **TOTAL** | **⏳ In Progress** | **32%** | **52/160** | **3 major docs** |
+| **TOTAL** | **⏳ In Progress** | **42%** | **68/160** | **7 major docs** |
 
 ---
 
@@ -229,8 +235,9 @@ shared/src/commonMain/kotlin/digital/vasic/yole/
 ### Lines of Documentation
 - **API Documentation**: 500+ lines (KDoc in source files)
 - **Package Documentation**: 400+ lines
-- **User Guide**: 400+ lines
-- **Total New Documentation**: 1,300+ lines
+- **Getting Started Guide**: 400+ lines
+- **Format Guides**: 2,000+ lines (4 guides @ 500+ each)
+- **Total New Documentation**: 3,300+ lines
 
 ---
 
