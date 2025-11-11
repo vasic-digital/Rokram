@@ -100,7 +100,9 @@ class RestructuredtextParserTest {
     @Test
     fun `should detect format by content patterns`() {
         val content = """
-            Title\n=====\n.. note::
+            Title
+            =====
+            .. note::
         """.trimIndent()
 
         val format = FormatRegistry.detectByContent(content)

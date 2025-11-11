@@ -99,9 +99,7 @@ class TaskpaperParserTest {
 
     @Test
     fun `should detect format by content patterns`() {
-        val content = """
-            Project:\n\t- Task
-        """.trimIndent()
+        val content = "Project:\n\t- Task"
 
         val format = FormatRegistry.detectByContent(content)
 

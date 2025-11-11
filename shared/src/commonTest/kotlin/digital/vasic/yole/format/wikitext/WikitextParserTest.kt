@@ -100,7 +100,8 @@ class WikitextParserTest {
     @Test
     fun `should detect format by content patterns`() {
         val content = """
-            == Heading ==\n[[Link]]
+            == Heading ==
+            [[Link]]
         """.trimIndent()
 
         val format = FormatRegistry.detectByContent(content)

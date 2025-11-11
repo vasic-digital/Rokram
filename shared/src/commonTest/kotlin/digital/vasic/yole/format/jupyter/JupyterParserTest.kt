@@ -100,7 +100,7 @@ class JupyterParserTest {
     @Test
     fun `should detect format by content patterns`() {
         val content = """
-            Sample Jupyter content here
+            {"nbformat": 4, "cell_type": "code"}
         """.trimIndent()
 
         val format = FormatRegistry.detectByContent(content)
