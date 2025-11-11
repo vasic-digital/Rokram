@@ -126,43 +126,252 @@ All source files must include SPDX license header:
 
 ## Project Structure
 
-### Cross-Platform Modules
+### Module Architecture
+
+**Yole uses Kotlin Multiplatform (KMP)** for cross-platform development:
+
 ```
-├── app/                    # Legacy Android application
-├── androidApp/             # Modern Android application
-├── desktopApp/             # Desktop application (Windows/macOS/Linux)
-├── iosApp/                 # iOS application
-├── webApp/                 # Web application
-├── format-*/               # Format-specific modules
-│   ├── format-markdown/
-│   ├── format-todotxt/
-│   └── ... (all 18 formats)
-├── commons/                # Shared utilities
-└── core/                   # Core functionality
-```
-├── shared/                 # Shared KMP code
+├── shared/                 # Shared KMP code (PRIMARY MODULE)
 │   ├── src/
 │   │   ├── commonMain/     # Common Kotlin code
-│   │   ├── androidMain/    # Android-specific
-│   │   ├── desktopMain/    # Desktop-specific
-│   │   └── iosMain/        # iOS-specific
-├── app/                    # Android application
-├── androidApp/             # Android app (KMP)
-├── desktopApp/             # Desktop application
-├── iosApp/                 # iOS application
-├── webApp/                 # Web application
-├── format-*/               # Format-specific modules
-│   ├── format-markdown/
-│   ├── format-todotxt/
-│   └── ...
-├── commons/                # Shared utilities
-└── core/                   # Core functionality
+│   │   │   └── kotlin/digital/vasic/yole/
+│   │   │       ├── format/          # Format system
+│   │   │       │   ├── FormatRegistry.kt
+│   │   │       │   ├── TextParser.kt
+│   │   │       │   ├── markdown/MarkdownParser.kt
+│   │   │       │   ├── todotxt/TodoTxtParser.kt
+│   │   │       │   └── ... (all 18 format parsers)
+│   │   │       └── model/           # Document model
+│   │   ├── androidMain/    # Android-specific implementations
+│   │   ├── desktopMain/    # Desktop-specific implementations
+│   │   ├── iosMain/        # iOS-specific implementations
+│   │   └── wasmJsMain/     # Web-specific implementations
+│
+├── androidApp/             # Android application (Compose UI)
+├── desktopApp/             # Desktop application (Compose Desktop)
+├── iosApp/                 # iOS application (SwiftUI + KMP)
+├── webApp/                 # Web application (Compose for Web)
+│
+├── commons/                # Android-specific utilities
+└── core/                   # Legacy encryption utilities
 ```
 
 ### Package Structure
-- `digital.vasic.yole.*`: Main application code
-- `net.gsantner.opoc.*`: Shared utility libraries
-- `digital.vasic.yole.format.*`: Format-specific implementations
+- `digital.vasic.yole.format.*`: Format system (parsers, registry)
+- `digital.vasic.yole.model.*`: Document model and data structures
+- `net.gsantner.opoc.*`: Shared utility libraries (legacy)
+
+## Documentation Standards
+
+### KDoc Comments
+
+All public APIs must have KDoc documentation:
+
+```kotlin
+/**
+ * Parses text content into a structured document.
+ *
+ * This parser supports the following features:
+ * - Feature 1 description
+ * - Feature 2 description
+ *
+ * @param content The raw text content to parse
+ * @param options Optional parsing configuration (default: empty map)
+ * @return Parsed document with HTML representation and metadata
+ * @throws IllegalArgumentException if content is empty
+ *
+ * @see TextParser for the common parser interface
+ * @see FormatRegistry for format registration
+ *
+ * @sample digital.vasic.yole.format.markdown.MarkdownParserTest.basicParsing
+ */
+fun parse(content: String, options: Map<String, Any> = emptyMap()): ParsedDocument {
+    // Implementation
+}
+```
+
+**KDoc Guidelines:**
+- **Purpose**: First sentence describes what the function/class does
+- **Details**: Additional paragraphs explain behavior, features, edge cases
+- **@param**: Document all parameters with clear descriptions
+- **@return**: Describe return value and its structure
+- **@throws**: Document exceptions that may be thrown
+- **@see**: Link to related APIs
+- **@sample**: Reference example code when helpful
+- **Code examples**: Include usage examples for complex APIs
+
+### Commit Messages
+
+Follow conventional commit format:
+
+```
+<type>(<scope>): <subject>
+
+<body>
+
+<footer>
+```
+
+**Types:**
+- `feat`: New feature
+- `fix`: Bug fix
+- `docs`: Documentation changes
+- `style`: Code formatting (no logic change)
+- `refactor`: Code refactoring
+- `test`: Adding/updating tests
+- `chore`: Build process, dependencies
+
+**Examples:**
+```
+feat(markdown): add support for footnotes
+
+Implement GFM footnote syntax [^1] for Markdown parser.
+Includes rendering in HTML preview and syntax highlighting.
+
+Closes #123
+
+---
+
+fix(todotxt): correct priority parsing for tasks without dates
+
+Priority was incorrectly parsed when creation date was missing.
+Now handles all valid todo.txt priority formats.
+
+Fixes #456
+
+---
+
+docs(api): add KDoc to FormatRegistry methods
+
+Complete documentation coverage for format registration,
+detection, and retrieval methods.
+
+Part of Phase 3 documentation initiative.
+```
+
+**Guidelines:**
+- **Subject line**: 50 characters or less, imperative mood
+- **Body**: Wrap at 72 characters, explain what and why (not how)
+- **Footer**: Reference issues/PRs (`Closes #123`, `Fixes #456`, `Part of #789`)
+- **Scope**: Module or component name (markdown, todotxt, ui, etc.)
+
+## Adding New Format Parsers
+
+### Step-by-Step Guide
+
+**1. Create Parser Class** in `shared/src/commonMain/kotlin/digital/vasic/yole/format/[formatname]/`
+
+```kotlin
+package digital.vasic.yole.format.myformat
+
+import digital.vasic.yole.format.ParsedDocument
+import digital.vasic.yole.format.TextParser
+
+/**
+ * Parser for MyFormat text files.
+ *
+ * MyFormat is a lightweight markup language for [purpose].
+ * Supports: [list key features]
+ *
+ * @see <a href="https://myformat.org/spec">MyFormat Specification</a>
+ */
+class MyFormatParser : TextParser {
+    override val formatId: String = "myformat"
+    override val displayName: String = "MyFormat"
+    override val fileExtensions: List<String> = listOf(".myf", ".myformat")
+
+    override fun parse(content: String, options: Map<String, Any>): ParsedDocument {
+        // 1. Detect format (optional validation)
+        // 2. Parse syntax into structure
+        // 3. Convert to HTML
+        // 4. Extract metadata
+
+        return ParsedDocument(
+            html = convertToHtml(content),
+            metadata = extractMetadata(content),
+            sourceFormat = formatId
+        )
+    }
+
+    private fun convertToHtml(content: String): String {
+        // Implement conversion logic
+    }
+
+    private fun extractMetadata(content: String): Map<String, Any> {
+        // Extract title, author, tags, etc.
+    }
+}
+```
+
+**2. Register Format** in `FormatRegistry.kt`:
+
+```kotlin
+init {
+    registerFormat(
+        TextFormat(
+            id = "myformat",
+            name = "MyFormat",
+            extensions = listOf(".myf", ".myformat"),
+            mimeType = "text/x-myformat",
+            parser = { MyFormatParser() }
+        )
+    )
+}
+```
+
+**3. Write Tests** in `shared/src/commonTest/kotlin/digital/vasic/yole/format/myformat/`
+
+```kotlin
+class MyFormatParserTest {
+    private val parser = MyFormatParser()
+
+    @Test
+    fun `parse basic syntax`() {
+        val content = """
+            # Header
+            Body text
+        """.trimIndent()
+
+        val result = parser.parse(content)
+
+        assertThat(result.html).contains("<h1>Header</h1>")
+        assertThat(result.html).contains("<p>Body text</p>")
+    }
+
+    @Test
+    fun `detect format by extension`() {
+        assertThat(parser.fileExtensions).contains(".myf")
+    }
+}
+```
+
+**4. Create User Documentation** in `docs/user-guide/formats/myformat.md`
+
+Include:
+- Format overview and use cases
+- Complete syntax reference with examples
+- Yole-specific features and limitations
+- Best practices
+- External resources
+
+**5. Update Format Index** in `docs/user-guide/formats/README.md`
+
+Add your format to the list with description and link.
+
+### Testing Requirements
+
+- ✅ Basic syntax parsing test
+- ✅ HTML conversion test
+- ✅ Metadata extraction test
+- ✅ Edge case handling (empty content, malformed syntax)
+- ✅ Format detection by extension
+- ✅ Integration with FormatRegistry
+
+### Reference Implementations
+
+**Simple formats**: Look at `PlaintextParser.kt` for minimal implementation
+**Complex formats**: Study `MarkdownParser.kt` for full-featured parser
+**Structured data**: Check `CsvParser.kt` for table handling
 
 ## Contributing Types
 
