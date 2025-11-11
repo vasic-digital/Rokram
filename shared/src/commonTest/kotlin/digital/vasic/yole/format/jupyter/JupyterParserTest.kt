@@ -11,9 +11,7 @@ package digital.vasic.yole.format.jupyter
 import digital.vasic.yole.format.FormatRegistry
 import digital.vasic.yole.format.jupyter.JupyterParser
 import org.junit.Test
-import org.assertj.core.api.Assertions.assertThat
-import kotlin.test.assertNotNull
-import kotlin.test.assertTrue
+import kotlin.test.*
 
 /**
  * Unit tests for Jupyter format parser.
@@ -36,8 +34,8 @@ class JupyterParserTest {
         val format = FormatRegistry.getByExtension(".ipynb")
 
         assertNotNull(format)
-        assertThat(format.id).isEqualTo(FormatRegistry.ID_JUPYTER)
-        assertThat(format.name).isEqualTo("Jupyter")
+        assertEquals(FormatRegistry.ID_JUPYTER, format.id)
+        assertEquals("Jupyter", format.name)
     }
 
     @Test
@@ -45,7 +43,7 @@ class JupyterParserTest {
         val format = FormatRegistry.detectByFilename("test.ipynb")
 
         assertNotNull(format)
-        assertThat(format.id).isEqualTo(FormatRegistry.ID_JUPYTER)
+        assertEquals(FormatRegistry.ID_JUPYTER, format.id)
     }
 
     @Test
@@ -55,7 +53,7 @@ class JupyterParserTest {
         extensions.forEach { ext ->
             val format = FormatRegistry.getByExtension(ext)
             assertNotNull(format, "Extension $ext should be recognized")
-            assertThat(format.id).isEqualTo(FormatRegistry.ID_JUPYTER)
+            assertEquals(FormatRegistry.ID_JUPYTER, format.id)
         }
     }
 
@@ -108,7 +106,7 @@ class JupyterParserTest {
         val format = FormatRegistry.detectByContent(content)
 
         assertNotNull(format)
-        assertThat(format.id).isEqualTo(FormatRegistry.ID_JUPYTER)
+        assertEquals(FormatRegistry.ID_JUPYTER, format.id)
     }
 
     @Test
@@ -119,7 +117,7 @@ class JupyterParserTest {
 
         // Should detect as plaintext, not Jupyter
         if (format != null) {
-            assertThat(format.id).isNotEqualTo(FormatRegistry.ID_JUPYTER)
+            assertNotEquals(FormatRegistry.ID_JUPYTER, format.id)
         }
     }
 
@@ -206,8 +204,8 @@ class JupyterParserTest {
         val format = FormatRegistry.getById(FormatRegistry.ID_JUPYTER)
 
         assertNotNull(format)
-        assertThat(format.name).isEqualTo("Jupyter")
-        assertThat(format.defaultExtension).isEqualTo(".ipynb")
+        assertEquals("Jupyter", format.name)
+        assertEquals(".ipynb", format.defaultExtension)
     }
 
     @Test
@@ -216,6 +214,6 @@ class JupyterParserTest {
         val jupyterFormat = allFormats.find { it.id == FormatRegistry.ID_JUPYTER }
 
         assertNotNull(jupyterFormat)
-        assertThat(jupyterFormat.name).isEqualTo("Jupyter")
+        assertEquals("Jupyter", jupyterFormat.name)
     }
 }

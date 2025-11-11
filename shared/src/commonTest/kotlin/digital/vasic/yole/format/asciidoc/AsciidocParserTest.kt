@@ -11,9 +11,7 @@ package digital.vasic.yole.format.asciidoc
 import digital.vasic.yole.format.FormatRegistry
 import digital.vasic.yole.format.asciidoc.AsciidocParser
 import org.junit.Test
-import org.assertj.core.api.Assertions.assertThat
-import kotlin.test.assertNotNull
-import kotlin.test.assertTrue
+import kotlin.test.*
 
 /**
  * Unit tests for AsciiDoc format parser.
@@ -36,8 +34,8 @@ class AsciidocParserTest {
         val format = FormatRegistry.getByExtension(".adoc")
 
         assertNotNull(format)
-        assertThat(format.id).isEqualTo(FormatRegistry.ID_ASCIIDOC)
-        assertThat(format.name).isEqualTo("AsciiDoc")
+        assertEquals(FormatRegistry.ID_ASCIIDOC, format.id)
+        assertEquals("AsciiDoc", format.name)
     }
 
     @Test
@@ -45,7 +43,7 @@ class AsciidocParserTest {
         val format = FormatRegistry.detectByFilename("test.adoc")
 
         assertNotNull(format)
-        assertThat(format.id).isEqualTo(FormatRegistry.ID_ASCIIDOC)
+        assertEquals(FormatRegistry.ID_ASCIIDOC, format.id)
     }
 
     @Test
@@ -55,7 +53,7 @@ class AsciidocParserTest {
         extensions.forEach { ext ->
             val format = FormatRegistry.getByExtension(ext)
             assertNotNull(format, "Extension $ext should be recognized")
-            assertThat(format.id).isEqualTo(FormatRegistry.ID_ASCIIDOC)
+            assertEquals(FormatRegistry.ID_ASCIIDOC, format.id)
         }
     }
 
@@ -108,7 +106,7 @@ class AsciidocParserTest {
         val format = FormatRegistry.detectByContent(content)
 
         assertNotNull(format)
-        assertThat(format.id).isEqualTo(FormatRegistry.ID_ASCIIDOC)
+        assertEquals(FormatRegistry.ID_ASCIIDOC, format.id)
     }
 
     @Test
@@ -119,7 +117,7 @@ class AsciidocParserTest {
 
         // Should detect as plaintext, not AsciiDoc
         if (format != null) {
-            assertThat(format.id).isNotEqualTo(FormatRegistry.ID_ASCIIDOC)
+            assertNotEquals(FormatRegistry.ID_ASCIIDOC, format.id)
         }
     }
 
@@ -206,8 +204,8 @@ class AsciidocParserTest {
         val format = FormatRegistry.getById(FormatRegistry.ID_ASCIIDOC)
 
         assertNotNull(format)
-        assertThat(format.name).isEqualTo("AsciiDoc")
-        assertThat(format.defaultExtension).isEqualTo(".adoc")
+        assertEquals("AsciiDoc", format.name)
+        assertEquals(".adoc", format.defaultExtension)
     }
 
     @Test
@@ -216,6 +214,6 @@ class AsciidocParserTest {
         val asciidocFormat = allFormats.find { it.id == FormatRegistry.ID_ASCIIDOC }
 
         assertNotNull(asciidocFormat)
-        assertThat(asciidocFormat.name).isEqualTo("AsciiDoc")
+        assertEquals("AsciiDoc", asciidocFormat.name)
     }
 }

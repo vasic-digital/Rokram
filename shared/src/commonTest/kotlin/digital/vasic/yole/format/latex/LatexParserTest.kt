@@ -11,9 +11,7 @@ package digital.vasic.yole.format.latex
 import digital.vasic.yole.format.FormatRegistry
 import digital.vasic.yole.format.latex.LatexParser
 import org.junit.Test
-import org.assertj.core.api.Assertions.assertThat
-import kotlin.test.assertNotNull
-import kotlin.test.assertTrue
+import kotlin.test.*
 
 /**
  * Unit tests for LaTeX format parser.
@@ -36,8 +34,8 @@ class LatexParserTest {
         val format = FormatRegistry.getByExtension(".tex")
 
         assertNotNull(format)
-        assertThat(format.id).isEqualTo(FormatRegistry.ID_LATEX)
-        assertThat(format.name).isEqualTo("LaTeX")
+        assertEquals(FormatRegistry.ID_LATEX, format.id)
+        assertEquals("LaTeX", format.name)
     }
 
     @Test
@@ -45,7 +43,7 @@ class LatexParserTest {
         val format = FormatRegistry.detectByFilename("test.tex")
 
         assertNotNull(format)
-        assertThat(format.id).isEqualTo(FormatRegistry.ID_LATEX)
+        assertEquals(FormatRegistry.ID_LATEX, format.id)
     }
 
     @Test
@@ -55,7 +53,7 @@ class LatexParserTest {
         extensions.forEach { ext ->
             val format = FormatRegistry.getByExtension(ext)
             assertNotNull(format, "Extension $ext should be recognized")
-            assertThat(format.id).isEqualTo(FormatRegistry.ID_LATEX)
+            assertEquals(FormatRegistry.ID_LATEX, format.id)
         }
     }
 
@@ -108,7 +106,7 @@ class LatexParserTest {
         val format = FormatRegistry.detectByContent(content)
 
         assertNotNull(format)
-        assertThat(format.id).isEqualTo(FormatRegistry.ID_LATEX)
+        assertEquals(FormatRegistry.ID_LATEX, format.id)
     }
 
     @Test
@@ -119,7 +117,7 @@ class LatexParserTest {
 
         // Should detect as plaintext, not LaTeX
         if (format != null) {
-            assertThat(format.id).isNotEqualTo(FormatRegistry.ID_LATEX)
+            assertNotEquals(FormatRegistry.ID_LATEX, format.id)
         }
     }
 
@@ -206,8 +204,8 @@ class LatexParserTest {
         val format = FormatRegistry.getById(FormatRegistry.ID_LATEX)
 
         assertNotNull(format)
-        assertThat(format.name).isEqualTo("LaTeX")
-        assertThat(format.defaultExtension).isEqualTo(".tex")
+        assertEquals("LaTeX", format.name)
+        assertEquals(".tex", format.defaultExtension)
     }
 
     @Test
@@ -216,6 +214,6 @@ class LatexParserTest {
         val latexFormat = allFormats.find { it.id == FormatRegistry.ID_LATEX }
 
         assertNotNull(latexFormat)
-        assertThat(latexFormat.name).isEqualTo("LaTeX")
+        assertEquals("LaTeX", latexFormat.name)
     }
 }

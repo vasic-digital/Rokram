@@ -11,9 +11,7 @@ package digital.vasic.yole.format.markdown
 import digital.vasic.yole.format.FormatRegistry
 import digital.vasic.yole.format.markdown.MarkdownParser
 import org.junit.Test
-import org.assertj.core.api.Assertions.assertThat
-import kotlin.test.assertNotNull
-import kotlin.test.assertTrue
+import kotlin.test.*
 
 /**
  * Unit tests for Markdown format parser.
@@ -36,8 +34,8 @@ class MarkdownParserTest {
         val format = FormatRegistry.getByExtension(".md")
 
         assertNotNull(format)
-        assertThat(format.id).isEqualTo(FormatRegistry.ID_MARKDOWN)
-        assertThat(format.name).isEqualTo("Markdown")
+        assertEquals(FormatRegistry.ID_MARKDOWN, format.id)
+        assertEquals("Markdown", format.name)
     }
 
     @Test
@@ -45,7 +43,7 @@ class MarkdownParserTest {
         val format = FormatRegistry.detectByFilename("test.md")
 
         assertNotNull(format)
-        assertThat(format.id).isEqualTo(FormatRegistry.ID_MARKDOWN)
+        assertEquals(FormatRegistry.ID_MARKDOWN, format.id)
     }
 
     @Test
@@ -55,7 +53,7 @@ class MarkdownParserTest {
         extensions.forEach { ext ->
             val format = FormatRegistry.getByExtension(ext)
             assertNotNull(format, "Extension $ext should be recognized")
-            assertThat(format.id).isEqualTo(FormatRegistry.ID_MARKDOWN)
+            assertEquals(FormatRegistry.ID_MARKDOWN, format.id)
         }
     }
 
@@ -74,11 +72,11 @@ class MarkdownParserTest {
         val result = parser.parse(content)
 
         assertNotNull(result)
-        assertThat(result.rawContent).isEqualTo(content)
-        assertThat(result.parsedContent).contains("<h1>")
-        assertThat(result.parsedContent).contains("<strong>")
-        assertThat(result.parsedContent).contains("<em>")
-        assertThat(result.parsedContent).contains("<a href=")
+        assertEquals(content, result.rawContent)
+        assertTrue(result.parsedContent.contains("<h1>"))
+        assertTrue(result.parsedContent.contains("<strong>"))
+        assertTrue(result.parsedContent.contains("<em>"))
+        assertTrue(result.parsedContent.contains("<a href="))
     }
 
     @Test
@@ -86,8 +84,8 @@ class MarkdownParserTest {
         val result = parser.parse("")
 
         assertNotNull(result)
-        assertThat(result.rawContent).isEmpty()
-        assertThat(result.parsedContent).isNotNull()
+        assertTrue(result.rawContent.isEmpty())
+        assertNotNull(result.parsedContent)
     }
 
     @Test
@@ -119,7 +117,7 @@ class MarkdownParserTest {
         val format = FormatRegistry.detectByContent(content)
 
         assertNotNull(format)
-        assertThat(format.id).isEqualTo(FormatRegistry.ID_MARKDOWN)
+        assertEquals(FormatRegistry.ID_MARKDOWN, format.id)
     }
 
     @Test
@@ -130,7 +128,7 @@ class MarkdownParserTest {
 
         // Should detect as plaintext, not Markdown
         if (format != null) {
-            assertThat(format.id).isNotEqualTo(FormatRegistry.ID_MARKDOWN)
+            assertNotEquals(FormatRegistry.ID_MARKDOWN, format.id)
         }
     }
 
@@ -148,9 +146,9 @@ class MarkdownParserTest {
 
         assertNotNull(result)
         // HTML should be escaped
-        assertThat(result.parsedContent).contains("&lt;")
-        assertThat(result.parsedContent).contains("&gt;")
-        assertThat(result.parsedContent).contains("&amp;")
+        assertTrue(result.parsedContent.contains("&lt;"))
+        assertTrue(result.parsedContent.contains("&gt;"))
+        assertTrue(result.parsedContent.contains("&amp;"))
     }
 
     @Test
@@ -177,7 +175,7 @@ class MarkdownParserTest {
         // Should not throw exception
         val result = parser.parse(malformed)
         assertNotNull(result)
-        assertThat(result.parsedContent).isNotNull()
+        assertNotNull(result.parsedContent)
     }
 
     @Test
@@ -215,12 +213,12 @@ class MarkdownParserTest {
         val result = parser.parse(content)
 
         assertNotNull(result)
-        assertThat(result.parsedContent).contains("<h1>H1 Header</h1>")
-        assertThat(result.parsedContent).contains("<h2>H2 Header</h2>")
-        assertThat(result.parsedContent).contains("<h3>H3 Header</h3>")
-        assertThat(result.parsedContent).contains("<h4>H4 Header</h4>")
-        assertThat(result.parsedContent).contains("<h5>H5 Header</h5>")
-        assertThat(result.parsedContent).contains("<h6>H6 Header</h6>")
+        assertTrue(result.parsedContent.contains("<h1>H1 Header</h1>"))
+        assertTrue(result.parsedContent.contains("<h2>H2 Header</h2>"))
+        assertTrue(result.parsedContent.contains("<h3>H3 Header</h3>"))
+        assertTrue(result.parsedContent.contains("<h4>H4 Header</h4>"))
+        assertTrue(result.parsedContent.contains("<h5>H5 Header</h5>"))
+        assertTrue(result.parsedContent.contains("<h6>H6 Header</h6>"))
     }
 
     @Test
@@ -230,7 +228,7 @@ class MarkdownParserTest {
         val result = parser.parse(content)
 
         assertNotNull(result)
-        assertThat(result.parsedContent).contains("<strong>bold text</strong>")
+        assertTrue(result.parsedContent.contains("<strong>bold text</strong>"))
     }
 
     @Test
@@ -240,7 +238,7 @@ class MarkdownParserTest {
         val result = parser.parse(content)
 
         assertNotNull(result)
-        assertThat(result.parsedContent).contains("<strong>bold text</strong>")
+        assertTrue(result.parsedContent.contains("<strong>bold text</strong>"))
     }
 
     @Test
@@ -250,7 +248,7 @@ class MarkdownParserTest {
         val result = parser.parse(content)
 
         assertNotNull(result)
-        assertThat(result.parsedContent).contains("<em>italic text</em>")
+        assertTrue(result.parsedContent.contains("<em>italic text</em>"))
     }
 
     @Test
@@ -260,7 +258,7 @@ class MarkdownParserTest {
         val result = parser.parse(content)
 
         assertNotNull(result)
-        assertThat(result.parsedContent).contains("<em>italic text</em>")
+        assertTrue(result.parsedContent.contains("<em>italic text</em>"))
     }
 
     @Test
@@ -270,7 +268,7 @@ class MarkdownParserTest {
         val result = parser.parse(content)
 
         assertNotNull(result)
-        assertThat(result.parsedContent).contains("<s>strikethrough text</s>")
+        assertTrue(result.parsedContent.contains("<s>strikethrough text</s>"))
     }
 
     @Test
@@ -280,7 +278,7 @@ class MarkdownParserTest {
         val result = parser.parse(content)
 
         assertNotNull(result)
-        assertThat(result.parsedContent).contains("<code>println()</code>")
+        assertTrue(result.parsedContent.contains("<code>println()</code>"))
     }
 
     @Test
@@ -296,9 +294,9 @@ class MarkdownParserTest {
         val result = parser.parse(content)
 
         assertNotNull(result)
-        assertThat(result.parsedContent).contains("<pre>")
-        assertThat(result.parsedContent).contains("<code>")
-        assertThat(result.parsedContent).contains("fun main()")
+        assertTrue(result.parsedContent.contains("<pre>"))
+        assertTrue(result.parsedContent.contains("<code>"))
+        assertTrue(result.parsedContent.contains("fun main()"))
     }
 
     @Test
@@ -312,10 +310,10 @@ class MarkdownParserTest {
         val result = parser.parse(content)
 
         assertNotNull(result)
-        assertThat(result.parsedContent).contains("<ul>")
-        assertThat(result.parsedContent).contains("<li>Item 1</li>")
-        assertThat(result.parsedContent).contains("<li>Item 2</li>")
-        assertThat(result.parsedContent).contains("</ul>")
+        assertTrue(result.parsedContent.contains("<ul>"))
+        assertTrue(result.parsedContent.contains("<li>Item 1</li>"))
+        assertTrue(result.parsedContent.contains("<li>Item 2</li>"))
+        assertTrue(result.parsedContent.contains("</ul>"))
     }
 
     @Test
@@ -328,8 +326,8 @@ class MarkdownParserTest {
         val result = parser.parse(content)
 
         assertNotNull(result)
-        assertThat(result.parsedContent).contains("<ul>")
-        assertThat(result.parsedContent).contains("<li>Item 1</li>")
+        assertTrue(result.parsedContent.contains("<ul>"))
+        assertTrue(result.parsedContent.contains("<li>Item 1</li>"))
     }
 
     @Test
@@ -342,8 +340,8 @@ class MarkdownParserTest {
         val result = parser.parse(content)
 
         assertNotNull(result)
-        assertThat(result.parsedContent).contains("<ul>")
-        assertThat(result.parsedContent).contains("<li>Item 1</li>")
+        assertTrue(result.parsedContent.contains("<ul>"))
+        assertTrue(result.parsedContent.contains("<li>Item 1</li>"))
     }
 
     @Test
@@ -357,10 +355,10 @@ class MarkdownParserTest {
         val result = parser.parse(content)
 
         assertNotNull(result)
-        assertThat(result.parsedContent).contains("<ol>")
-        assertThat(result.parsedContent).contains("<li>First item</li>")
-        assertThat(result.parsedContent).contains("<li>Second item</li>")
-        assertThat(result.parsedContent).contains("</ol>")
+        assertTrue(result.parsedContent.contains("<ol>"))
+        assertTrue(result.parsedContent.contains("<li>First item</li>"))
+        assertTrue(result.parsedContent.contains("<li>Second item</li>"))
+        assertTrue(result.parsedContent.contains("</ol>"))
     }
 
     @Test
@@ -370,7 +368,7 @@ class MarkdownParserTest {
         val result = parser.parse(content)
 
         assertNotNull(result)
-        assertThat(result.parsedContent).contains("<a href='https://example.com'>Example</a>")
+        assertTrue(result.parsedContent.contains("<a href='https://example.com'>Example</a>"))
     }
 
     @Test
@@ -380,7 +378,7 @@ class MarkdownParserTest {
         val result = parser.parse(content)
 
         assertNotNull(result)
-        assertThat(result.parsedContent).contains("<img src='https://example.com/image.png' alt='Alt text'/>")
+        assertTrue(result.parsedContent.contains("<img src='https://example.com/image.png' alt='Alt text'/>"))
     }
 
     @Test
@@ -393,9 +391,9 @@ class MarkdownParserTest {
         val result = parser.parse(content)
 
         assertNotNull(result)
-        assertThat(result.parsedContent).contains("<blockquote>")
-        assertThat(result.parsedContent).contains("This is a quote")
-        assertThat(result.parsedContent).contains("</blockquote>")
+        assertTrue(result.parsedContent.contains("<blockquote>"))
+        assertTrue(result.parsedContent.contains("This is a quote"))
+        assertTrue(result.parsedContent.contains("</blockquote>"))
     }
 
     @Test
@@ -411,7 +409,7 @@ class MarkdownParserTest {
         val result = parser.parse(content)
 
         assertNotNull(result)
-        assertThat(result.parsedContent).contains("<hr>")
+        assertTrue(result.parsedContent.contains("<hr>"))
     }
 
     @Test
@@ -427,7 +425,7 @@ class MarkdownParserTest {
         val result = parser.parse(content)
 
         assertNotNull(result)
-        assertThat(result.parsedContent).contains("<hr>")
+        assertTrue(result.parsedContent.contains("<hr>"))
     }
 
     @Test
@@ -443,7 +441,7 @@ class MarkdownParserTest {
         val result = parser.parse(content)
 
         assertNotNull(result)
-        assertThat(result.parsedContent).contains("<hr>")
+        assertTrue(result.parsedContent.contains("<hr>"))
     }
 
     @Test
@@ -458,11 +456,11 @@ class MarkdownParserTest {
         val result = parser.parse(content)
 
         assertNotNull(result)
-        assertThat(result.parsedContent).contains("<table>")
-        assertThat(result.parsedContent).contains("<th>Column 1</th>")
-        assertThat(result.parsedContent).contains("<th>Column 2</th>")
-        assertThat(result.parsedContent).contains("<td>Cell 1</td>")
-        assertThat(result.parsedContent).contains("</table>")
+        assertTrue(result.parsedContent.contains("<table>"))
+        assertTrue(result.parsedContent.contains("<th>Column 1</th>"))
+        assertTrue(result.parsedContent.contains("<th>Column 2</th>"))
+        assertTrue(result.parsedContent.contains("<td>Cell 1</td>"))
+        assertTrue(result.parsedContent.contains("</table>"))
     }
 
     @Test
@@ -472,7 +470,7 @@ class MarkdownParserTest {
         val result = parser.parse(content)
 
         assertNotNull(result)
-        assertThat(result.parsedContent).contains("<input type='checkbox' disabled>")
+        assertTrue(result.parsedContent.contains("<input type='checkbox' disabled>"))
     }
 
     @Test
@@ -482,7 +480,7 @@ class MarkdownParserTest {
         val result = parser.parse(content)
 
         assertNotNull(result)
-        assertThat(result.parsedContent).contains("<input type='checkbox' disabled checked>")
+        assertTrue(result.parsedContent.contains("<input type='checkbox' disabled checked>"))
     }
 
     @Test
@@ -492,8 +490,8 @@ class MarkdownParserTest {
         val result = parser.parse(content)
 
         assertNotNull(result)
-        assertThat(result.parsedContent).contains("<strong>")
-        assertThat(result.parsedContent).contains("<em>")
+        assertTrue(result.parsedContent.contains("<strong>"))
+        assertTrue(result.parsedContent.contains("<em>"))
     }
 
     @Test
@@ -509,8 +507,8 @@ class MarkdownParserTest {
         val result = parser.parse(content)
 
         assertNotNull(result)
-        assertThat(result.parsedContent).contains("<ol>")
-        assertThat(result.parsedContent).contains("<ul>")
+        assertTrue(result.parsedContent.contains("<ol>"))
+        assertTrue(result.parsedContent.contains("<ul>"))
     }
 
     @Test
@@ -543,8 +541,8 @@ class MarkdownParserTest {
 
         assertNotNull(result)
         // Special characters inside code blocks should be escaped
-        assertThat(result.parsedContent).contains("&lt;html&gt;")
-        assertThat(result.parsedContent).contains("&amp;amp;")
+        assertTrue(result.parsedContent.contains("&lt;html&gt;"))
+        assertTrue(result.parsedContent.contains("&amp;amp;"))
     }
 
     @Test
@@ -553,8 +551,8 @@ class MarkdownParserTest {
 
         val errors = parser.validate(content)
 
-        assertThat(errors).isNotEmpty()
-        assertThat(errors[0]).contains("Unclosed brackets")
+        assertTrue(errors.isNotEmpty())
+        assertTrue(errors[0].contains("Unclosed brackets"))
     }
 
     @Test
@@ -563,8 +561,8 @@ class MarkdownParserTest {
 
         val errors = parser.validate(content)
 
-        assertThat(errors).isNotEmpty()
-        assertThat(errors[0]).contains("Unclosed parentheses")
+        assertTrue(errors.isNotEmpty())
+        assertTrue(errors[0].contains("Unclosed parentheses"))
     }
 
     @Test
@@ -577,7 +575,7 @@ class MarkdownParserTest {
 
         val errors = parser.validate(content)
 
-        assertThat(errors).isEmpty()
+        assertTrue(errors.isEmpty())
     }
 
     // ==================== Integration Tests ====================
@@ -587,8 +585,8 @@ class MarkdownParserTest {
         val format = FormatRegistry.getById(FormatRegistry.ID_MARKDOWN)
 
         assertNotNull(format)
-        assertThat(format.name).isEqualTo("Markdown")
-        assertThat(format.defaultExtension).isEqualTo(".md")
+        assertEquals("Markdown", format.name)
+        assertEquals(".md", format.defaultExtension)
     }
 
     @Test
@@ -597,6 +595,6 @@ class MarkdownParserTest {
         val markdownFormat = allFormats.find { it.id == FormatRegistry.ID_MARKDOWN }
 
         assertNotNull(markdownFormat)
-        assertThat(markdownFormat.name).isEqualTo("Markdown")
+        assertEquals("Markdown", markdownFormat.name)
     }
 }

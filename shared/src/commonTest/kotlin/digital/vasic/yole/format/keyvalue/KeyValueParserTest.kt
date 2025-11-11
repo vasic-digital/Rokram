@@ -9,11 +9,9 @@
 package digital.vasic.yole.format.keyvalue
 
 import digital.vasic.yole.format.FormatRegistry
-import digital.vasic.yole.format.keyvalue.KeyvalueParser
+import digital.vasic.yole.format.keyvalue.KeyValueParser
 import org.junit.Test
-import org.assertj.core.api.Assertions.assertThat
-import kotlin.test.assertNotNull
-import kotlin.test.assertTrue
+import kotlin.test.*
 
 /**
  * Unit tests for KeyValue format parser.
@@ -27,7 +25,7 @@ import kotlin.test.assertTrue
  */
 class KeyvalueParserTest {
 
-    private val parser = KeyvalueParser()
+    private val parser = KeyValueParser()
 
     // ==================== Format Detection Tests ====================
 
@@ -36,8 +34,8 @@ class KeyvalueParserTest {
         val format = FormatRegistry.getByExtension(".ini")
 
         assertNotNull(format)
-        assertThat(format.id).isEqualTo(FormatRegistry.ID_KEYVALUE)
-        assertThat(format.name).isEqualTo("KeyValue")
+        assertEquals(FormatRegistry.ID_KEYVALUE, format.id)
+        assertEquals("KeyValue", format.name)
     }
 
     @Test
@@ -45,7 +43,7 @@ class KeyvalueParserTest {
         val format = FormatRegistry.detectByFilename("test.ini")
 
         assertNotNull(format)
-        assertThat(format.id).isEqualTo(FormatRegistry.ID_KEYVALUE)
+        assertEquals(FormatRegistry.ID_KEYVALUE, format.id)
     }
 
     @Test
@@ -55,7 +53,7 @@ class KeyvalueParserTest {
         extensions.forEach { ext ->
             val format = FormatRegistry.getByExtension(ext)
             assertNotNull(format, "Extension $ext should be recognized")
-            assertThat(format.id).isEqualTo(FormatRegistry.ID_KEYVALUE)
+            assertEquals(FormatRegistry.ID_KEYVALUE, format.id)
         }
     }
 
@@ -108,7 +106,7 @@ class KeyvalueParserTest {
         val format = FormatRegistry.detectByContent(content)
 
         assertNotNull(format)
-        assertThat(format.id).isEqualTo(FormatRegistry.ID_KEYVALUE)
+        assertEquals(FormatRegistry.ID_KEYVALUE, format.id)
     }
 
     @Test
@@ -119,7 +117,7 @@ class KeyvalueParserTest {
 
         // Should detect as plaintext, not KeyValue
         if (format != null) {
-            assertThat(format.id).isNotEqualTo(FormatRegistry.ID_KEYVALUE)
+            assertNotEquals(FormatRegistry.ID_KEYVALUE, format.id)
         }
     }
 
@@ -206,8 +204,8 @@ class KeyvalueParserTest {
         val format = FormatRegistry.getById(FormatRegistry.ID_KEYVALUE)
 
         assertNotNull(format)
-        assertThat(format.name).isEqualTo("KeyValue")
-        assertThat(format.defaultExtension).isEqualTo(".ini")
+        assertEquals("KeyValue", format.name)
+        assertEquals(".ini", format.defaultExtension)
     }
 
     @Test
@@ -216,6 +214,6 @@ class KeyvalueParserTest {
         val keyvalueFormat = allFormats.find { it.id == FormatRegistry.ID_KEYVALUE }
 
         assertNotNull(keyvalueFormat)
-        assertThat(keyvalueFormat.name).isEqualTo("KeyValue")
+        assertEquals("KeyValue", keyvalueFormat.name)
     }
 }

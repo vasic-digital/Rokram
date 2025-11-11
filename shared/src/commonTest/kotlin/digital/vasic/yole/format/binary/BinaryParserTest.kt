@@ -11,9 +11,7 @@ package digital.vasic.yole.format.binary
 import digital.vasic.yole.format.FormatRegistry
 import digital.vasic.yole.format.binary.BinaryParser
 import org.junit.Test
-import org.assertj.core.api.Assertions.assertThat
-import kotlin.test.assertNotNull
-import kotlin.test.assertTrue
+import kotlin.test.*
 
 /**
  * Unit tests for Binary format parser.
@@ -36,8 +34,8 @@ class BinaryParserTest {
         val format = FormatRegistry.getByExtension(".bin")
 
         assertNotNull(format)
-        assertThat(format.id).isEqualTo(FormatRegistry.ID_BINARY)
-        assertThat(format.name).isEqualTo("Binary")
+        assertEquals(FormatRegistry.ID_BINARY, format.id)
+        assertEquals("Binary", format.name)
     }
 
     @Test
@@ -45,7 +43,7 @@ class BinaryParserTest {
         val format = FormatRegistry.detectByFilename("test.bin")
 
         assertNotNull(format)
-        assertThat(format.id).isEqualTo(FormatRegistry.ID_BINARY)
+        assertEquals(FormatRegistry.ID_BINARY, format.id)
     }
 
     @Test
@@ -55,7 +53,7 @@ class BinaryParserTest {
         extensions.forEach { ext ->
             val format = FormatRegistry.getByExtension(ext)
             assertNotNull(format, "Extension $ext should be recognized")
-            assertThat(format.id).isEqualTo(FormatRegistry.ID_BINARY)
+            assertEquals(FormatRegistry.ID_BINARY, format.id)
         }
     }
 
@@ -108,7 +106,7 @@ class BinaryParserTest {
         val format = FormatRegistry.detectByContent(content)
 
         assertNotNull(format)
-        assertThat(format.id).isEqualTo(FormatRegistry.ID_BINARY)
+        assertEquals(FormatRegistry.ID_BINARY, format.id)
     }
 
     @Test
@@ -119,7 +117,7 @@ class BinaryParserTest {
 
         // Should detect as plaintext, not Binary
         if (format != null) {
-            assertThat(format.id).isNotEqualTo(FormatRegistry.ID_BINARY)
+            assertNotEquals(FormatRegistry.ID_BINARY, format.id)
         }
     }
 
@@ -206,8 +204,8 @@ class BinaryParserTest {
         val format = FormatRegistry.getById(FormatRegistry.ID_BINARY)
 
         assertNotNull(format)
-        assertThat(format.name).isEqualTo("Binary")
-        assertThat(format.defaultExtension).isEqualTo(".bin")
+        assertEquals("Binary", format.name)
+        assertEquals(".bin", format.defaultExtension)
     }
 
     @Test
@@ -216,6 +214,6 @@ class BinaryParserTest {
         val binaryFormat = allFormats.find { it.id == FormatRegistry.ID_BINARY }
 
         assertNotNull(binaryFormat)
-        assertThat(binaryFormat.name).isEqualTo("Binary")
+        assertEquals("Binary", binaryFormat.name)
     }
 }

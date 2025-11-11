@@ -9,11 +9,9 @@
 package digital.vasic.yole.format.restructuredtext
 
 import digital.vasic.yole.format.FormatRegistry
-import digital.vasic.yole.format.restructuredtext.RestructuredtextParser
+import digital.vasic.yole.format.restructuredtext.RestructuredTextParser
 import org.junit.Test
-import org.assertj.core.api.Assertions.assertThat
-import kotlin.test.assertNotNull
-import kotlin.test.assertTrue
+import kotlin.test.*
 
 /**
  * Unit tests for reStructuredText format parser.
@@ -27,7 +25,7 @@ import kotlin.test.assertTrue
  */
 class RestructuredtextParserTest {
 
-    private val parser = RestructuredtextParser()
+    private val parser = RestructuredTextParser()
 
     // ==================== Format Detection Tests ====================
 
@@ -36,8 +34,8 @@ class RestructuredtextParserTest {
         val format = FormatRegistry.getByExtension(".rst")
 
         assertNotNull(format)
-        assertThat(format.id).isEqualTo(FormatRegistry.ID_RESTRUCTUREDTEXT)
-        assertThat(format.name).isEqualTo("reStructuredText")
+        assertEquals(FormatRegistry.ID_RESTRUCTUREDTEXT, format.id)
+        assertEquals("reStructuredText", format.name)
     }
 
     @Test
@@ -45,7 +43,7 @@ class RestructuredtextParserTest {
         val format = FormatRegistry.detectByFilename("test.rst")
 
         assertNotNull(format)
-        assertThat(format.id).isEqualTo(FormatRegistry.ID_RESTRUCTUREDTEXT)
+        assertEquals(FormatRegistry.ID_RESTRUCTUREDTEXT, format.id)
     }
 
     @Test
@@ -55,7 +53,7 @@ class RestructuredtextParserTest {
         extensions.forEach { ext ->
             val format = FormatRegistry.getByExtension(ext)
             assertNotNull(format, "Extension $ext should be recognized")
-            assertThat(format.id).isEqualTo(FormatRegistry.ID_RESTRUCTUREDTEXT)
+            assertEquals(FormatRegistry.ID_RESTRUCTUREDTEXT, format.id)
         }
     }
 
@@ -108,7 +106,7 @@ class RestructuredtextParserTest {
         val format = FormatRegistry.detectByContent(content)
 
         assertNotNull(format)
-        assertThat(format.id).isEqualTo(FormatRegistry.ID_RESTRUCTUREDTEXT)
+        assertEquals(FormatRegistry.ID_RESTRUCTUREDTEXT, format.id)
     }
 
     @Test
@@ -119,7 +117,7 @@ class RestructuredtextParserTest {
 
         // Should detect as plaintext, not reStructuredText
         if (format != null) {
-            assertThat(format.id).isNotEqualTo(FormatRegistry.ID_RESTRUCTUREDTEXT)
+            assertNotEquals(FormatRegistry.ID_RESTRUCTUREDTEXT, format.id)
         }
     }
 
@@ -206,8 +204,8 @@ class RestructuredtextParserTest {
         val format = FormatRegistry.getById(FormatRegistry.ID_RESTRUCTUREDTEXT)
 
         assertNotNull(format)
-        assertThat(format.name).isEqualTo("reStructuredText")
-        assertThat(format.defaultExtension).isEqualTo(".rst")
+        assertEquals("reStructuredText", format.name)
+        assertEquals(".rst", format.defaultExtension)
     }
 
     @Test
@@ -216,6 +214,6 @@ class RestructuredtextParserTest {
         val restructuredtextFormat = allFormats.find { it.id == FormatRegistry.ID_RESTRUCTUREDTEXT }
 
         assertNotNull(restructuredtextFormat)
-        assertThat(restructuredtextFormat.name).isEqualTo("reStructuredText")
+        assertEquals("reStructuredText", restructuredtextFormat.name)
     }
 }

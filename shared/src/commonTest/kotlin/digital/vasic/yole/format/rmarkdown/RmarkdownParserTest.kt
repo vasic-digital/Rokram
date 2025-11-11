@@ -9,11 +9,9 @@
 package digital.vasic.yole.format.rmarkdown
 
 import digital.vasic.yole.format.FormatRegistry
-import digital.vasic.yole.format.rmarkdown.RmarkdownParser
+import digital.vasic.yole.format.rmarkdown.RMarkdownParser
 import org.junit.Test
-import org.assertj.core.api.Assertions.assertThat
-import kotlin.test.assertNotNull
-import kotlin.test.assertTrue
+import kotlin.test.*
 
 /**
  * Unit tests for RMarkdown format parser.
@@ -27,7 +25,7 @@ import kotlin.test.assertTrue
  */
 class RmarkdownParserTest {
 
-    private val parser = RmarkdownParser()
+    private val parser = RMarkdownParser()
 
     // ==================== Format Detection Tests ====================
 
@@ -36,8 +34,8 @@ class RmarkdownParserTest {
         val format = FormatRegistry.getByExtension(".rmd")
 
         assertNotNull(format)
-        assertThat(format.id).isEqualTo(FormatRegistry.ID_RMARKDOWN)
-        assertThat(format.name).isEqualTo("RMarkdown")
+        assertEquals(FormatRegistry.ID_RMARKDOWN, format.id)
+        assertEquals("RMarkdown", format.name)
     }
 
     @Test
@@ -45,7 +43,7 @@ class RmarkdownParserTest {
         val format = FormatRegistry.detectByFilename("test.rmd")
 
         assertNotNull(format)
-        assertThat(format.id).isEqualTo(FormatRegistry.ID_RMARKDOWN)
+        assertEquals(FormatRegistry.ID_RMARKDOWN, format.id)
     }
 
     @Test
@@ -55,7 +53,7 @@ class RmarkdownParserTest {
         extensions.forEach { ext ->
             val format = FormatRegistry.getByExtension(ext)
             assertNotNull(format, "Extension $ext should be recognized")
-            assertThat(format.id).isEqualTo(FormatRegistry.ID_RMARKDOWN)
+            assertEquals(FormatRegistry.ID_RMARKDOWN, format.id)
         }
     }
 
@@ -108,7 +106,7 @@ class RmarkdownParserTest {
         val format = FormatRegistry.detectByContent(content)
 
         assertNotNull(format)
-        assertThat(format.id).isEqualTo(FormatRegistry.ID_RMARKDOWN)
+        assertEquals(FormatRegistry.ID_RMARKDOWN, format.id)
     }
 
     @Test
@@ -119,7 +117,7 @@ class RmarkdownParserTest {
 
         // Should detect as plaintext, not RMarkdown
         if (format != null) {
-            assertThat(format.id).isNotEqualTo(FormatRegistry.ID_RMARKDOWN)
+            assertNotEquals(FormatRegistry.ID_RMARKDOWN, format.id)
         }
     }
 
@@ -206,8 +204,8 @@ class RmarkdownParserTest {
         val format = FormatRegistry.getById(FormatRegistry.ID_RMARKDOWN)
 
         assertNotNull(format)
-        assertThat(format.name).isEqualTo("RMarkdown")
-        assertThat(format.defaultExtension).isEqualTo(".rmd")
+        assertEquals("RMarkdown", format.name)
+        assertEquals(".rmd", format.defaultExtension)
     }
 
     @Test
@@ -216,6 +214,6 @@ class RmarkdownParserTest {
         val rmarkdownFormat = allFormats.find { it.id == FormatRegistry.ID_RMARKDOWN }
 
         assertNotNull(rmarkdownFormat)
-        assertThat(rmarkdownFormat.name).isEqualTo("RMarkdown")
+        assertEquals("RMarkdown", rmarkdownFormat.name)
     }
 }

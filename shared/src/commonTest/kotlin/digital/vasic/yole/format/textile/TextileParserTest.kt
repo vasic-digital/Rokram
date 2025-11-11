@@ -11,9 +11,7 @@ package digital.vasic.yole.format.textile
 import digital.vasic.yole.format.FormatRegistry
 import digital.vasic.yole.format.textile.TextileParser
 import org.junit.Test
-import org.assertj.core.api.Assertions.assertThat
-import kotlin.test.assertNotNull
-import kotlin.test.assertTrue
+import kotlin.test.*
 
 /**
  * Unit tests for Textile format parser.
@@ -36,8 +34,8 @@ class TextileParserTest {
         val format = FormatRegistry.getByExtension(".textile")
 
         assertNotNull(format)
-        assertThat(format.id).isEqualTo(FormatRegistry.ID_TEXTILE)
-        assertThat(format.name).isEqualTo("Textile")
+        assertEquals(FormatRegistry.ID_TEXTILE, format.id)
+        assertEquals("Textile", format.name)
     }
 
     @Test
@@ -45,7 +43,7 @@ class TextileParserTest {
         val format = FormatRegistry.detectByFilename("test.textile")
 
         assertNotNull(format)
-        assertThat(format.id).isEqualTo(FormatRegistry.ID_TEXTILE)
+        assertEquals(FormatRegistry.ID_TEXTILE, format.id)
     }
 
     @Test
@@ -55,7 +53,7 @@ class TextileParserTest {
         extensions.forEach { ext ->
             val format = FormatRegistry.getByExtension(ext)
             assertNotNull(format, "Extension $ext should be recognized")
-            assertThat(format.id).isEqualTo(FormatRegistry.ID_TEXTILE)
+            assertEquals(FormatRegistry.ID_TEXTILE, format.id)
         }
     }
 
@@ -108,7 +106,7 @@ class TextileParserTest {
         val format = FormatRegistry.detectByContent(content)
 
         assertNotNull(format)
-        assertThat(format.id).isEqualTo(FormatRegistry.ID_TEXTILE)
+        assertEquals(FormatRegistry.ID_TEXTILE, format.id)
     }
 
     @Test
@@ -119,7 +117,7 @@ class TextileParserTest {
 
         // Should detect as plaintext, not Textile
         if (format != null) {
-            assertThat(format.id).isNotEqualTo(FormatRegistry.ID_TEXTILE)
+            assertNotEquals(FormatRegistry.ID_TEXTILE, format.id)
         }
     }
 
@@ -206,8 +204,8 @@ class TextileParserTest {
         val format = FormatRegistry.getById(FormatRegistry.ID_TEXTILE)
 
         assertNotNull(format)
-        assertThat(format.name).isEqualTo("Textile")
-        assertThat(format.defaultExtension).isEqualTo(".textile")
+        assertEquals("Textile", format.name)
+        assertEquals(".textile", format.defaultExtension)
     }
 
     @Test
@@ -216,6 +214,6 @@ class TextileParserTest {
         val textileFormat = allFormats.find { it.id == FormatRegistry.ID_TEXTILE }
 
         assertNotNull(textileFormat)
-        assertThat(textileFormat.name).isEqualTo("Textile")
+        assertEquals("Textile", textileFormat.name)
     }
 }

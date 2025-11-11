@@ -9,11 +9,9 @@
 package digital.vasic.yole.format.plaintext
 
 import digital.vasic.yole.format.FormatRegistry
-import digital.vasic.yole.format.plaintext.PlainTextParser
+import digital.vasic.yole.format.plaintext.PlaintextParser
 import org.junit.Test
-import org.assertj.core.api.Assertions.assertThat
-import kotlin.test.assertNotNull
-import kotlin.test.assertTrue
+import kotlin.test.*
 
 /**
  * Unit tests for Plain Text format parser.
@@ -27,7 +25,7 @@ import kotlin.test.assertTrue
  */
 class PlainTextParserTest {
 
-    private val parser = PlainTextParser()
+    private val parser = PlaintextParser()
 
     // ==================== Format Detection Tests ====================
 
@@ -36,8 +34,8 @@ class PlainTextParserTest {
         val format = FormatRegistry.getByExtension(".txt")
 
         assertNotNull(format)
-        assertThat(format.id).isEqualTo(FormatRegistry.ID_PLAIN_TEXT)
-        assertThat(format.name).isEqualTo("Plain Text")
+        assertEquals(FormatRegistry.ID_PLAINTEXT, format.id)
+        assertEquals("Plain Text", format.name)
     }
 
     @Test
@@ -45,7 +43,7 @@ class PlainTextParserTest {
         val format = FormatRegistry.detectByFilename("test.txt")
 
         assertNotNull(format)
-        assertThat(format.id).isEqualTo(FormatRegistry.ID_PLAIN_TEXT)
+        assertEquals(FormatRegistry.ID_PLAINTEXT, format.id)
     }
 
     @Test
@@ -55,7 +53,7 @@ class PlainTextParserTest {
         extensions.forEach { ext ->
             val format = FormatRegistry.getByExtension(ext)
             assertNotNull(format, "Extension $ext should be recognized")
-            assertThat(format.id).isEqualTo(FormatRegistry.ID_PLAIN_TEXT)
+            assertEquals(FormatRegistry.ID_PLAINTEXT, format.id)
         }
     }
 
@@ -108,7 +106,7 @@ class PlainTextParserTest {
         val format = FormatRegistry.detectByContent(content)
 
         assertNotNull(format)
-        assertThat(format.id).isEqualTo(FormatRegistry.ID_PLAIN_TEXT)
+        assertEquals(FormatRegistry.ID_PLAINTEXT, format.id)
     }
 
     @Test
@@ -119,7 +117,7 @@ class PlainTextParserTest {
 
         // Should detect as plaintext, not Plain Text
         if (format != null) {
-            assertThat(format.id).isNotEqualTo(FormatRegistry.ID_PLAIN_TEXT)
+            assertNotEquals(FormatRegistry.ID_PLAINTEXT, format.id)
         }
     }
 
@@ -203,19 +201,19 @@ class PlainTextParserTest {
 
     @Test
     fun `should integrate with FormatRegistry`() {
-        val format = FormatRegistry.getById(FormatRegistry.ID_PLAIN_TEXT)
+        val format = FormatRegistry.getById(FormatRegistry.ID_PLAINTEXT)
 
         assertNotNull(format)
-        assertThat(format.name).isEqualTo("Plain Text")
-        assertThat(format.defaultExtension).isEqualTo(".txt")
+        assertEquals("Plain Text", format.name)
+        assertEquals(".txt", format.defaultExtension)
     }
 
     @Test
     fun `should be registered in FormatRegistry`() {
         val allFormats = FormatRegistry.formats
-        val plainTextFormat = allFormats.find { it.id == FormatRegistry.ID_PLAIN_TEXT }
+        val plainTextFormat = allFormats.find { it.id == FormatRegistry.ID_PLAINTEXT }
 
         assertNotNull(plainTextFormat)
-        assertThat(plainTextFormat.name).isEqualTo("Plain Text")
+        assertEquals("Plain Text", plainTextFormat.name)
     }
 }

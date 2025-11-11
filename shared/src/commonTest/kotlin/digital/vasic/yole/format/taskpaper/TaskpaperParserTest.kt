@@ -11,9 +11,7 @@ package digital.vasic.yole.format.taskpaper
 import digital.vasic.yole.format.FormatRegistry
 import digital.vasic.yole.format.taskpaper.TaskpaperParser
 import org.junit.Test
-import org.assertj.core.api.Assertions.assertThat
-import kotlin.test.assertNotNull
-import kotlin.test.assertTrue
+import kotlin.test.*
 
 /**
  * Unit tests for TaskPaper format parser.
@@ -36,8 +34,8 @@ class TaskpaperParserTest {
         val format = FormatRegistry.getByExtension(".taskpaper")
 
         assertNotNull(format)
-        assertThat(format.id).isEqualTo(FormatRegistry.ID_TASKPAPER)
-        assertThat(format.name).isEqualTo("TaskPaper")
+        assertEquals(FormatRegistry.ID_TASKPAPER, format.id)
+        assertEquals("TaskPaper", format.name)
     }
 
     @Test
@@ -45,7 +43,7 @@ class TaskpaperParserTest {
         val format = FormatRegistry.detectByFilename("test.taskpaper")
 
         assertNotNull(format)
-        assertThat(format.id).isEqualTo(FormatRegistry.ID_TASKPAPER)
+        assertEquals(FormatRegistry.ID_TASKPAPER, format.id)
     }
 
     @Test
@@ -55,7 +53,7 @@ class TaskpaperParserTest {
         extensions.forEach { ext ->
             val format = FormatRegistry.getByExtension(ext)
             assertNotNull(format, "Extension $ext should be recognized")
-            assertThat(format.id).isEqualTo(FormatRegistry.ID_TASKPAPER)
+            assertEquals(FormatRegistry.ID_TASKPAPER, format.id)
         }
     }
 
@@ -108,7 +106,7 @@ class TaskpaperParserTest {
         val format = FormatRegistry.detectByContent(content)
 
         assertNotNull(format)
-        assertThat(format.id).isEqualTo(FormatRegistry.ID_TASKPAPER)
+        assertEquals(FormatRegistry.ID_TASKPAPER, format.id)
     }
 
     @Test
@@ -119,7 +117,7 @@ class TaskpaperParserTest {
 
         // Should detect as plaintext, not TaskPaper
         if (format != null) {
-            assertThat(format.id).isNotEqualTo(FormatRegistry.ID_TASKPAPER)
+            assertNotEquals(FormatRegistry.ID_TASKPAPER, format.id)
         }
     }
 
@@ -206,8 +204,8 @@ class TaskpaperParserTest {
         val format = FormatRegistry.getById(FormatRegistry.ID_TASKPAPER)
 
         assertNotNull(format)
-        assertThat(format.name).isEqualTo("TaskPaper")
-        assertThat(format.defaultExtension).isEqualTo(".taskpaper")
+        assertEquals("TaskPaper", format.name)
+        assertEquals(".taskpaper", format.defaultExtension)
     }
 
     @Test
@@ -216,6 +214,6 @@ class TaskpaperParserTest {
         val taskpaperFormat = allFormats.find { it.id == FormatRegistry.ID_TASKPAPER }
 
         assertNotNull(taskpaperFormat)
-        assertThat(taskpaperFormat.name).isEqualTo("TaskPaper")
+        assertEquals("TaskPaper", taskpaperFormat.name)
     }
 }

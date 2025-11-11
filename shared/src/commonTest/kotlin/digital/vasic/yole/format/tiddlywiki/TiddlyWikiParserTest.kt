@@ -9,11 +9,9 @@
 package digital.vasic.yole.format.tiddlywiki
 
 import digital.vasic.yole.format.FormatRegistry
-import digital.vasic.yole.format.tiddlywiki.TiddlywikiParser
+import digital.vasic.yole.format.tiddlywiki.TiddlyWikiParser
 import org.junit.Test
-import org.assertj.core.api.Assertions.assertThat
-import kotlin.test.assertNotNull
-import kotlin.test.assertTrue
+import kotlin.test.*
 
 /**
  * Unit tests for TiddlyWiki format parser.
@@ -27,7 +25,7 @@ import kotlin.test.assertTrue
  */
 class TiddlywikiParserTest {
 
-    private val parser = TiddlywikiParser()
+    private val parser = TiddlyWikiParser()
 
     // ==================== Format Detection Tests ====================
 
@@ -36,8 +34,8 @@ class TiddlywikiParserTest {
         val format = FormatRegistry.getByExtension(".tid")
 
         assertNotNull(format)
-        assertThat(format.id).isEqualTo(FormatRegistry.ID_TIDDLYWIKI)
-        assertThat(format.name).isEqualTo("TiddlyWiki")
+        assertEquals(FormatRegistry.ID_TIDDLYWIKI, format.id)
+        assertEquals("TiddlyWiki", format.name)
     }
 
     @Test
@@ -45,7 +43,7 @@ class TiddlywikiParserTest {
         val format = FormatRegistry.detectByFilename("test.tid")
 
         assertNotNull(format)
-        assertThat(format.id).isEqualTo(FormatRegistry.ID_TIDDLYWIKI)
+        assertEquals(FormatRegistry.ID_TIDDLYWIKI, format.id)
     }
 
     @Test
@@ -55,7 +53,7 @@ class TiddlywikiParserTest {
         extensions.forEach { ext ->
             val format = FormatRegistry.getByExtension(ext)
             assertNotNull(format, "Extension $ext should be recognized")
-            assertThat(format.id).isEqualTo(FormatRegistry.ID_TIDDLYWIKI)
+            assertEquals(FormatRegistry.ID_TIDDLYWIKI, format.id)
         }
     }
 
@@ -108,7 +106,7 @@ class TiddlywikiParserTest {
         val format = FormatRegistry.detectByContent(content)
 
         assertNotNull(format)
-        assertThat(format.id).isEqualTo(FormatRegistry.ID_TIDDLYWIKI)
+        assertEquals(FormatRegistry.ID_TIDDLYWIKI, format.id)
     }
 
     @Test
@@ -119,7 +117,7 @@ class TiddlywikiParserTest {
 
         // Should detect as plaintext, not TiddlyWiki
         if (format != null) {
-            assertThat(format.id).isNotEqualTo(FormatRegistry.ID_TIDDLYWIKI)
+            assertNotEquals(FormatRegistry.ID_TIDDLYWIKI, format.id)
         }
     }
 
@@ -206,8 +204,8 @@ class TiddlywikiParserTest {
         val format = FormatRegistry.getById(FormatRegistry.ID_TIDDLYWIKI)
 
         assertNotNull(format)
-        assertThat(format.name).isEqualTo("TiddlyWiki")
-        assertThat(format.defaultExtension).isEqualTo(".tid")
+        assertEquals("TiddlyWiki", format.name)
+        assertEquals(".tid", format.defaultExtension)
     }
 
     @Test
@@ -216,6 +214,6 @@ class TiddlywikiParserTest {
         val tiddlywikiFormat = allFormats.find { it.id == FormatRegistry.ID_TIDDLYWIKI }
 
         assertNotNull(tiddlywikiFormat)
-        assertThat(tiddlywikiFormat.name).isEqualTo("TiddlyWiki")
+        assertEquals("TiddlyWiki", tiddlywikiFormat.name)
     }
 }

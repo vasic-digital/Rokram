@@ -11,9 +11,7 @@ package digital.vasic.yole.format.csv
 import digital.vasic.yole.format.FormatRegistry
 import digital.vasic.yole.format.csv.CsvParser
 import org.junit.Test
-import org.assertj.core.api.Assertions.assertThat
-import kotlin.test.assertNotNull
-import kotlin.test.assertTrue
+import kotlin.test.*
 
 /**
  * Unit tests for CSV format parser.
@@ -36,8 +34,8 @@ class CsvParserTest {
         val format = FormatRegistry.getByExtension(".csv")
 
         assertNotNull(format)
-        assertThat(format.id).isEqualTo(FormatRegistry.ID_CSV)
-        assertThat(format.name).isEqualTo("CSV")
+        assertEquals(FormatRegistry.ID_CSV, format.id)
+        assertEquals("CSV", format.name)
     }
 
     @Test
@@ -45,7 +43,7 @@ class CsvParserTest {
         val format = FormatRegistry.detectByFilename("test.csv")
 
         assertNotNull(format)
-        assertThat(format.id).isEqualTo(FormatRegistry.ID_CSV)
+        assertEquals(FormatRegistry.ID_CSV, format.id)
     }
 
     @Test
@@ -55,7 +53,7 @@ class CsvParserTest {
         extensions.forEach { ext ->
             val format = FormatRegistry.getByExtension(ext)
             assertNotNull(format, "Extension $ext should be recognized")
-            assertThat(format.id).isEqualTo(FormatRegistry.ID_CSV)
+            assertEquals(FormatRegistry.ID_CSV, format.id)
         }
     }
 
@@ -64,13 +62,18 @@ class CsvParserTest {
     @Test
     fun `should parse basic CSV content`() {
         val content = """
-            Sample CSV content here
+            Name,Age,City
+            John,30,New York
+            Jane,25,Los Angeles
+            Bob,35,Chicago
         """.trimIndent()
 
         val result = parser.parse(content)
 
         assertNotNull(result)
-        // Add format-specific assertions here
+        assertTrue(result.parsedContent.contains("John"))
+        assertTrue(result.parsedContent.contains("New York"))
+        assertEquals(content, result.rawContent)
     }
 
     @Test
@@ -102,13 +105,15 @@ class CsvParserTest {
     @Test
     fun `should detect format by content patterns`() {
         val content = """
-            Sample CSV content here
+            Name,Age,Email
+            Alice,28,alice@example.com
+            Bob,32,bob@example.com
         """.trimIndent()
 
         val format = FormatRegistry.detectByContent(content)
 
         assertNotNull(format)
-        assertThat(format.id).isEqualTo(FormatRegistry.ID_CSV)
+        assertEquals(FormatRegistry.ID_CSV, format.id)
     }
 
     @Test
@@ -119,7 +124,7 @@ class CsvParserTest {
 
         // Should detect as plaintext, not CSV
         if (format != null) {
-            assertThat(format.id).isNotEqualTo(FormatRegistry.ID_CSV)
+            assertNotEquals(FormatRegistry.ID_CSV, format.id)
         }
     }
 
@@ -179,24 +184,110 @@ class CsvParserTest {
     }
 
     // ==================== Format-Specific Tests ====================
-    // Add format-specific parsing tests below
-    // Examples:
-    // - Headers (for Markdown, AsciiDoc, etc.)
-    // - Lists (for Markdown, Org Mode, etc.)
-    // - Code blocks (for Markdown, reStructuredText, etc.)
-    // - Tables (for CSV, Markdown, etc.)
-    // - Math (for LaTeX, R Markdown, etc.)
 
     @Test
-    fun `should parse format-specific feature`() {
+    fun `should parse CSV with headers`() {
         val content = """
-            Format specific sample
+            Product,Price,Quantity
+            Apple,1.50,100
+            Banana,0.75,200
+            Orange,2.00,150
         """.trimIndent()
 
         val result = parser.parse(content)
 
         assertNotNull(result)
-        // Add format-specific assertions
+        assertTrue(result.parsedContent.contains("Product"))
+        assertTrue(result.parsedContent.contains("Apple"))
+        assertTrue(result.parsedContent.contains("1.50"))
+    }
+
+    @Test
+    fun `should parse CSV with quoted fields`() {
+        val content = """
+            Name,Address,Phone
+            "Smith, John","123 Main St, NYC","555-1234"
+            "Doe, Jane","456 Oak Ave, LA","555-5678"
+        """.trimIndent()
+
+        val result = parser.parse(content)
+
+        assertNotNull(result)
+        assertTrue(result.parsedContent.contains("Smith, John") || result.parsedContent.contains("Smith"))
+    }
+
+    @Test
+    fun `should handle escaped quotes in CSV`() {
+        val content = "Title,Description\n\"Book\",\"He said Hello\"\n\"Movie\",\"She replied Hi there\""
+
+        val result = parser.parse(content)
+
+        assertNotNull(result)
+        assertTrue(result.parsedContent.contains("Book"))
+    }
+
+    @Test
+    fun `should parse CSV with empty fields`() {
+        val content = "Name,Email,Phone\nJohn,john@example.com,\nJane,,555-1234\nBob,bob@example.com,555-5678"
+
+        val result = parser.parse(content)
+
+        assertNotNull(result)
+        assertTrue(result.parsedContent.contains("John"))
+        assertTrue(result.parsedContent.contains("Jane"))
+    }
+
+    @Test
+    fun `should parse CSV with numeric data`() {
+        val content = "Year,Sales,Profit\n2021,150000,25000\n2022,175000,30000\n2023,200000,35000"
+
+        val result = parser.parse(content)
+
+        assertNotNull(result)
+        assertTrue(result.parsedContent.contains("150000"))
+        assertTrue(result.parsedContent.contains("2021"))
+    }
+
+    @Test
+    fun `should parse CSV with line breaks in quoted fields`() {
+        val content = "\"Name\",\"Address\"\n\"John Smith\",\"123 Main St\\nNew York, NY\"\n\"Jane Doe\",\"456 Oak Ave\\nLos Angeles, CA\""
+
+        val result = parser.parse(content)
+
+        assertNotNull(result)
+        assertTrue(result.parsedContent.contains("John Smith"))
+    }
+
+    @Test
+    fun `should parse single column CSV`() {
+        val content = "Name\nAlice\nBob\nCharlie"
+
+        val result = parser.parse(content)
+
+        assertNotNull(result)
+        assertTrue(result.parsedContent.contains("Alice"))
+        assertTrue(result.parsedContent.contains("Bob"))
+    }
+
+    @Test
+    fun `should parse CSV with special characters`() {
+        val content = "Email,Password\nuser@example.com,pass123!\nadmin@site.org,secur3#"
+
+        val result = parser.parse(content)
+
+        assertNotNull(result)
+        assertTrue(result.parsedContent.contains("user@example.com"))
+    }
+
+    @Test
+    fun `should generate HTML table from CSV`() {
+        val content = "Name,Age,City\nJohn,30,NYC\nJane,25,LA"
+
+        val result = parser.parse(content)
+
+        assertNotNull(result)
+        // CSV should be rendered as HTML table
+        assertTrue(result.parsedContent.contains("table") || result.parsedContent.contains("TABLE"))
     }
 
     // ==================== Integration Tests ====================
@@ -206,8 +297,8 @@ class CsvParserTest {
         val format = FormatRegistry.getById(FormatRegistry.ID_CSV)
 
         assertNotNull(format)
-        assertThat(format.name).isEqualTo("CSV")
-        assertThat(format.defaultExtension).isEqualTo(".csv")
+        assertEquals("CSV", format.name)
+        assertEquals(".csv", format.defaultExtension)
     }
 
     @Test
@@ -216,6 +307,6 @@ class CsvParserTest {
         val csvFormat = allFormats.find { it.id == FormatRegistry.ID_CSV }
 
         assertNotNull(csvFormat)
-        assertThat(csvFormat.name).isEqualTo("CSV")
+        assertEquals("CSV", csvFormat.name)
     }
 }

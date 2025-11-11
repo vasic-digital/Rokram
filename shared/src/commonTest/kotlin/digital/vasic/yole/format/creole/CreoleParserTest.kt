@@ -11,9 +11,7 @@ package digital.vasic.yole.format.creole
 import digital.vasic.yole.format.FormatRegistry
 import digital.vasic.yole.format.creole.CreoleParser
 import org.junit.Test
-import org.assertj.core.api.Assertions.assertThat
-import kotlin.test.assertNotNull
-import kotlin.test.assertTrue
+import kotlin.test.*
 
 /**
  * Unit tests for Creole format parser.
@@ -36,8 +34,8 @@ class CreoleParserTest {
         val format = FormatRegistry.getByExtension(".creole")
 
         assertNotNull(format)
-        assertThat(format.id).isEqualTo(FormatRegistry.ID_CREOLE)
-        assertThat(format.name).isEqualTo("Creole")
+        assertEquals(FormatRegistry.ID_CREOLE, format.id)
+        assertEquals("Creole", format.name)
     }
 
     @Test
@@ -45,7 +43,7 @@ class CreoleParserTest {
         val format = FormatRegistry.detectByFilename("test.creole")
 
         assertNotNull(format)
-        assertThat(format.id).isEqualTo(FormatRegistry.ID_CREOLE)
+        assertEquals(FormatRegistry.ID_CREOLE, format.id)
     }
 
     @Test
@@ -55,7 +53,7 @@ class CreoleParserTest {
         extensions.forEach { ext ->
             val format = FormatRegistry.getByExtension(ext)
             assertNotNull(format, "Extension $ext should be recognized")
-            assertThat(format.id).isEqualTo(FormatRegistry.ID_CREOLE)
+            assertEquals(FormatRegistry.ID_CREOLE, format.id)
         }
     }
 
@@ -108,7 +106,7 @@ class CreoleParserTest {
         val format = FormatRegistry.detectByContent(content)
 
         assertNotNull(format)
-        assertThat(format.id).isEqualTo(FormatRegistry.ID_CREOLE)
+        assertEquals(FormatRegistry.ID_CREOLE, format.id)
     }
 
     @Test
@@ -119,7 +117,7 @@ class CreoleParserTest {
 
         // Should detect as plaintext, not Creole
         if (format != null) {
-            assertThat(format.id).isNotEqualTo(FormatRegistry.ID_CREOLE)
+            assertNotEquals(FormatRegistry.ID_CREOLE, format.id)
         }
     }
 
@@ -206,8 +204,8 @@ class CreoleParserTest {
         val format = FormatRegistry.getById(FormatRegistry.ID_CREOLE)
 
         assertNotNull(format)
-        assertThat(format.name).isEqualTo("Creole")
-        assertThat(format.defaultExtension).isEqualTo(".creole")
+        assertEquals("Creole", format.name)
+        assertEquals(".creole", format.defaultExtension)
     }
 
     @Test
@@ -216,6 +214,6 @@ class CreoleParserTest {
         val creoleFormat = allFormats.find { it.id == FormatRegistry.ID_CREOLE }
 
         assertNotNull(creoleFormat)
-        assertThat(creoleFormat.name).isEqualTo("Creole")
+        assertEquals("Creole", creoleFormat.name)
     }
 }

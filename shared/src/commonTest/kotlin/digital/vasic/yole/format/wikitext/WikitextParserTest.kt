@@ -11,9 +11,7 @@ package digital.vasic.yole.format.wikitext
 import digital.vasic.yole.format.FormatRegistry
 import digital.vasic.yole.format.wikitext.WikitextParser
 import org.junit.Test
-import org.assertj.core.api.Assertions.assertThat
-import kotlin.test.assertNotNull
-import kotlin.test.assertTrue
+import kotlin.test.*
 
 /**
  * Unit tests for WikiText format parser.
@@ -36,8 +34,8 @@ class WikitextParserTest {
         val format = FormatRegistry.getByExtension(".wiki")
 
         assertNotNull(format)
-        assertThat(format.id).isEqualTo(FormatRegistry.ID_WIKITEXT)
-        assertThat(format.name).isEqualTo("WikiText")
+        assertEquals(FormatRegistry.ID_WIKITEXT, format.id)
+        assertEquals("WikiText", format.name)
     }
 
     @Test
@@ -45,7 +43,7 @@ class WikitextParserTest {
         val format = FormatRegistry.detectByFilename("test.wiki")
 
         assertNotNull(format)
-        assertThat(format.id).isEqualTo(FormatRegistry.ID_WIKITEXT)
+        assertEquals(FormatRegistry.ID_WIKITEXT, format.id)
     }
 
     @Test
@@ -55,7 +53,7 @@ class WikitextParserTest {
         extensions.forEach { ext ->
             val format = FormatRegistry.getByExtension(ext)
             assertNotNull(format, "Extension $ext should be recognized")
-            assertThat(format.id).isEqualTo(FormatRegistry.ID_WIKITEXT)
+            assertEquals(FormatRegistry.ID_WIKITEXT, format.id)
         }
     }
 
@@ -108,7 +106,7 @@ class WikitextParserTest {
         val format = FormatRegistry.detectByContent(content)
 
         assertNotNull(format)
-        assertThat(format.id).isEqualTo(FormatRegistry.ID_WIKITEXT)
+        assertEquals(FormatRegistry.ID_WIKITEXT, format.id)
     }
 
     @Test
@@ -119,7 +117,7 @@ class WikitextParserTest {
 
         // Should detect as plaintext, not WikiText
         if (format != null) {
-            assertThat(format.id).isNotEqualTo(FormatRegistry.ID_WIKITEXT)
+            assertNotEquals(FormatRegistry.ID_WIKITEXT, format.id)
         }
     }
 
@@ -206,8 +204,8 @@ class WikitextParserTest {
         val format = FormatRegistry.getById(FormatRegistry.ID_WIKITEXT)
 
         assertNotNull(format)
-        assertThat(format.name).isEqualTo("WikiText")
-        assertThat(format.defaultExtension).isEqualTo(".wiki")
+        assertEquals("WikiText", format.name)
+        assertEquals(".wiki", format.defaultExtension)
     }
 
     @Test
@@ -216,6 +214,6 @@ class WikitextParserTest {
         val wikitextFormat = allFormats.find { it.id == FormatRegistry.ID_WIKITEXT }
 
         assertNotNull(wikitextFormat)
-        assertThat(wikitextFormat.name).isEqualTo("WikiText")
+        assertEquals("WikiText", wikitextFormat.name)
     }
 }
