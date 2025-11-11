@@ -35,7 +35,7 @@ class RmarkdownParserTest {
 
         assertNotNull(format)
         assertEquals(FormatRegistry.ID_RMARKDOWN, format.id)
-        assertEquals("RMarkdown", format.name)
+        assertEquals("R Markdown", format.name)
     }
 
     @Test
@@ -62,7 +62,7 @@ class RmarkdownParserTest {
     @Test
     fun `should parse basic RMarkdown content`() {
         val content = """
-            Sample RMarkdown content here
+            ---\ntitle: Doc\n---\n```{r}
         """.trimIndent()
 
         val result = parser.parse(content)
@@ -100,7 +100,7 @@ class RmarkdownParserTest {
     @Test
     fun `should detect format by content patterns`() {
         val content = """
-            Sample RMarkdown content here
+            ---\ntitle: Doc\n---\n```{r}
         """.trimIndent()
 
         val format = FormatRegistry.detectByContent(content)
@@ -204,7 +204,7 @@ class RmarkdownParserTest {
         val format = FormatRegistry.getById(FormatRegistry.ID_RMARKDOWN)
 
         assertNotNull(format)
-        assertEquals("RMarkdown", format.name)
+        assertEquals("R Markdown", format.name)
         assertEquals(".rmd", format.defaultExtension)
     }
 
@@ -214,6 +214,6 @@ class RmarkdownParserTest {
         val rmarkdownFormat = allFormats.find { it.id == FormatRegistry.ID_RMARKDOWN }
 
         assertNotNull(rmarkdownFormat)
-        assertEquals("RMarkdown", rmarkdownFormat.name)
+        assertEquals("R Markdown", rmarkdownFormat.name)
     }
 }

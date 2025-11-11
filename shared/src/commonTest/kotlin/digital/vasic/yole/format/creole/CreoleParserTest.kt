@@ -62,7 +62,7 @@ class CreoleParserTest {
     @Test
     fun `should parse basic Creole content`() {
         val content = """
-            Sample Creole content here
+            = Heading\n** bold
         """.trimIndent()
 
         val result = parser.parse(content)
@@ -100,7 +100,7 @@ class CreoleParserTest {
     @Test
     fun `should detect format by content patterns`() {
         val content = """
-            Sample Creole content here
+            = Heading\n** bold
         """.trimIndent()
 
         val format = FormatRegistry.detectByContent(content)

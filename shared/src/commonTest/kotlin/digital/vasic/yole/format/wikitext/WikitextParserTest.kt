@@ -62,7 +62,7 @@ class WikitextParserTest {
     @Test
     fun `should parse basic WikiText content`() {
         val content = """
-            Sample WikiText content here
+            == Heading ==\n[[Link]]
         """.trimIndent()
 
         val result = parser.parse(content)
@@ -100,7 +100,7 @@ class WikitextParserTest {
     @Test
     fun `should detect format by content patterns`() {
         val content = """
-            Sample WikiText content here
+            == Heading ==\n[[Link]]
         """.trimIndent()
 
         val format = FormatRegistry.detectByContent(content)

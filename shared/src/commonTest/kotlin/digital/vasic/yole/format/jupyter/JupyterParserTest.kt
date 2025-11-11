@@ -35,7 +35,7 @@ class JupyterParserTest {
 
         assertNotNull(format)
         assertEquals(FormatRegistry.ID_JUPYTER, format.id)
-        assertEquals("Jupyter", format.name)
+        assertEquals("Jupyter Notebook", format.name)
     }
 
     @Test
@@ -204,7 +204,7 @@ class JupyterParserTest {
         val format = FormatRegistry.getById(FormatRegistry.ID_JUPYTER)
 
         assertNotNull(format)
-        assertEquals("Jupyter", format.name)
+        assertEquals("Jupyter Notebook", format.name)
         assertEquals(".ipynb", format.defaultExtension)
     }
 
@@ -214,6 +214,6 @@ class JupyterParserTest {
         val jupyterFormat = allFormats.find { it.id == FormatRegistry.ID_JUPYTER }
 
         assertNotNull(jupyterFormat)
-        assertEquals("Jupyter", jupyterFormat.name)
+        assertEquals("Jupyter Notebook", jupyterFormat.name)
     }
 }

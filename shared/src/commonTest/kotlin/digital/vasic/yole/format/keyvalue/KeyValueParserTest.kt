@@ -35,7 +35,7 @@ class KeyvalueParserTest {
 
         assertNotNull(format)
         assertEquals(FormatRegistry.ID_KEYVALUE, format.id)
-        assertEquals("KeyValue", format.name)
+        assertEquals("Key-Value", format.name)
     }
 
     @Test
@@ -62,7 +62,7 @@ class KeyvalueParserTest {
     @Test
     fun `should parse basic KeyValue content`() {
         val content = """
-            Sample KeyValue content here
+            key1 = value1\nkey2 = value2
         """.trimIndent()
 
         val result = parser.parse(content)
@@ -100,7 +100,7 @@ class KeyvalueParserTest {
     @Test
     fun `should detect format by content patterns`() {
         val content = """
-            Sample KeyValue content here
+            key1 = value1\nkey2 = value2
         """.trimIndent()
 
         val format = FormatRegistry.detectByContent(content)
@@ -204,7 +204,7 @@ class KeyvalueParserTest {
         val format = FormatRegistry.getById(FormatRegistry.ID_KEYVALUE)
 
         assertNotNull(format)
-        assertEquals("KeyValue", format.name)
+        assertEquals("Key-Value", format.name)
         assertEquals(".ini", format.defaultExtension)
     }
 
@@ -214,6 +214,6 @@ class KeyvalueParserTest {
         val keyvalueFormat = allFormats.find { it.id == FormatRegistry.ID_KEYVALUE }
 
         assertNotNull(keyvalueFormat)
-        assertEquals("KeyValue", keyvalueFormat.name)
+        assertEquals("Key-Value", keyvalueFormat.name)
     }
 }

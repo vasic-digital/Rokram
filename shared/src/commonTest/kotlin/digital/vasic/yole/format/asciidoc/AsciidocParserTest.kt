@@ -62,7 +62,7 @@ class AsciidocParserTest {
     @Test
     fun `should parse basic AsciiDoc content`() {
         val content = """
-            Sample AsciiDoc content here
+            = Document Title\n== Section
         """.trimIndent()
 
         val result = parser.parse(content)
@@ -100,7 +100,7 @@ class AsciidocParserTest {
     @Test
     fun `should detect format by content patterns`() {
         val content = """
-            Sample AsciiDoc content here
+            = Document Title\n== Section
         """.trimIndent()
 
         val format = FormatRegistry.detectByContent(content)

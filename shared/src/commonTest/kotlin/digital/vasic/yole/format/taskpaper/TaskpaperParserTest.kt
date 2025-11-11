@@ -62,7 +62,7 @@ class TaskpaperParserTest {
     @Test
     fun `should parse basic TaskPaper content`() {
         val content = """
-            Sample TaskPaper content here
+            Project:\n\t- Task
         """.trimIndent()
 
         val result = parser.parse(content)
@@ -100,7 +100,7 @@ class TaskpaperParserTest {
     @Test
     fun `should detect format by content patterns`() {
         val content = """
-            Sample TaskPaper content here
+            Project:\n\t- Task
         """.trimIndent()
 
         val format = FormatRegistry.detectByContent(content)

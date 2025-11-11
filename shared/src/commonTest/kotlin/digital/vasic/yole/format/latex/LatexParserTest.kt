@@ -62,7 +62,7 @@ class LatexParserTest {
     @Test
     fun `should parse basic LaTeX content`() {
         val content = """
-            Sample LaTeX content here
+            \documentclass{article}\n\begin{document}
         """.trimIndent()
 
         val result = parser.parse(content)
@@ -100,7 +100,7 @@ class LatexParserTest {
     @Test
     fun `should detect format by content patterns`() {
         val content = """
-            Sample LaTeX content here
+            \documentclass{article}\n\begin{document}
         """.trimIndent()
 
         val format = FormatRegistry.detectByContent(content)

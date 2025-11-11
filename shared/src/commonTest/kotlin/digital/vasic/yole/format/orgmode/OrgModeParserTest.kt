@@ -62,7 +62,7 @@ class OrgModeParserTest {
     @Test
     fun `should parse basic Org Mode content`() {
         val content = """
-            Sample Org Mode content here
+            * Heading\n#+TITLE: Document
         """.trimIndent()
 
         val result = parser.parse(content)
@@ -100,7 +100,7 @@ class OrgModeParserTest {
     @Test
     fun `should detect format by content patterns`() {
         val content = """
-            Sample Org Mode content here
+            * Heading\n#+TITLE: Document
         """.trimIndent()
 
         val format = FormatRegistry.detectByContent(content)

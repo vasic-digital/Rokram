@@ -62,7 +62,7 @@ class TiddlywikiParserTest {
     @Test
     fun `should parse basic TiddlyWiki content`() {
         val content = """
-            Sample TiddlyWiki content here
+            ! Heading\ntitle: Doc
         """.trimIndent()
 
         val result = parser.parse(content)
@@ -100,7 +100,7 @@ class TiddlywikiParserTest {
     @Test
     fun `should detect format by content patterns`() {
         val content = """
-            Sample TiddlyWiki content here
+            ! Heading\ntitle: Doc
         """.trimIndent()
 
         val format = FormatRegistry.detectByContent(content)

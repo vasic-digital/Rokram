@@ -62,7 +62,7 @@ class RestructuredtextParserTest {
     @Test
     fun `should parse basic reStructuredText content`() {
         val content = """
-            Sample reStructuredText content here
+            Title\n=====\n.. note::
         """.trimIndent()
 
         val result = parser.parse(content)
@@ -100,7 +100,7 @@ class RestructuredtextParserTest {
     @Test
     fun `should detect format by content patterns`() {
         val content = """
-            Sample reStructuredText content here
+            Title\n=====\n.. note::
         """.trimIndent()
 
         val format = FormatRegistry.detectByContent(content)

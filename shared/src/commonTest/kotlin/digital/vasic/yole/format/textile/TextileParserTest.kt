@@ -62,7 +62,7 @@ class TextileParserTest {
     @Test
     fun `should parse basic Textile content`() {
         val content = """
-            Sample Textile content here
+            h1. Heading\n* Item
         """.trimIndent()
 
         val result = parser.parse(content)
@@ -100,7 +100,7 @@ class TextileParserTest {
     @Test
     fun `should detect format by content patterns`() {
         val content = """
-            Sample Textile content here
+            h1. Heading\n* Item
         """.trimIndent()
 
         val format = FormatRegistry.detectByContent(content)
