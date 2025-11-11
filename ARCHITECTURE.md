@@ -2,7 +2,9 @@
 
 ## Overview
 
-Yole is a cross-platform text editor supporting Android, Desktop, iOS, and Web platforms with 18+ text formats. This document describes the architecture, module structure, and implementation details.
+Yole is a **Kotlin Multiplatform (KMP)** text editor supporting Android, Desktop, iOS, and Web platforms with 17 text formats. This document describes the architecture, module structure, and implementation details.
+
+**Architecture Philosophy**: Share as much code as possible through Kotlin Multiplatform, with platform-specific implementations only where necessary for optimal user experience.
 
 ## Current Platform Status (November 2025)
 
@@ -17,6 +19,94 @@ Yole is a cross-platform text editor supporting Android, Desktop, iOS, and Web p
 - **iOS**: All iOS targets (`iosX64`, `iosArm64`, `iosSimulatorArm64`) commented out. TODO at line 41 of `shared/build.gradle.kts`: "Re-enable iOS targets once basic compilation is working"
 - **Web**: `webApp/src/main/` has no source code despite complete build configuration
 - **Core Module**: Investigation needed - main source directory structure unclear
+
+## Kotlin Multiplatform Architecture
+
+### Core Concept
+
+Yole uses **Kotlin Multiplatform (KMP)** to maximize code sharing across platforms:
+
+```
+┌─────────────────────────────────────────┐
+│         Shared Business Logic           │
+│  (Kotlin Multiplatform - shared module) │
+│                                          │
+│  • Format Parsers                        │
+│  • Document Model                        │
+│  • Format Registry                       │
+│  • Core Utilities                        │
+└──────────────┬───────────────────────────┘
+               │
+       ┌───────┴────────┐
+       │                │
+   ┌───▼───┐      ┌────▼────┐
+   │Android│      │ Desktop │
+   │  UI   │      │   UI    │
+   └───────┘      └─────────┘
+       │                │
+   ┌───▼───┐      ┌────▼────┐
+   │  iOS  │      │   Web   │
+   │   UI  │      │   UI    │
+   └───────┘      └─────────┘
+```
+
+### Shared Module (`shared/`)
+
+**Primary location** for cross-platform code:
+
+```
+shared/src/
+├── commonMain/kotlin/digital/vasic/yole/
+│   ├── format/                    # Format system (PRIMARY)
+│   │   ├── FormatRegistry.kt      # Central format registry
+│   │   ├── TextFormat.kt          # Format metadata
+│   │   ├── TextParser.kt          # Parser interface
+│   │   ├── markdown/              # Markdown parser
+│   │   ├── todotxt/               # Todo.txt parser
+│   │   ├── csv/                   # CSV parser
+│   │   ├── latex/                 # LaTeX parser
+│   │   ├── asciidoc/              # AsciiDoc parser
+│   │   ├── orgmode/               # Org Mode parser
+│   │   ├── wikitext/              # WikiText parser
+│   │   ├── restructuredtext/      # reStructuredText parser
+│   │   ├── taskpaper/             # TaskPaper parser
+│   │   ├── textile/               # Textile parser
+│   │   ├── creole/                # Creole parser
+│   │   ├── tiddlywiki/            # TiddlyWiki parser
+│   │   ├── jupyter/               # Jupyter parser
+│   │   ├── rmarkdown/             # R Markdown parser
+│   │   ├── plaintext/             # Plain text parser
+│   │   └── keyvalue/              # Key-value parser
+│   │
+│   └── model/                     # Document model
+│       └── Document.kt            # Cross-platform document
+│
+├── androidMain/kotlin/            # Android-specific code
+├── desktopMain/kotlin/            # Desktop-specific code
+├── iosMain/kotlin/                # iOS-specific code (disabled)
+└── wasmJsMain/kotlin/             # Web-specific code
+```
+
+### Platform Modules
+
+**Each platform has a dedicated app module**:
+
+```
+androidApp/     # Android application (Compose UI)
+desktopApp/     # Desktop application (Compose Desktop)
+iosApp/         # iOS application (SwiftUI + KMP)
+webApp/         # Web application (Compose for Web)
+```
+
+### Dependency Flow
+
+```
+Platform Apps (androidApp, desktopApp, etc.)
+       ↓
+    shared (Kotlin Multiplatform)
+       ↓
+   commons (Android utilities - legacy)
+```
 
 ## Module Structure
 
@@ -117,113 +207,106 @@ format-[name]/
 └── src/androidTest/java/             # Integration tests
 ```
 
-## Supported Formats
+## Supported Formats (17 Total)
 
-### 1. Markdown (`format-markdown`)
-- **Extensions**: `.md`
-- **Features**: Full CommonMark support, KaTeX math rendering, tables, code blocks
-- **Dependencies**: Flexmark library
+All formats are implemented as parsers in the **`shared/src/commonMain/kotlin/digital/vasic/yole/format/`** directory.
 
-### 2. Todo.txt (`format-todotxt`)
-- **Extensions**: `.todo.txt`
-- **Features**: Task management, priorities, contexts, projects, due dates
-- **Special Features**: Advanced search and filtering
+### Core Formats (6)
 
-### 3. CSV (`format-csv`)
-- **Extensions**: `.csv`
-- **Features**: Table preview, column-based syntax highlighting, HTML export
-- **Dependencies**: OpenCSV library
+1. **Markdown** - `markdown/MarkdownParser.kt`
+   - Extensions: `.md`, `.markdown`, `.mdown`, `.mkd`
+   - Features: CommonMark + GFM, tables, task lists, code blocks
+   - Status: ✅ Full support
 
-### 4. WikiText (`format-wikitext`)
-- **Extensions**: `.txt`
-- **Features**: Zim wiki format, link resolution, transclusion
-- **Special Features**: Attachment directory handling
+2. **Plain Text** - `plaintext/PlaintextParser.kt`
+   - Extensions: `.txt`, `.text`, `.log`
+   - Features: Universal text format, syntax highlighting for code
+   - Status: ✅ Full support
 
-### 5. Key-Value (`format-keyvalue`)
-- **Extensions**: `.json`, `.yml`, `.yaml`, `.toml`, `.vcf`, `.ics`, `.ini`
-- **Features**: Structured data editing with syntax highlighting
-- **Supported Formats**: JSON, YAML, TOML, INI, VCF (vCard), ICS (iCalendar)
+3. **Todo.txt** - `todotxt/TodoTxtParser.kt`
+   - Extensions: `.txt` (with todo.txt format)
+   - Features: Task management, priorities, projects, contexts, due dates
+   - Status: ✅ Full support with advanced query syntax
 
-### 6. AsciiDoc (`format-asciidoc`)
-- **Extensions**: `.adoc`
-- **Features**: Technical documentation format
-- **Dependencies**: AsciiDoctor.js
+4. **CSV** - `csv/CsvParser.kt`
+   - Extensions: `.csv`
+   - Features: Comma-separated values, table view
+   - Status: ✅ Full support
 
-### 7. Org-mode (`format-orgmode`)
-- **Extensions**: `.org`
-- **Features**: Emacs org-mode format, headings, TODO states, timestamps
-- **Dependencies**: Org-mode JavaScript library
+5. **LaTeX** - `latex/LatexParser.kt`
+   - Extensions: `.tex`, `.latex`
+   - Features: Academic documents, mathematical equations
+   - Status: ✅ Full support
 
-### 8. Plaintext (`format-plaintext`)
-- **Extensions**: `.txt`
-- **Features**: Basic text editing with code syntax highlighting
-- **Special Features**: Automatic language detection
+6. **Org Mode** - `orgmode/OrgModeParser.kt`
+   - Extensions: `.org`
+   - Features: Emacs org-mode, TODO items, scheduling, tables
+   - Status: ✅ Full support
 
-### 9. LaTeX (`format-latex`) - NEW
-- **Extensions**: `.tex`, `.latex`
-- **Features**:
-  - LaTeX command highlighting
-  - Math expression conversion to KaTeX
-  - Basic document structure conversion
-  - Comment highlighting
-- **Action Buttons**: Common LaTeX commands, math delimiters, lists
+### Wiki Formats (3)
 
-### 10. reStructuredText (`format-restructuredtext`) - NEW
-- **Extensions**: `.rst`, `.rest`
-- **Features**:
-  - Header detection and conversion
-  - Inline markup (`*bold*`, `**italic**`, ```code```)
-  - Code blocks
-  - Basic list support
-- **Action Buttons**: RST markup shortcuts
+7. **WikiText** - `wikitext/WikitextParser.kt`
+   - Extensions: `.wiki`, `.wikitext`, `.mediawiki`
+   - Features: MediaWiki markup, Wikipedia-compatible
+   - Status: ✅ Basic parsing
 
-### 11. TaskPaper (`format-taskpaper`) - NEW
-- **Extensions**: `.taskpaper`
-- **Features**:
-  - Project-based task organization
-  - Tag support
-  - Note attachments
-- **Action Buttons**: Task creation, project management
+8. **Creole** - `creole/CreoleParser.kt`
+   - Extensions: `.creole`, `.wiki`
+   - Features: Standardized wiki markup, cross-wiki compatibility
+   - Status: ✅ Basic parsing
 
-### 12. Textile (`format-textile`) - NEW
-- **Extensions**: `.textile`
-- **Features**:
-  - Lightweight markup similar to Markdown
-  - Textile-specific syntax highlighting
-  - HTML conversion
-- **Action Buttons**: Textile formatting shortcuts
+9. **TiddlyWiki** - `tiddlywiki/TiddlyWikiParser.kt`
+   - Extensions: `.tid`, `.tiddler`
+   - Features: Non-linear personal wiki, tiddler format
+   - Status: ✅ Basic parsing
 
-### 13. Creole (`format-creole`) - NEW
-- **Extensions**: `.creole`
-- **Features**:
-  - Wiki markup standard
-  - Cross-wiki compatibility
-  - Link and formatting support
-- **Action Buttons**: Creole wiki markup
+### Technical Documentation Formats (2)
 
-### 14. TiddlyWiki (`format-tiddlywiki`) - NEW
-- **Extensions**: `.tid`
-- **Features**:
-  - Personal wiki format
-  - Structured data support
-  - Link handling
-- **Action Buttons**: Tiddler creation, linking
+10. **AsciiDoc** - `asciidoc/AsciidocParser.kt`
+    - Extensions: `.adoc`, `.asciidoc`, `.asc`
+    - Features: Technical documentation, powerful features
+    - Status: ✅ Basic parsing
 
-### 15. Jupyter (`format-jupyter`) - NEW
-- **Extensions**: `.ipynb`
-- **Features**:
-  - JSON-based notebook format
-  - Code cell highlighting
-  - Markdown cell support
-- **Action Buttons**: Cell creation, notebook structure
+11. **reStructuredText** - `restructuredtext/RestructuredTextParser.kt`
+    - Extensions: `.rst`, `.rest`, `.restx`, `.rtxt`
+    - Features: Python documentation standard, Sphinx integration
+    - Status: ✅ Basic parsing
 
-### 16. R Markdown (`format-rmarkdown`) - NEW
-- **Extensions**: `.Rmd`
-- **Features**:
-  - R code integration
-  - Markdown with R chunks
-  - Output formatting
-- **Action Buttons**: Code chunk insertion, R integration
+### Specialized Formats (3)
+
+12. **Key-Value** - `keyvalue/KeyValueParser.kt`
+    - Extensions: `.properties`, `.ini`, `.env`, `.conf`, `.config`, `.cfg`
+    - Features: Configuration files (Java properties, INI, ENV)
+    - Status: ✅ Full support
+
+13. **TaskPaper** - `taskpaper/TaskpaperParser.kt`
+    - Extensions: `.taskpaper`, `.todo`
+    - Features: Plain-text task management, projects, tasks, tags
+    - Status: ✅ Basic parsing
+
+14. **Textile** - `textile/TextileParser.kt`
+    - Extensions: `.textile`, `.txtl`
+    - Features: Lightweight markup, CMS-friendly
+    - Status: ✅ Basic parsing
+
+### Data Science Formats (2)
+
+15. **Jupyter** - `jupyter/JupyterParser.kt`
+    - Extensions: `.ipynb`
+    - Features: Interactive notebooks, JSON format, cells
+    - Status: ✅ JSON viewing
+
+16. **R Markdown** - `rmarkdown/RMarkdownParser.kt`
+    - Extensions: `.Rmd`, `.rmarkdown`
+    - Features: Reproducible R research, markdown + R code chunks
+    - Status: ✅ Basic parsing
+
+### Other (1)
+
+17. **Binary** - Binary file detection
+    - All binary file types
+    - Features: Detects and prevents editing non-text files
+    - Status: ✅ Full detection
 
 ## Implementation Details
 
