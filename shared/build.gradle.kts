@@ -16,6 +16,8 @@ plugins {
     kotlin("plugin.compose")
     id("com.android.library")
     id("org.jetbrains.compose")
+    id("org.jetbrains.kotlinx.benchmark") version "0.4.11"
+    id("org.jetbrains.kotlin.plugin.allopen") version "2.1.0"
     // TODO: Fix dokka plugin - temporarily commented out for testing
     // id("org.jetbrains.dokka")
 }
@@ -32,10 +34,17 @@ kotlin {
 
     // JVM Desktop target
     jvm("desktop") {
+        val mainCompilation = compilations.getByName("main")
+
         compilations.all {
             kotlinOptions {
                 jvmTarget = "11"
             }
+        }
+
+        // Add benchmark compilation
+        compilations.create("benchmark") {
+            associateWith(mainCompilation)
         }
     }
 
@@ -161,6 +170,37 @@ kotlin {
                 // kotlinx-coroutines-test doesn't have WASM variant
                 // implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
             }
+        }
+
+        // Benchmark source set (created automatically by benchmark compilation)
+        val desktopBenchmark by getting {
+            dependencies {
+                implementation("org.jetbrains.kotlinx:kotlinx-benchmark-runtime:0.4.11")
+            }
+        }
+    }
+}
+
+// Configure allopen for benchmark annotations
+allOpen {
+    annotation("org.openjdk.jmh.annotations.State")
+}
+
+// Benchmark configuration
+benchmark {
+    targets {
+        register("desktop") {
+            this as kotlinx.benchmark.gradle.JvmBenchmarkTarget
+            jmhVersion = "1.37"
+        }
+    }
+
+    configurations {
+        named("main") {
+            warmups = 3
+            iterations = 5
+            iterationTime = 1
+            iterationTimeUnit = "s"
         }
     }
 }
