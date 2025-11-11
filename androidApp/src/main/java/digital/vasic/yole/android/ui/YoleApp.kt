@@ -271,28 +271,17 @@ fun MainScreen() {
                     targetState = currentSubScreen,
                     transitionSpec = {
                         if (targetState != null && initialState == null) {
-                            // Entering sub-screen (slide in from right)
-                            slideInHorizontally(
-                                animationSpec = tween(800),
-                                initialOffsetX = { it }
-                            ) + fadeIn(animationSpec = tween(800)) togetherWith
-                            slideOutHorizontally(
-                                animationSpec = tween(800),
-                                targetOffsetX = { -it / 2 }
-                            ) + fadeOut(animationSpec = tween(800))
+                            // Entering sub-screen (slide in from right) - enhanced with shared animations
+                            ScreenTransitions.slideIn(durationMillis = 600) togetherWith
+                            ScreenTransitions.slideOut(durationMillis = 600)
                         } else if (targetState == null && initialState != null) {
-                            // Exiting sub-screen (slide out to right)
-                            slideInHorizontally(
-                                animationSpec = tween(800),
-                                initialOffsetX = { -it / 2 }
-                            ) + fadeIn(animationSpec = tween(800)) togetherWith
-                            slideOutHorizontally(
-                                animationSpec = tween(800),
-                                targetOffsetX = { it }
-                            ) + fadeOut(animationSpec = tween(800))
+                            // Exiting sub-screen (slide back) - enhanced with shared animations
+                            ScreenTransitions.slideOut(durationMillis = 600).reversed() togetherWith
+                            ScreenTransitions.slideIn(durationMillis = 600).reversed()
                         } else {
-                            // Same level transitions or null to null
-                            fadeIn(animationSpec = tween(300)) togetherWith fadeOut(animationSpec = tween(300))
+                            // Same level transitions or null to null - faster fade
+                            ScreenTransitions.fade(durationMillis = 250) togetherWith
+                            fadeOut(animationSpec = tween(250))
                         }
                     },
                     label = "SubScreenTransition"
@@ -336,25 +325,15 @@ fun MainScreen() {
                             AnimatedContent(
                                 targetState = currentScreen,
                                 transitionSpec = {
-                                    // Tab transitions - slide horizontally
+                                    // Enhanced tab transitions - smoother with shared animations
                                     if (targetState.ordinal > initialState.ordinal) {
-                                        slideInHorizontally(
-                                            animationSpec = tween(600),
-                                            initialOffsetX = { it }
-                                        ) + fadeIn(animationSpec = tween(600)) togetherWith
-                                        slideOutHorizontally(
-                                            animationSpec = tween(600),
-                                            targetOffsetX = { -it }
-                                        ) + fadeOut(animationSpec = tween(600))
+                                        // Swipe left (moving forward)
+                                        ScreenTransitions.slideIn(durationMillis = 450) togetherWith
+                                        ScreenTransitions.slideOut(durationMillis = 450)
                                     } else {
-                                        slideInHorizontally(
-                                            animationSpec = tween(600),
-                                            initialOffsetX = { -it }
-                                        ) + fadeIn(animationSpec = tween(600)) togetherWith
-                                        slideOutHorizontally(
-                                            animationSpec = tween(600),
-                                            targetOffsetX = { it }
-                                        ) + fadeOut(animationSpec = tween(600))
+                                        // Swipe right (moving backward)
+                                        ScreenTransitions.slideOut(durationMillis = 450).reversed() togetherWith
+                                        ScreenTransitions.slideIn(durationMillis = 450).reversed()
                                     }
                                 },
                                 label = "MainScreenTransition"
@@ -746,18 +725,27 @@ fun FileBrowserScreen(
                     }
                 }
             } else {
-                // File list
+                // File list with staggered animations
                 LazyColumn(modifier = Modifier.weight(1f)) {
-                    items(files) { file ->
+                    itemsIndexed(
+                        items = files,
+                        key = { _, file -> file.absolutePath }
+                    ) { index, file ->
                         val isDirectory = file.isDirectory
                         val fileName = file.name
                         val fileSize = if (file.isFile) "${file.length()} bytes" else ""
 
-                        Card(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(vertical = 2.dp)
-                                .pressScale(scale = 0.97f), // Add press animation
+                        // Animated list item with staggered entrance
+                        androidx.compose.animation.AnimatedVisibility(
+                            visible = true,
+                            enter = ListAnimations.itemEnter(index),
+                            modifier = Modifier.animateItem()
+                        ) {
+                            Card(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(vertical = 2.dp)
+                                    .pressScale(scale = 0.97f), // Add press animation
                             onClick = {
                                 if (isDirectory) {
                                     // Navigate into directory with loading state
@@ -806,6 +794,7 @@ fun FileBrowserScreen(
                                     )
                                 }
                             }
+                        }
                         }
                     }
                 }
@@ -1549,20 +1538,30 @@ fun TodoScreen() {
                 )
             }
         } else {
-            // Show todo list
+            // Show todo list with staggered animations
             LazyColumn(modifier = Modifier.weight(1f)) {
-                items(filteredTodos) { item ->
-                    TodoItemRow(
-                        item = item,
-                        onToggleComplete = { completed ->
-                            todoItems = todoItems.map {
-                                if (it.id == item.id) it.copy(completed = completed) else it
+                itemsIndexed(
+                    items = filteredTodos,
+                    key = { _, item -> item.id }
+                ) { index, item ->
+                    androidx.compose.animation.AnimatedVisibility(
+                        visible = true,
+                        enter = ListAnimations.itemEnter(index),
+                        exit = ListAnimations.itemExit(),
+                        modifier = Modifier.animateItem()
+                    ) {
+                        TodoItemRow(
+                            item = item,
+                            onToggleComplete = { completed ->
+                                todoItems = todoItems.map {
+                                    if (it.id == item.id) it.copy(completed = completed) else it
+                                }
+                            },
+                            onDelete = {
+                                todoItems = todoItems.filter { it.id != item.id }
                             }
-                        },
-                        onDelete = {
-                            todoItems = todoItems.filter { it.id != item.id }
-                        }
-                    )
+                        )
+                    }
                 }
             }
         }
