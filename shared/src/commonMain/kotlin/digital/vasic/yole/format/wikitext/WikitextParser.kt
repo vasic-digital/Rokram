@@ -63,26 +63,7 @@ class WikitextParser : TextParser {
         val html = StringBuilder()
 
         html.append("<div class='wikitext'>")
-        html.append("<style>")
-        html.append(".wikitext { font-family: sans-serif; line-height: 1.6; }")
-        html.append(".wikitext h1 { color: #4e9a06; font-size: 2em; }")
-        html.append(".wikitext h2 { color: #4e9a06; font-size: 1.8em; }")
-        html.append(".wikitext h3 { color: #4e9a06; font-size: 1.6em; }")
-        html.append(".wikitext h4 { color: #4e9a06; font-size: 1.4em; }")
-        html.append(".wikitext h5 { color: #4e9a06; font-size: 1.2em; }")
-        html.append(".wikitext h6 { color: #4e9a06; font-size: 1em; }")
-        html.append(".wikitext ul { list-style-type: disc; }")
-        html.append(".wikitext ol { list-style-type: decimal; }")
-        html.append(".wikitext .checklist { list-style-type: none; }")
-        html.append(".wikitext .checklist li::before { content: '☐ '; color: #daa521; }")
-        html.append(".wikitext .checklist li.checked::before { content: '☑ '; color: #54a309; }")
-        html.append(".wikitext .checklist li.crossed::before { content: '☒ '; color: #a90000; }")
-        html.append(".wikitext .highlight { background-color: #ffa062; padding: 2px 4px; }")
-        html.append(".wikitext code { background-color: #f0f0f0; padding: 2px 4px; font-family: monospace; }")
-        html.append(".wikitext pre { background-color: #f0f0f0; padding: 10px; overflow-x: auto; }")
-        html.append(".wikitext a { color: #1ea3fd; text-decoration: none; }")
-        html.append(".wikitext a:hover { text-decoration: underline; }")
-        html.append("</style>")
+        html.append(StyleSheets.WIKITEXT_STYLES)
 
         var inCodeBlock = false
         var inUnorderedList = false

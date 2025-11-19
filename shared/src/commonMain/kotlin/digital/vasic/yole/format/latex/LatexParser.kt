@@ -155,44 +155,9 @@ class LatexParser : TextParser {
     private fun convertLatexToHtml(content: String, lightMode: Boolean): String {
         val lines = content.lines()
         val html = StringBuilder()
-        
-        html.append("""
-            <div class='latex'>
-            <style>
-            .latex { font-family: serif; line-height: 1.6; }
-            .latex .document-title { font-size: 2em; font-weight: bold; text-align: center; margin: 1em 0; }
-            .latex .document-author { font-size: 1.2em; text-align: center; margin: 0.5em 0; color: #666; }
-            .latex .document-date { font-size: 1em; text-align: center; margin: 0.5em 0; color: #999; }
-            .latex .section { font-size: 1.5em; font-weight: bold; margin: 1em 0 0.5em 0; }
-            .latex .subsection { font-size: 1.3em; font-weight: bold; margin: 0.8em 0 0.4em 0; }
-            .latex .paragraph { font-size: 1.1em; font-weight: bold; margin: 0.6em 0 0.3em 0; }
-            .latex .math { font-family: "Times New Roman", serif; font-style: italic; }
-            .latex .math-inline { display: inline; }
-            .latex .math-display { display: block; text-align: center; margin: 1em 0; }
-            .latex .environment { border: 1px solid #ddd; padding: 1em; margin: 1em 0; background-color: #f9f9f9; }
-            .latex .environment-title { font-weight: bold; margin-bottom: 0.5em; color: #4e9a06; }
-            .latex code { background-color: #f0f0f0; padding: 2px 4px; font-family: monospace; }
-            .latex pre { background-color: #f0f0f0; padding: 1em; overflow-x: auto; }
-            .latex .itemize { list-style-type: disc; margin-left: 2em; }
-            .latex .enumerate { list-style-type: decimal; margin-left: 2em; }
-            .latex .item { margin: 0.5em 0; }
-            .latex .bold { font-weight: bold; }
-            .latex .italic { font-style: italic; }
-            .latex .underline { text-decoration: underline; }
-            """.trimIndent())
-        
-        if (!lightMode) {
-            html.append("""
-                .latex { background-color: #2d2d2d; color: #f0f0f0; }
-                .latex .environment { background-color: #3d3d3d; border-color: #555; }
-                .latex code { background-color: #3d3d3d; color: #f0f0f0; }
-                .latex pre { background-color: #3d3d3d; color: #f0f0f0; }
-                .latex .document-author { color: #aaa; }
-                .latex .document-date { color: #888; }
-                """.trimIndent())
-        }
-        
-        html.append("</style>\n")
+
+        html.append("<div class='latex'>\n")
+        html.append(StyleSheets.getStyleSheet(TextFormat.ID_LATEX, lightMode))
         
         var inDocument = false
         var inMathMode = false

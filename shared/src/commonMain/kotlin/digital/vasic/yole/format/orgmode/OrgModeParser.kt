@@ -40,49 +40,13 @@ class OrgModeParser : TextParser {
     
     override fun toHtml(document: ParsedDocument, lightMode: Boolean): String {
         val themeClass = if (lightMode) "light" else "dark"
-        
+        val styles = StyleSheets.getStyleSheet(TextFormat.ID_ORGMODE, lightMode)
+
         return """
             |<div class="org-mode-document $themeClass">
             |${generateOrgHtml(document.rawContent, lightMode)}
             |</div>
-            |<style>
-            |.org-mode-document { font-family: sans-serif; line-height: 1.6; }
-            |.org-mode-document.light { background: white; color: black; }
-            |.org-mode-document.dark { background: #1e1e1e; color: #d4d4d4; }
-            |.org-heading { margin: 1rem 0; }
-            |.org-heading-1 { font-size: 2em; color: #4e9a06; font-weight: bold; }
-            |.org-heading-2 { font-size: 1.8em; color: #4e9a06; font-weight: bold; }
-            |.org-heading-3 { font-size: 1.6em; color: #4e9a06; font-weight: bold; }
-            |.org-heading-4 { font-size: 1.4em; color: #4e9a06; font-weight: bold; }
-            |.org-heading-5 { font-size: 1.2em; color: #4e9a06; font-weight: bold; }
-            |.org-heading-6 { font-size: 1em; color: #4e9a06; font-weight: bold; }
-            |.org-todo { font-weight: bold; }
-            |.org-todo-todo { color: #cc0000; }
-            |.org-todo-done { color: #4e9a06; text-decoration: line-through; }
-            |.org-todo-done .dark { color: #73d216; }
-            |.org-properties { background: #f5f5f5; border: 1px solid #ddd; border-radius: 4px; padding: 1rem; margin: 1rem 0; }
-            |.org-properties .dark { background: #2d2d2d; border-color: #444; }
-            |.org-property { font-family: monospace; }
-            |.org-property-key { color: #75507b; }
-            |.org-property-key .dark { color: #ad7fa8; }
-            |.org-property-value { color: #4e9a06; }
-            |.org-property-value .dark { color: #73d216; }
-            |.org-code { font-family: monospace; background: #f8f8f8; padding: 0.2rem 0.4rem; border-radius: 3px; }
-            |.org-code .dark { background: #2d2d2d; }
-            |.org-block { background: #f8f8f8; border: 1px solid #ddd; border-radius: 4px; padding: 1rem; margin: 1rem 0; }
-            |.org-block .dark { background: #2d2d2d; border-color: #444; }
-            |.org-block-header { font-family: monospace; color: #75507b; margin-bottom: 0.5rem; }
-            |.org-block-header .dark { color: #ad7fa8; }
-            |.org-block-content { font-family: monospace; white-space: pre-wrap; }
-            |.org-link { color: #1ea3fd; text-decoration: none; }
-            |.org-link:hover { text-decoration: underline; }
-            |.org-bold { font-weight: bold; }
-            |.org-italic { font-style: italic; }
-            |.org-underline { text-decoration: underline; }
-            |.org-strikethrough { text-decoration: line-through; }
-            |.org-verbatim { font-family: monospace; background: #f0f0f0; padding: 0.1rem 0.2rem; }
-            |.org-verbatim .dark { background: #3d3d3d; }
-            |</style>
+            |$styles
         """.trimMargin()
     }
     

@@ -125,47 +125,9 @@ class AsciidocParser : TextParser {
     private fun convertAsciidocToHtml(content: String, lightMode: Boolean): String {
         val lines = content.lines()
         val html = StringBuilder()
-        
-        html.append("""
-            <div class='asciidoc'>
-            <style>
-            .asciidoc { font-family: sans-serif; line-height: 1.6; }
-            .asciidoc h1 { color: #4e9a06; font-size: 2em; border-bottom: 2px solid #4e9a06; padding-bottom: 0.3em; }
-            .asciidoc h2 { color: #4e9a06; font-size: 1.8em; border-bottom: 1px solid #4e9a06; padding-bottom: 0.2em; }
-            .asciidoc h3 { color: #4e9a06; font-size: 1.6em; }
-            .asciidoc h4 { color: #4e9a06; font-size: 1.4em; }
-            .asciidoc h5 { color: #4e9a06; font-size: 1.2em; }
-            .asciidoc h6 { color: #4e9a06; font-size: 1em; }
-            .asciidoc blockquote { border-left: 4px solid #4e9a06; padding-left: 1em; margin-left: 0; color: #666; }
-            .asciidoc code { background-color: #f0f0f0; padding: 2px 4px; font-family: monospace; border-radius: 3px; }
-            .asciidoc pre { background-color: #f0f0f0; padding: 1em; border-radius: 5px; overflow-x: auto; }
-            .asciidoc table { border-collapse: collapse; width: 100%; }
-            .asciidoc th, .asciidoc td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-            .asciidoc th { background-color: #4e9a06; color: white; }
-            .asciidoc a { color: #1ea3fd; text-decoration: none; }
-            .asciidoc a:hover { text-decoration: underline; }
-            .asciidoc .admonition { border-left: 4px solid; padding: 1em; margin: 1em 0; }
-            .asciidoc .admonition-note { border-color: #1ea3fd; background-color: #f0f8ff; }
-            .asciidoc .admonition-tip { border-color: #4e9a06; background-color: #f8fff0; }
-            .asciidoc .admonition-warning { border-color: #ffa500; background-color: #fff8f0; }
-            .asciidoc .admonition-important { border-color: #ff4500; background-color: #fff0f0; }
-            .asciidoc .admonition-caution { border-color: #dc143c; background-color: #fff0f0; }
-            .asciidoc ul { list-style-type: disc; }
-            .asciidoc ol { list-style-type: decimal; }
-            .asciidoc li { margin: 0.5em 0; }
-            """.trimIndent())
-        
-        if (!lightMode) {
-            html.append("""
-                .asciidoc { background-color: #2d2d2d; color: #f0f0f0; }
-                .asciidoc code { background-color: #3d3d3d; color: #f0f0f0; }
-                .asciidoc pre { background-color: #3d3d3d; color: #f0f0f0; }
-                .asciidoc th, .asciidoc td { border-color: #555; }
-                .asciidoc th { background-color: #4e9a06; }
-                """.trimIndent())
-        }
-        
-        html.append("</style>\n")
+
+        html.append("<div class='asciidoc'>\n")
+        html.append(StyleSheets.getStyleSheet(TextFormat.ID_ASCIIDOC, lightMode))
         
         var inCodeBlock = false
         var inCommentBlock = false

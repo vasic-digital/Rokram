@@ -36,45 +36,13 @@ class RestructuredTextParser : TextParser {
     
     override fun toHtml(document: ParsedDocument, lightMode: Boolean): String {
         val themeClass = if (lightMode) "light" else "dark"
-        
+        val styles = StyleSheets.getStyleSheet(TextFormat.ID_RESTRUCTUREDTEXT, lightMode)
+
         return """
             |<div class="rst-document $themeClass">
             |${generateRstHtml(document.rawContent, lightMode)}
             |</div>
-            |<style>
-            |.rst-document { font-family: sans-serif; line-height: 1.6; }
-            |.rst-document.light { background: white; color: black; }
-            |.rst-document.dark { background: #1e1e1e; color: #d4d4d4; }
-            |.rst-section { margin: 1rem 0; }
-            |.rst-section-1 { font-size: 2em; color: #4e9a06; font-weight: bold; border-bottom: 2px solid #4e9a06; }
-            |.rst-section-2 { font-size: 1.8em; color: #4e9a06; font-weight: bold; border-bottom: 1px solid #4e9a06; }
-            |.rst-section-3 { font-size: 1.6em; color: #4e9a06; font-weight: bold; }
-            |.rst-section-4 { font-size: 1.4em; color: #4e9a06; font-weight: bold; }
-            |.rst-section-5 { font-size: 1.2em; color: #4e9a06; font-weight: bold; }
-            |.rst-section-6 { font-size: 1em; color: #4e9a06; font-weight: bold; }
-            |.rst-directive { background: #f5f5f5; border: 1px solid #ddd; border-radius: 4px; padding: 1rem; margin: 1rem 0; }
-            |.rst-directive .dark { background: #2d2d2d; border-color: #444; }
-            |.rst-directive-header { font-family: monospace; color: #75507b; margin-bottom: 0.5rem; }
-            |.rst-directive-header .dark { color: #ad7fa8; }
-            |.rst-directive-content { font-family: monospace; white-space: pre-wrap; }
-            |.rst-code { font-family: monospace; background: #f8f8f8; padding: 0.2rem 0.4rem; border-radius: 3px; }
-            |.rst-code .dark { background: #2d2d2d; }
-            |.rst-block { background: #f8f8f8; border: 1px solid #ddd; border-radius: 4px; padding: 1rem; margin: 1rem 0; }
-            |.rst-block .dark { background: #2d2d2d; border-color: #444; }
-            |.rst-link { color: #1ea3fd; text-decoration: none; }
-            |.rst-link:hover { text-decoration: underline; }
-            |.rst-bold { font-weight: bold; }
-            |.rst-italic { font-style: italic; }
-            |.rst-literal { font-family: monospace; background: #f0f0f0; padding: 0.1rem 0.2rem; }
-            |.rst-literal .dark { background: #3d3d3d; }
-            |.rst-admonition { background: #e7f2fa; border: 1px solid #6ab0de; border-radius: 4px; padding: 1rem; margin: 1rem 0; }
-            |.rst-admonition .dark { background: #1e3a5f; border-color: #4e9a06; }
-            |.rst-admonition-title { font-weight: bold; color: #4e9a06; margin-bottom: 0.5rem; }
-            |.rst-admonition.note { background: #e7f2fa; border-color: #6ab0de; }
-            |.rst-admonition.warning { background: #fff2cc; border-color: #f0b37e; }
-            |.rst-admonition.danger { background: #f2dede; border-color: #d9534f; }
-            |.rst-admonition.tip { background: #dff0d8; border-color: #5cb85c; }
-            |</style>
+            |$styles
         """.trimMargin()
     }
     

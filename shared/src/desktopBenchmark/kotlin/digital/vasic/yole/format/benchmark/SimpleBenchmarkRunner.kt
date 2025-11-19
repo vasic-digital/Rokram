@@ -159,6 +159,102 @@ object SimpleBenchmarkRunner {
         println("  ✓ Complete")
         println()
 
+        // AsciiDoc Parser Benchmarks
+        println("Running AsciiDoc Parser Benchmarks...")
+        val asciidocBench = AsciidocParserBenchmark()
+        asciidocBench.setup()
+
+        results.add(runBenchmark("AsciiDoc: Small document (~2KB)") {
+            asciidocBench.parseSmallDocument()
+        })
+
+        results.add(runBenchmark("AsciiDoc: Medium document (~20KB)") {
+            asciidocBench.parseMediumDocument()
+        })
+
+        results.add(runBenchmark("AsciiDoc: Large document (~200KB)") {
+            asciidocBench.parseLargeDocument()
+        })
+
+        results.add(runBenchmark("AsciiDoc: Complex document") {
+            asciidocBench.parseComplexDocument()
+        })
+
+        println("  ✓ Complete")
+        println()
+
+        // Org Mode Parser Benchmarks
+        println("Running Org Mode Parser Benchmarks...")
+        val orgModeBench = OrgModeParserBenchmark()
+        orgModeBench.setup()
+
+        results.add(runBenchmark("OrgMode: Small document (~2KB)") {
+            orgModeBench.parseSmallDocument()
+        })
+
+        results.add(runBenchmark("OrgMode: Medium document (~20KB)") {
+            orgModeBench.parseMediumDocument()
+        })
+
+        results.add(runBenchmark("OrgMode: Large document (~200KB)") {
+            orgModeBench.parseLargeDocument()
+        })
+
+        results.add(runBenchmark("OrgMode: Complex document") {
+            orgModeBench.parseComplexDocument()
+        })
+
+        println("  ✓ Complete")
+        println()
+
+        // reStructuredText Parser Benchmarks
+        println("Running reStructuredText Parser Benchmarks...")
+        val rstBench = RestructuredTextParserBenchmark()
+        rstBench.setup()
+
+        results.add(runBenchmark("reST: Small document (~2KB)") {
+            rstBench.parseSmallDocument()
+        })
+
+        results.add(runBenchmark("reST: Medium document (~20KB)") {
+            rstBench.parseMediumDocument()
+        })
+
+        results.add(runBenchmark("reST: Large document (~200KB)") {
+            rstBench.parseLargeDocument()
+        })
+
+        results.add(runBenchmark("reST: Complex document") {
+            rstBench.parseComplexDocument()
+        })
+
+        println("  ✓ Complete")
+        println()
+
+        // WikiText Parser Benchmarks
+        println("Running WikiText Parser Benchmarks...")
+        val wikitextBench = WikitextParserBenchmark()
+        wikitextBench.setup()
+
+        results.add(runBenchmark("WikiText: Small document (~2KB)") {
+            wikitextBench.parseSmallDocument()
+        })
+
+        results.add(runBenchmark("WikiText: Medium document (~20KB)") {
+            wikitextBench.parseMediumDocument()
+        })
+
+        results.add(runBenchmark("WikiText: Large document (~200KB)") {
+            wikitextBench.parseLargeDocument()
+        })
+
+        results.add(runBenchmark("WikiText: Complex document") {
+            wikitextBench.parseComplexDocument()
+        })
+
+        println("  ✓ Complete")
+        println()
+
         // Print results
         println("============================================")
         println("Benchmark Results")
@@ -191,7 +287,19 @@ object SimpleBenchmarkRunner {
             "CSV: Large table (1000x20)" to 300.0,
             "LaTeX: Small document (~2KB)" to 40.0,
             "LaTeX: Medium document (~20KB)" to 200.0,
-            "LaTeX: Large document (~200KB)" to 2000.0
+            "LaTeX: Large document (~200KB)" to 2000.0,
+            "AsciiDoc: Small document (~2KB)" to 30.0,
+            "AsciiDoc: Medium document (~20KB)" to 150.0,
+            "AsciiDoc: Large document (~200KB)" to 1500.0,
+            "OrgMode: Small document (~2KB)" to 25.0,
+            "OrgMode: Medium document (~20KB)" to 120.0,
+            "OrgMode: Large document (~200KB)" to 1200.0,
+            "reST: Small document (~2KB)" to 35.0,
+            "reST: Medium document (~20KB)" to 180.0,
+            "reST: Large document (~200KB)" to 1800.0,
+            "WikiText: Small document (~2KB)" to 20.0,
+            "WikiText: Medium document (~20KB)" to 100.0,
+            "WikiText: Large document (~200KB)" to 1000.0
         )
 
         var passedCount = 0
