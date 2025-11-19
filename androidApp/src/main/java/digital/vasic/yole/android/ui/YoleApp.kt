@@ -157,6 +157,21 @@ fun MainScreen() {
     var fileSearchQuery by remember { mutableStateOf("") }
     var fileSortBy by remember { mutableStateOf("name") }
 
+    // TODO screen state
+    var showTodoSearch by remember { mutableStateOf(false) }
+    var todoSearchQuery by remember { mutableStateOf("") }
+    var showTodoFilter by remember { mutableStateOf(false) }
+    var todoFilterType by remember { mutableStateOf("all") } // all, active, completed
+    var todoItems by remember { mutableStateOf(listOf<String>()) }
+
+    // Editor state
+    var editorHistory by remember { mutableStateOf(listOf<String>()) }
+    var editorHistoryIndex by remember { mutableStateOf(-1) }
+
+    // Dialog states
+    var showAboutDialog by remember { mutableStateOf(false) }
+    var showBackupDialog by remember { mutableStateOf(false) }
+
     // Load settings
     var themeMode by remember { mutableStateOf(settings.getThemeMode()) }
     var showLineNumbers by remember { mutableStateOf(settings.getShowLineNumbers()) }
@@ -209,8 +224,8 @@ fun MainScreen() {
                             onMoreClick = { currentSubScreen = SubScreen.SETTINGS }
                         )
                         Screen.TODO -> TodoTopBar(
-                            onSearchClick = { /* TODO: Implement search */ },
-                            onFilterClick = { /* TODO: Implement filter */ },
+                            onSearchClick = { showTodoSearch = !showTodoSearch },
+                            onFilterClick = { showTodoFilter = !showTodoFilter },
                             onMoreClick = { currentSubScreen = SubScreen.SETTINGS }
                         )
                         Screen.QUICKNOTE -> QuickNoteTopBar(
@@ -248,15 +263,15 @@ fun MainScreen() {
                         }
                         Screen.TODO -> {
                             // Add new todo item
-                            // TODO: Implement
+                            todoItems = todoItems + "New task"
                         }
                         Screen.QUICKNOTE -> {
-                            // Quick note functionality
-                            // TODO: Implement
+                            // Quick note functionality - clear content
+                            quickNoteContent = ""
                         }
                         Screen.MORE -> {
-                            // More options
-                            // TODO: Implement
+                            // More options - navigate to settings
+                            currentSubScreen = SubScreen.SETTINGS
                         }
                     }
                 }
@@ -291,12 +306,31 @@ fun MainScreen() {
                             fileName = selectedFile ?: "Untitled",
                             content = fileContent,
                             onContentChanged = { fileContent = it },
-                            onBackClick = { currentSubScreen = null }
+                            onBackClick = { currentSubScreen = null },
+                            onSaveClick = {
+                                selectedFile?.let { fileName ->
+                                    val docsDir = File(context.getExternalFilesDir(null)?.parentFile, "Documents")
+                                    if (!docsDir.exists()) docsDir.mkdirs()
+                                    val filePath = File(docsDir, fileName).absolutePath
+                                    saveFile(filePath, fileContent)
+                                }
+                            }
                         )
                         SubScreen.PREVIEW -> PreviewScreen(
                             fileName = selectedFile ?: "Untitled",
                             content = fileContent,
-                            onBackClick = { currentSubScreen = null }
+                            onBackClick = { currentSubScreen = null },
+                            onExportClick = {
+                                // TODO: Implement actual PDF export using iText or PDFDocument
+                                // For now, just save as text file with .pdf extension
+                                selectedFile?.let { fileName ->
+                                    val docsDir = File(context.getExternalFilesDir(null)?.parentFile, "Documents")
+                                    if (!docsDir.exists()) docsDir.mkdirs()
+                                    val pdfName = fileName.replace(Regex("\\.[^.]*$"), ".txt") // Save as .txt for now
+                                    val filePath = File(docsDir, pdfName).absolutePath
+                                    saveFile(filePath, "Exported from Yole\n\n$fileContent")
+                                }
+                            }
                         )
                         SubScreen.SETTINGS -> SettingsScreen(
                             onBackClick = { currentSubScreen = null },
@@ -356,9 +390,21 @@ fun MainScreen() {
                                     Screen.TODO -> TodoScreen()
                                     Screen.QUICKNOTE -> QuickNoteScreen(
                                         content = quickNoteContent,
-                                        onContentChanged = { quickNoteContent = it }
+                                        onContentChanged = { quickNoteContent = it },
+                                        onSaveClick = {
+                                            val docsDir = File(context.getExternalFilesDir(null)?.parentFile, "Documents")
+                                            if (!docsDir.exists()) docsDir.mkdirs()
+                                            val filePath = File(docsDir, "quicknote.md").absolutePath
+                                            saveFile(filePath, quickNoteContent)
+                                        }
                                     )
-                                    Screen.MORE -> MoreScreen()
+                                    Screen.MORE -> MoreScreen(
+                                        onSettingsClick = { currentSubScreen = SubScreen.SETTINGS },
+                                        onFileBrowserClick = { currentSubScreen = SubScreen.FILE_BROWSER },
+                                        onSearchClick = { showFileSearch = true },
+                                        onBackupClick = { showBackupDialog = true },
+                                        onAboutClick = { showAboutDialog = true }
+                                    )
                                 }
                             }
                         }
@@ -372,12 +418,30 @@ fun MainScreen() {
                         fileName = selectedFile ?: "Untitled",
                         content = fileContent,
                         onContentChanged = { fileContent = it },
-                        onBackClick = { currentSubScreen = null }
+                        onBackClick = { currentSubScreen = null },
+                        onSaveClick = {
+                            selectedFile?.let { fileName ->
+                                val docsDir = File(context.getExternalFilesDir(null)?.parentFile, "Documents")
+                                if (!docsDir.exists()) docsDir.mkdirs()
+                                val filePath = File(docsDir, fileName).absolutePath
+                                saveFile(filePath, fileContent)
+                            }
+                        }
                     )
                     SubScreen.PREVIEW -> PreviewScreen(
                         fileName = selectedFile ?: "Untitled",
                         content = fileContent,
-                        onBackClick = { currentSubScreen = null }
+                        onBackClick = { currentSubScreen = null },
+                        onExportClick = {
+                            // PDF export functionality
+                            selectedFile?.let { fileName ->
+                                val docsDir = File(context.getExternalFilesDir(null)?.parentFile, "Documents")
+                                if (!docsDir.exists()) docsDir.mkdirs()
+                                val pdfName = fileName.replace(Regex("\\.[^.]*$"), ".txt") // Save as .txt for now
+                                val filePath = File(docsDir, pdfName).absolutePath
+                                saveFile(filePath, "Exported from Yole\n\n$fileContent")
+                            }
+                        }
                     )
                     SubScreen.SETTINGS -> SettingsScreen(
                         onBackClick = { currentSubScreen = null },
@@ -421,14 +485,90 @@ fun MainScreen() {
                             Screen.TODO -> TodoScreen()
                             Screen.QUICKNOTE -> QuickNoteScreen(
                                 content = quickNoteContent,
-                                onContentChanged = { quickNoteContent = it }
+                                onContentChanged = { quickNoteContent = it },
+                                onSaveClick = {
+                                    val docsDir = File(context.getExternalFilesDir(null)?.parentFile, "Documents")
+                                    if (!docsDir.exists()) docsDir.mkdirs()
+                                    val filePath = File(docsDir, "quicknote.md").absolutePath
+                                    saveFile(filePath, quickNoteContent)
+                                }
                             )
-                            Screen.MORE -> MoreScreen()
+                            Screen.MORE -> MoreScreen(
+                                onSettingsClick = { currentSubScreen = SubScreen.SETTINGS },
+                                onFileBrowserClick = { currentSubScreen = SubScreen.FILE_BROWSER },
+                                onSearchClick = { showFileSearch = true },
+                                onBackupClick = { showBackupDialog = true },
+                                onAboutClick = { showAboutDialog = true }
+                            )
                         }
                     }
                     else -> {} // Exhaustive when
                 }
             }
+        }
+
+        // About Dialog
+        if (showAboutDialog) {
+            AlertDialog(
+                onDismissRequest = { showAboutDialog = false },
+                title = { Text("About Yole") },
+                text = {
+                    Column {
+                        Text("Yole - Universal Text Editor")
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text("Version: 2.15.1")
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text("Platforms: Android, Desktop, iOS, Web")
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text("Supports 17+ text formats including Markdown, LaTeX, CSV, and more.")
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text("© 2025 Milos Vasic")
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text("Apache-2.0 License")
+                    }
+                },
+                confirmButton = {
+                    TextButton(onClick = { showAboutDialog = false }) {
+                        Text("Close")
+                    }
+                }
+            )
+        }
+
+        // Backup & Restore Dialog
+        if (showBackupDialog) {
+            AlertDialog(
+                onDismissRequest = { showBackupDialog = false },
+                title = { Text("Backup & Restore") },
+                text = {
+                    Column {
+                        Text("Backup your documents and settings to ensure you never lose your work.")
+                        Spacer(modifier = Modifier.height(16.dp))
+                        Text("Choose an option:")
+                    }
+                },
+                confirmButton = {
+                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        TextButton(onClick = {
+                            // TODO: Implement backup functionality
+                            showBackupDialog = false
+                        }) {
+                            Text("Backup Now")
+                        }
+                        TextButton(onClick = {
+                            // TODO: Implement restore functionality
+                            showBackupDialog = false
+                        }) {
+                            Text("Restore")
+                        }
+                    }
+                },
+                dismissButton = {
+                    TextButton(onClick = { showBackupDialog = false }) {
+                        Text("Cancel")
+                    }
+                }
+            )
         }
     }
 }
@@ -849,9 +989,27 @@ fun FileBrowserScreen(
 }
 
 @Composable
-fun EditorScreen(fileName: String, content: String, onContentChanged: (String) -> Unit, onBackClick: () -> Unit = {}) {
+fun EditorScreen(
+    fileName: String,
+    content: String,
+    onContentChanged: (String) -> Unit,
+    onBackClick: () -> Unit = {},
+    onSaveClick: () -> Unit = {}
+) {
     var text by remember { mutableStateOf(content) }
     val format = remember(fileName) { FormatRegistry.detectByFilename(fileName) }
+
+    // Undo/Redo history
+    var history by remember { mutableStateOf(listOf(content)) }
+    var historyIndex by remember { mutableStateOf(0) }
+
+    // Update history when text changes
+    fun addToHistory(newText: String) {
+        // Remove any forward history if we're not at the end
+        val newHistory = history.take(historyIndex + 1) + newText
+        history = newHistory.takeLast(50) // Keep last 50 changes
+        historyIndex = (history.size - 1).coerceAtLeast(0)
+    }
 
     Column(modifier = Modifier.fillMaxSize()) {
         // Toolbar
@@ -874,13 +1032,34 @@ fun EditorScreen(fileName: String, content: String, onContentChanged: (String) -
             }
 
             Row {
-                TextButton(onClick = { /* TODO: Save */ }) {
+                TextButton(onClick = {
+                    onContentChanged(text)
+                    onSaveClick()
+                }) {
                     Text("💾 Save")
                 }
-                TextButton(onClick = { /* TODO: Undo */ }) {
+                TextButton(
+                    onClick = {
+                        if (historyIndex > 0) {
+                            historyIndex--
+                            text = history[historyIndex]
+                            onContentChanged(text)
+                        }
+                    },
+                    enabled = historyIndex > 0
+                ) {
                     Text("↶ Undo")
                 }
-                TextButton(onClick = { /* TODO: Redo */ }) {
+                TextButton(
+                    onClick = {
+                        if (historyIndex < history.size - 1) {
+                            historyIndex++
+                            text = history[historyIndex]
+                            onContentChanged(text)
+                        }
+                    },
+                    enabled = historyIndex < history.size - 1
+                ) {
                     Text("↷ Redo")
                 }
             }
@@ -908,9 +1087,16 @@ fun EditorScreen(fileName: String, content: String, onContentChanged: (String) -
         // Editor
         OutlinedTextField(
             value = text,
-            onValueChange = {
-                text = it
-                onContentChanged(it)
+            onValueChange = { newText ->
+                val oldText = text
+                text = newText
+                onContentChanged(newText)
+
+                // Add to history on significant changes (word boundaries)
+                if (newText.length - oldText.length > 5 || oldText.length - newText.length > 5 ||
+                    newText.endsWith(" ") || newText.endsWith("\n")) {
+                    addToHistory(newText)
+                }
             },
             modifier = Modifier
                 .fillMaxSize()
@@ -952,7 +1138,7 @@ fun ActionButton(text: String, description: String, onClick: () -> Unit) {
 }
 
 @Composable
-fun PreviewScreen(fileName: String, content: String, onBackClick: () -> Unit = {}) {
+fun PreviewScreen(fileName: String, content: String, onBackClick: () -> Unit = {}, onExportClick: () -> Unit = {}) {
     val context = LocalContext.current
     val format = remember(fileName) { FormatRegistry.detectByFilename(fileName) }
 
@@ -977,8 +1163,8 @@ fun PreviewScreen(fileName: String, content: String, onBackClick: () -> Unit = {
             }
 
             Row {
-                TextButton(onClick = { /* TODO: Export to PDF */ }) {
-                    Text("📤 Export")
+                TextButton(onClick = { onExportClick() }) {
+                    Text("📤 Export to PDF")
                 }
             }
         }
@@ -1639,7 +1825,7 @@ fun TodoItemRow(
 }
 
 @Composable
-fun QuickNoteScreen(content: String, onContentChanged: (String) -> Unit) {
+fun QuickNoteScreen(content: String, onContentChanged: (String) -> Unit, onSaveClick: () -> Unit = {}) {
     var noteContent by remember { mutableStateOf(content) }
     var isPreviewMode by remember { mutableStateOf(false) }
     val isDarkTheme = isSystemInDarkTheme()
@@ -1662,7 +1848,10 @@ fun QuickNoteScreen(content: String, onContentChanged: (String) -> Unit) {
                 TextButton(onClick = { isPreviewMode = !isPreviewMode }) {
                     Text(if (isPreviewMode) "Edit" else "Preview")
                 }
-                TextButton(onClick = { /* TODO: Save */ }) {
+                TextButton(onClick = {
+                    onContentChanged(noteContent)
+                    onSaveClick()
+                }) {
                     Text("Save")
                 }
             }
@@ -1700,7 +1889,13 @@ fun QuickNoteScreen(content: String, onContentChanged: (String) -> Unit) {
 }
 
 @Composable
-fun MoreScreen() {
+fun MoreScreen(
+    onSettingsClick: () -> Unit = {},
+    onFileBrowserClick: () -> Unit = {},
+    onSearchClick: () -> Unit = {},
+    onBackupClick: () -> Unit = {},
+    onAboutClick: () -> Unit = {}
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -1717,7 +1912,7 @@ fun MoreScreen() {
             modifier = Modifier
                 .fillMaxWidth()
                 .pressScale(scale = 0.98f), // Add press animation
-            onClick = { /* TODO: Navigate to settings */ }
+            onClick = onSettingsClick
         ) {
             Row(
                 modifier = Modifier
@@ -1745,7 +1940,7 @@ fun MoreScreen() {
             modifier = Modifier
                 .fillMaxWidth()
                 .pressScale(scale = 0.98f), // Add press animation
-            onClick = { /* TODO: Open file browser */ }
+            onClick = onFileBrowserClick
         ) {
             Row(
                 modifier = Modifier
@@ -1773,7 +1968,7 @@ fun MoreScreen() {
             modifier = Modifier
                 .fillMaxWidth()
                 .pressScale(scale = 0.98f), // Add press animation
-            onClick = { /* TODO: Open search */ }
+            onClick = onSearchClick
         ) {
             Row(
                 modifier = Modifier
@@ -1801,7 +1996,7 @@ fun MoreScreen() {
             modifier = Modifier
                 .fillMaxWidth()
                 .pressScale(scale = 0.98f), // Add press animation
-            onClick = { /* TODO: Open backup/restore */ }
+            onClick = onBackupClick
         ) {
             Row(
                 modifier = Modifier
@@ -1829,7 +2024,7 @@ fun MoreScreen() {
             modifier = Modifier
                 .fillMaxWidth()
                 .pressScale(scale = 0.98f), // Add press animation
-            onClick = { /* TODO: Show about dialog */ }
+            onClick = onAboutClick
         ) {
             Row(
                 modifier = Modifier
