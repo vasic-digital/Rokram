@@ -178,9 +178,9 @@ fun MainScreen() {
     var autoSave by remember { mutableStateOf(settings.getAutoSave()) }
     var animationsEnabled by remember { mutableStateOf(settings.getAnimationsEnabled()) }
 
-    // Initialize parsers
+    // Initialize parsers with lazy loading for faster startup
     LaunchedEffect(Unit) {
-        digital.vasic.yole.format.ParserInitializer.registerAllParsers()
+        digital.vasic.yole.format.ParserInitializer.registerAllParsersLazy()
     }
 
     Scaffold(

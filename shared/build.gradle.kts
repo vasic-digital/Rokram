@@ -19,6 +19,7 @@ plugins {
     id("org.jetbrains.kotlinx.benchmark") version "0.4.11"
     id("org.jetbrains.kotlin.plugin.allopen") version "2.1.0"
     id("org.jetbrains.dokka") version "2.0.0"
+    id("org.jetbrains.kotlinx.kover") version "0.8.3"
 }
 
 kotlin {
@@ -255,5 +256,28 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
+    }
+}
+
+// Kover configuration for code coverage
+kover {
+    reports {
+        // Configure verification rules
+        verify {
+            rule {
+                minBound(70) // Minimum 70% coverage target
+            }
+        }
+
+        // Configure filters for coverage
+        filters {
+            excludes {
+                // Exclude benchmark code from coverage
+                packages("digital.vasic.yole.benchmark")
+
+                // Exclude generated code
+                annotatedBy("*Generated*")
+            }
+        }
     }
 }

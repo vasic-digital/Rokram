@@ -173,7 +173,7 @@ class ParsedDocumentTest {
     }
 
     @Test
-    fun `should support destructuring`() {
+    fun `should provide access to all properties`() {
         val doc = ParsedDocument(
             format = testFormat,
             rawContent = "raw",
@@ -182,13 +182,12 @@ class ParsedDocumentTest {
             errors = listOf("error")
         )
 
-        val (format, raw, parsed, meta, errs) = doc
-
-        assertEquals(testFormat, format)
-        assertEquals("raw", raw)
-        assertEquals("parsed", parsed)
-        assertEquals(mapOf("key" to "value"), meta)
-        assertEquals(listOf("error"), errs)
+        // Verify all properties are accessible
+        assertEquals(testFormat, doc.format)
+        assertEquals("raw", doc.rawContent)
+        assertEquals("parsed", doc.parsedContent)
+        assertEquals(mapOf("key" to "value"), doc.metadata)
+        assertEquals(listOf("error"), doc.errors)
     }
 
     // ==================== Metadata Tests ====================

@@ -362,11 +362,18 @@ interface TextParser {
  * ```
  */
 object ParserRegistry {
-    private val parsers = mutableListOf<TextParser>()
+    // Eager storage: Parsers that have been explicitly registered or lazy-loaded
+    private val parsers = mutableMapOf<String, TextParser>()
+
+    // Lazy storage: Factory functions for parsers not yet instantiated
+    private val parserFactories = mutableMapOf<String, () -> TextParser>()
 
     /**
-     * Register a parser with the registry.
-     * 
+     * Register a parser with the registry (eager instantiation).
+     *
+     * This method immediately stores the parser instance. For lazy loading,
+     * use registerLazy() instead.
+     *
      * @param parser The parser to register
      * @throws IllegalArgumentException if a parser for the same format is already registered
      *
@@ -376,17 +383,46 @@ object ParserRegistry {
      * ```
      */
     fun register(parser: TextParser) {
+        val formatId = parser.supportedFormat.id
+
         // Check for duplicate format registration
-        val existing = parsers.find { it.supportedFormat.id == parser.supportedFormat.id }
-        if (existing != null) {
-            throw IllegalArgumentException("Parser for format '${parser.supportedFormat.id}' is already registered")
+        if (parsers.containsKey(formatId) || parserFactories.containsKey(formatId)) {
+            throw IllegalArgumentException("Parser for format '$formatId' is already registered")
         }
-        parsers.add(parser)
+
+        parsers[formatId] = parser
+    }
+
+    /**
+     * Register a parser factory for lazy instantiation.
+     *
+     * The parser will not be instantiated until first access via getParser().
+     * This reduces startup time by deferring parser creation until needed.
+     *
+     * @param formatId The format ID to register
+     * @param factory A lambda that creates the parser instance when called
+     * @throws IllegalArgumentException if a parser for the same format is already registered
+     *
+     * @example
+     * ```kotlin
+     * ParserRegistry.registerLazy("markdown") { MarkdownParser() }
+     * ```
+     */
+    fun registerLazy(formatId: String, factory: () -> TextParser) {
+        // Check for duplicate format registration
+        if (parsers.containsKey(formatId) || parserFactories.containsKey(formatId)) {
+            throw IllegalArgumentException("Parser for format '$formatId' is already registered")
+        }
+
+        parserFactories[formatId] = factory
     }
 
     /**
      * Get parser for a specific format.
-     * 
+     *
+     * If the parser was registered lazily and hasn't been instantiated yet,
+     * this method will create it on first access and cache it for future use.
+     *
      * @param format The format to get a parser for
      * @return The parser if found, null otherwise
      *
@@ -397,7 +433,23 @@ object ParserRegistry {
      * ```
      */
     fun getParser(format: TextFormat): TextParser? {
-        return parsers.firstOrNull { it.canParse(format) }
+        val formatId = format.id
+
+        // Check if parser is already instantiated
+        parsers[formatId]?.let { return it }
+
+        // Check if we have a factory for this format
+        val factory = parserFactories[formatId] ?: run {
+            // Try to find by canParse() for backwards compatibility
+            return parsers.values.firstOrNull { it.canParse(format) }
+        }
+
+        // Lazy instantiate the parser
+        val parser = factory()
+        parsers[formatId] = parser
+        parserFactories.remove(formatId)  // Remove factory after instantiation
+
+        return parser
     }
 
     /**
@@ -418,21 +470,53 @@ object ParserRegistry {
 
     /**
      * Check if a parser exists for the given format.
-     * 
+     *
+     * This method checks both instantiated parsers and registered factories.
+     * It does NOT trigger lazy instantiation.
+     *
      * @param format The format to check
      * @return true if a parser exists, false otherwise
      */
     fun hasParser(format: TextFormat): Boolean {
-        return getParser(format) != null
+        val formatId = format.id
+        return parsers.containsKey(formatId) ||
+               parserFactories.containsKey(formatId) ||
+               parsers.values.any { it.canParse(format) }
     }
 
     /**
      * Get all registered parsers.
-     * 
-     * @return A list of all registered parsers
+     *
+     * NOTE: This method only returns parsers that have been instantiated.
+     * Lazy-registered parsers that haven't been accessed yet are NOT included.
+     * To get all available formats, use FormatRegistry.formats instead.
+     *
+     * @return A list of all instantiated parsers
      */
     fun getAllParsers(): List<TextParser> {
-        return parsers.toList()
+        return parsers.values.toList()
+    }
+
+    /**
+     * Get count of registered parser factories (not yet instantiated).
+     *
+     * Useful for monitoring lazy loading effectiveness.
+     *
+     * @return Number of parsers registered but not yet instantiated
+     */
+    fun getPendingParserCount(): Int {
+        return parserFactories.size
+    }
+
+    /**
+     * Get count of instantiated parsers.
+     *
+     * Useful for monitoring lazy loading effectiveness.
+     *
+     * @return Number of parsers that have been instantiated
+     */
+    fun getInstantiatedParserCount(): Int {
+        return parsers.size
     }
 
     /**
