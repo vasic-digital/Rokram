@@ -11,10 +11,10 @@ Complete installation guide for all platforms.
 
 | Platform | Status | Download |
 |----------|--------|----------|
-| **Android** |  Production | [F-Droid](#android-fdroid) \| [GitHub Releases](#android-github) |
-| **Desktop** | † Beta | [Build from Source](#desktop-build-from-source) |
-| **iOS** | =ß Development | Coming Q2 2026 |
-| **Web** | =ß Development | Coming Q3 2026 |
+| **Android** | ‚úì Production | [F-Droid](#android-fdroid) \| [GitHub Releases](#android-github) |
+| **Desktop** | ‚óê Beta | [Build from Source](#desktop-build-from-source) |
+| **iOS** | = Development | Coming Q2 2026 |
+| **Web** | = Development | Coming Q3 2026 |
 
 ---
 
@@ -22,7 +22,7 @@ Complete installation guide for all platforms.
 
 ### Android: F-Droid (Recommended)
 
-**Status**:  Production Ready
+**Status**: ‚úì Production Ready
 
 F-Droid is a repository of free and open-source Android apps. This is the recommended installation method.
 
@@ -52,17 +52,17 @@ F-Droid is a repository of free and open-source Android apps. This is the recomm
 
 #### Advantages of F-Droid
 
--  Automatic updates
--  Verified reproducible builds
--  No tracking or analytics
--  Open source infrastructure
--  Security-focused
+- ‚úì Automatic updates
+- ‚úì Verified reproducible builds
+- ‚úì No tracking or analytics
+- ‚úì Open source infrastructure
+- ‚úì Security-focused
 
 ---
 
 ### Android: GitHub Releases
 
-**Status**:  Production Ready
+**Status**: ‚úì Production Ready
 
 Download APK files directly from GitHub releases.
 
@@ -74,7 +74,7 @@ Download APK files directly from GitHub releases.
    - Recommended: `Yole-v2.15.1-flavorDefault-release.apk`
 
 2. **Enable Installation from Unknown Sources**:
-   - Go to **Settings** í **Security**
+   - Go to **Settings**  **Security**
    - Enable **Install unknown apps** for your browser or file manager
    - (Android 8.0+) Grant permission when prompted
 
@@ -85,7 +85,7 @@ Download APK files directly from GitHub releases.
    - Tap **Open** to launch
 
 4. **Verify Installation**:
-   - Check **Settings** í **Apps** í **Yole**
+   - Check **Settings**  **Apps**  **Yole**
    - Version should be v2.15.1 or later
 
 #### GitHub Release Links
@@ -108,7 +108,7 @@ Download APK files directly from GitHub releases.
 
 ### Android: Build from Source
 
-**Status**:  Advanced Users
+**Status**: ‚úì Advanced Users
 
 Build Yole from source code for maximum control and transparency.
 
@@ -188,15 +188,15 @@ For more details, see [Build System Guide](BUILD_SYSTEM.md).
 
 ### Desktop: Build from Source
 
-**Status**: † Beta (30% Complete)
+**Status**: ‚óê Beta (30% Complete)
 
 Desktop support is currently in beta. Build from source for testing.
 
 #### Supported Platforms
 
--  **Windows** (Windows 10/11)
--  **macOS** (macOS 11 Big Sur or later)
--  **Linux** (Ubuntu 20.04+, Fedora 35+, other modern distros)
+- ‚úì **Windows** (Windows 10/11)
+- ‚úì **macOS** (macOS 11 Big Sur or later)
+- ‚úì **Linux** (Ubuntu 20.04+, Fedora 35+, other modern distros)
 
 #### Prerequisites
 
@@ -238,10 +238,10 @@ Desktop support is currently in beta. Build from source for testing.
 
 #### Known Limitations (Beta)
 
-- † Some format action buttons not implemented
-- † Limited preview options for certain formats
-- † UI polish needed
-- † Performance optimization ongoing
+- ‚óê Some format action buttons not implemented
+- ‚óê Limited preview options for certain formats
+- ‚óê UI polish needed
+- ‚óê Performance optimization ongoing
 
 #### System Requirements
 
@@ -260,7 +260,7 @@ Desktop support is currently in beta. Build from source for testing.
 
 ### iOS: Current Status
 
-**Status**: =ß In Development (Disabled)
+**Status**: = In Development (Disabled)
 
 iOS support is currently disabled due to compilation issues. It will be re-enabled once basic compilation is working.
 
@@ -272,13 +272,13 @@ iOS support is currently disabled due to compilation issues. It will be re-enabl
 
 #### Planned Features
 
--  Native iOS app with SwiftUI
--  All 17 text formats supported
--  iCloud Drive integration
--  iOS file system access
--  Share extension for text sharing
--  Dark mode support
--  iPad optimization
+- ‚úì Native iOS app with SwiftUI
+- ‚úì All 17 text formats supported
+- ‚úì iCloud Drive integration
+- ‚úì iOS file system access
+- ‚úì Share extension for text sharing
+- ‚úì Dark mode support
+- ‚úì iPad optimization
 
 #### Target Platforms
 
@@ -302,19 +302,19 @@ iOS support is currently disabled due to compilation issues. It will be re-enabl
 
 ### Web: Current Status
 
-**Status**: =ß Stub (0% Complete)
+**Status**: = Stub (0% Complete)
 
 Web support has build configuration complete but no source implementation yet.
 
 #### Planned Features
 
--  Progressive Web App (PWA)
--  Offline-first with service workers
--  All 17 text formats supported
--  Browser file system access
--  Local storage for preferences
--  Installable on desktop and mobile
--  Works without internet connection
+- ‚úì Progressive Web App (PWA)
+- ‚úì Offline-first with service workers
+- ‚úì All 17 text formats supported
+- ‚úì Browser file system access
+- ‚úì Local storage for preferences
+- ‚úì Installable on desktop and mobile
+- ‚úì Works without internet connection
 
 #### Technology Stack
 
@@ -328,10 +328,10 @@ Web support has build configuration complete but no source implementation yet.
 
 | Browser | Version | Status |
 |---------|---------|--------|
-| **Chrome/Edge** | 90+ |  Full support |
-| **Firefox** | 88+ |  Full support |
-| **Safari** | 15.4+ |  Full support |
-| **Opera** | 76+ |  Full support |
+| **Chrome/Edge** | 90+ | ‚úì Full support |
+| **Firefox** | 88+ | ‚úì Full support |
+| **Safari** | 15.4+ | ‚úì Full support |
+| **Opera** | 76+ | ‚úì Full support |
 
 #### Expected Timeline
 
@@ -439,7 +439,7 @@ Rebuild from source or download new distributable when available.
 ### Android
 
 1. **Standard Uninstall**:
-   - Go to **Settings** í **Apps** í **Yole**
+   - Go to **Settings**  **Apps**  **Yole**
    - Tap **Uninstall**
    - Confirm
 
@@ -473,7 +473,7 @@ Rebuild from source or download new distributable when available.
 - **Or**: Clear package installer cache
 
 **Problem**: "Installation blocked"
-- **Solution**: Enable "Install unknown apps" in Settings í Security
+- **Solution**: Enable "Install unknown apps" in Settings  Security
 
 **Problem**: "Insufficient storage"
 - **Solution**: Free up at least 50 MB of storage space
@@ -481,7 +481,7 @@ Rebuild from source or download new distributable when available.
 ### Android: Permission Issues
 
 **Problem**: Cannot access files
-- **Solution**: Grant storage permissions in Settings í Apps í Yole í Permissions
+- **Solution**: Grant storage permissions in Settings  Apps  Yole  Permissions
 
 **Problem**: Cannot write to SD card
 - **Solution**: Browse to SD card root, create folder, follow SD card mount dialog

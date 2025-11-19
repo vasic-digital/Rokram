@@ -11,18 +11,18 @@ Detailed status of Yole across all target platforms.
 
 | Platform | Status | Completion | Production Ready | Target Release |
 |----------|--------|------------|------------------|----------------|
-| **Android** |  Production | 100% | Yes | Available now |
-| **Desktop** | � Beta | 30% | No | Q1 2026 (beta) |
-| **iOS** | =� Disabled | 0% | No | Q2 2026 |
-| **Web** | =� Stub | 0% | No | Q3 2026 |
+| **Android** | ✓ Production | 100% | Yes | Available now |
+| **Desktop** | ◐ Beta | 30% | No | Q1 2026 (beta) |
+| **iOS** | = Disabled | 0% | No | Q2 2026 |
+| **Web** | = Stub | 0% | No | Q3 2026 |
 
-**Overall Project Status**: � Multi-platform in development (Android production-ready)
+**Overall Project Status**: ◐ Multi-platform in development (Android production-ready)
 
 ---
 
 ## Android Platform
 
-### Status:  **PRODUCTION READY**
+### Status: ✓ **PRODUCTION READY**
 
 Android is the flagship platform with full functionality and production-quality code.
 
@@ -31,55 +31,55 @@ Android is the flagship platform with full functionality and production-quality 
 | Category | Status | Details |
 |----------|--------|---------|
 | **Overall** | 100% | Fully functional |
-| **Core Features** |  Complete | All editor features working |
-| **Format Support** |  Complete | All 17 formats with full support |
-| **UI/UX** |  Complete | Polished, smooth animations |
-| **Testing** |  Excellent | 850+ tests, 100% pass rate |
-| **Documentation** |  Complete | Full user & developer docs |
-| **Performance** |  Optimized | Fast on all devices |
-| **Stability** |  Stable | Production-ready |
+| **Core Features** | ✓ Complete | All editor features working |
+| **Format Support** | ✓ Complete | All 17 formats with full support |
+| **UI/UX** | ✓ Complete | Polished, smooth animations |
+| **Testing** | ✓ Excellent | 850+ tests, 100% pass rate |
+| **Documentation** | ✓ Complete | Full user & developer docs |
+| **Performance** | ✓ Optimized | Fast on all devices |
+| **Stability** | ✓ Stable | Production-ready |
 
 #### Supported Features
 
 **Core Editor**:
--  Text editing with undo/redo
--  Auto-save
--  Syntax highlighting for all 17 formats
--  Line numbers
--  Search and replace
--  Multi-window support
+- ✓ Text editing with undo/redo
+- ✓ Auto-save
+- ✓ Syntax highlighting for all 17 formats
+- ✓ Line numbers
+- ✓ Search and replace
+- ✓ Multi-window support
 
 **Format Support**:
--  All 17 formats fully supported
--  Format-specific action buttons
--  HTML preview for supported formats
--  PDF export
--  Custom CSS for previews
+- ✓ All 17 formats fully supported
+- ✓ Format-specific action buttons
+- ✓ HTML preview for supported formats
+- ✓ PDF export
+- ✓ Custom CSS for previews
 
 **File Management**:
--  File browser with favorites
--  SD card support
--  Notebook (root folder customization)
--  QuickNote (fast-access markdown file)
--  ToDo (main todo.txt file)
--  File encryption (AES256)
+- ✓ File browser with favorites
+- ✓ SD card support
+- ✓ Notebook (root folder customization)
+- ✓ QuickNote (fast-access markdown file)
+- ✓ ToDo (main todo.txt file)
+- ✓ File encryption (AES256)
 
 **UI Features**:
--  Smooth animated transitions
--  Dark theme
--  Material Design 3
--  Tab-based navigation
--  Settings persistence
--  Customizable interface
+- ✓ Smooth animated transitions
+- ✓ Dark theme
+- ✓ Material Design 3
+- ✓ Tab-based navigation
+- ✓ Settings persistence
+- ✓ Customizable interface
 
 **Advanced Features**:
--  Math rendering (KaTeX)
--  Mermaid diagrams
--  Code syntax highlighting (50+ languages)
--  Task lists (interactive checkboxes)
--  Custom file templates
--  Share integration
--  Launcher shortcuts
+- ✓ Math rendering (KaTeX)
+- ✓ Mermaid diagrams
+- ✓ Code syntax highlighting (50+ languages)
+- ✓ Task lists (interactive checkboxes)
+- ✓ Custom file templates
+- ✓ Share integration
+- ✓ Launcher shortcuts
 
 #### Technical Details
 
@@ -119,7 +119,7 @@ No critical issues. See [GitHub Issues](https://github.com/vasic-digital/Yole/is
 
 ## Desktop Platform
 
-### Status: � **BETA (30% Complete)**
+### Status: ◐ **BETA (30% Complete)**
 
 Desktop platform is in active development with basic functionality working.
 
@@ -128,29 +128,29 @@ Desktop platform is in active development with basic functionality working.
 | Category | Status | Details |
 |----------|--------|---------|
 | **Overall** | 30% | Basic functionality |
-| **Core Features** | � Partial | Editor works, some features missing |
-| **Format Support** | � Mixed | Full: 6 formats, Partial: 11 formats |
-| **UI/UX** | � Basic | Functional but needs polish |
-| **Testing** |  Good | 100+ tests, 100% pass rate |
-| **Documentation** |  Complete | Build and usage docs available |
-| **Performance** | � Adequate | Works but not optimized |
-| **Stability** | � Beta | Functional for testing |
+| **Core Features** | ◐ Partial | Editor works, some features missing |
+| **Format Support** | ◐ Mixed | Full: 6 formats, Partial: 11 formats |
+| **UI/UX** | ◐ Basic | Functional but needs polish |
+| **Testing** | ✓ Good | 100+ tests, 100% pass rate |
+| **Documentation** | ✓ Complete | Build and usage docs available |
+| **Performance** | ◐ Adequate | Works but not optimized |
+| **Stability** | ◐ Beta | Functional for testing |
 
 #### Supported Features
 
-**Working** :
--  Text editing with undo/redo
--  Syntax highlighting (basic)
--  File open/save
--  Settings persistence
--  Format detection
--  Dark theme
+**Working** ✓:
+- ✓ Text editing with undo/redo
+- ✓ Syntax highlighting (basic)
+- ✓ File open/save
+- ✓ Settings persistence
+- ✓ Format detection
+- ✓ Dark theme
 
-**Partial** �:
-- � Action buttons (limited)
-- � HTML preview (basic)
-- � File browser (basic)
-- � Format-specific features (limited)
+**Partial** ◐:
+- ◐ Action buttons (limited)
+- ◐ HTML preview (basic)
+- ◐ File browser (basic)
+- ◐ Format-specific features (limited)
 
 **Missing** L:
 - L PDF export
@@ -163,25 +163,25 @@ Desktop platform is in active development with basic functionality working.
 #### Format Support Status
 
 **Fully Supported** (6 formats):
--  Markdown (basic)
--  Plain Text
--  Todo.txt (basic)
--  CSV (table view working)
--  Key-Value
--  Binary Detection
+- ✓ Markdown (basic)
+- ✓ Plain Text
+- ✓ Todo.txt (basic)
+- ✓ CSV (table view working)
+- ✓ Key-Value
+- ✓ Binary Detection
 
 **Partially Supported** (11 formats):
-- � LaTeX (syntax highlighting only)
-- � Org Mode (basic parsing)
-- � WikiText (basic parsing)
-- � AsciiDoc (basic parsing)
-- � reStructuredText (basic parsing)
-- � TaskPaper (basic parsing)
-- � Textile (basic parsing)
-- � Creole (basic parsing)
-- � TiddlyWiki (basic parsing)
-- � Jupyter (JSON view only)
-- � R Markdown (basic parsing)
+- ◐ LaTeX (syntax highlighting only)
+- ◐ Org Mode (basic parsing)
+- ◐ WikiText (basic parsing)
+- ◐ AsciiDoc (basic parsing)
+- ◐ reStructuredText (basic parsing)
+- ◐ TaskPaper (basic parsing)
+- ◐ Textile (basic parsing)
+- ◐ Creole (basic parsing)
+- ◐ TiddlyWiki (basic parsing)
+- ◐ Jupyter (JSON view only)
+- ◐ R Markdown (basic parsing)
 
 #### Technical Details
 
@@ -208,13 +208,13 @@ Desktop platform is in active development with basic functionality working.
 
 #### Current Limitations
 
-- � No installer packages yet (build from source required)
-- � Limited action buttons for most formats
-- � Basic preview functionality
-- � No PDF export
-- � UI needs polish and refinement
-- � Performance not optimized
-- � File browser is basic
+- ◐ No installer packages yet (build from source required)
+- ◐ Limited action buttons for most formats
+- ◐ Basic preview functionality
+- ◐ No PDF export
+- ◐ UI needs polish and refinement
+- ◐ Performance not optimized
+- ◐ File browser is basic
 
 #### Known Issues
 
@@ -259,7 +259,7 @@ See [Build System Guide](BUILD_SYSTEM.md) for details.
 
 ## iOS Platform
 
-### Status: =� **DISABLED (Compilation Issues)**
+### Status: = **DISABLED (Compilation Issues)**
 
 iOS platform is temporarily disabled due to compilation issues with Kotlin Multiplatform.
 
@@ -272,7 +272,7 @@ iOS platform is temporarily disabled due to compilation issues with Kotlin Multi
 | **Format Support** | L | Not implemented |
 | **UI/UX** | L | Not implemented |
 | **Testing** | L | No tests yet |
-| **Documentation** | � | Architecture planned |
+| **Documentation** | ◐ | Architecture planned |
 | **Performance** | L | N/A |
 | **Stability** | L | Not building |
 
@@ -387,7 +387,7 @@ iOS platform is temporarily disabled due to compilation issues with Kotlin Multi
 
 ## Web Platform
 
-### Status: =� **STUB (0% Implementation)**
+### Status: = **STUB (0% Implementation)**
 
 Web platform has build configuration but zero source code implementation.
 
@@ -400,13 +400,13 @@ Web platform has build configuration but zero source code implementation.
 | **Format Support** | L | Not implemented |
 | **UI/UX** | L | Not implemented |
 | **Testing** | L | No tests yet |
-| **Documentation** | � | Architecture planned |
+| **Documentation** | ◐ | Architecture planned |
 | **Performance** | L | N/A |
 | **Stability** | L | No code yet |
 
 #### Current State
 
-**Build Configuration**:  Complete
+**Build Configuration**: ✓ Complete
 - Gradle build setup exists
 - wasmJs target configured
 - Dependencies defined
@@ -537,12 +537,12 @@ The `shared` module contains all cross-platform business logic.
 
 | Component | Status | Completion | Notes |
 |-----------|--------|------------|-------|
-| **Format Parsers** |  Complete | 100% | All 17 parsers working |
-| **FormatRegistry** |  Complete | 100% | Centralized format management |
-| **Document Model** |  Complete | 100% | Cross-platform document representation |
-| **Format Detection** |  Complete | 100% | Extension and content analysis |
-| **Text Parser Interface** |  Complete | 100% | Common parser contract |
-| **Platform-Specific Impls** | � Partial | 40% | Android complete, others partial |
+| **Format Parsers** | ✓ Complete | 100% | All 17 parsers working |
+| **FormatRegistry** | ✓ Complete | 100% | Centralized format management |
+| **Document Model** | ✓ Complete | 100% | Cross-platform document representation |
+| **Format Detection** | ✓ Complete | 100% | Extension and content analysis |
+| **Text Parser Interface** | ✓ Complete | 100% | Common parser contract |
+| **Platform-Specific Impls** | ◐ Partial | 40% | Android complete, others partial |
 
 #### Shared Module Metrics
 
@@ -555,10 +555,10 @@ The `shared` module contains all cross-platform business logic.
 
 | Platform | Common Code | Platform Code | Status |
 |----------|-------------|---------------|--------|
-| **Android** |  100% |  100% | Complete |
-| **Desktop** |  100% | � 30% | Partial |
-| **iOS** |  100% | L 0% | Blocked |
-| **Web** |  100% | L 0% | Not started |
+| **Android** | ✓ 100% | ✓ 100% | Complete |
+| **Desktop** | ✓ 100% | ◐ 30% | Partial |
+| **iOS** | ✓ 100% | L 0% | Blocked |
+| **Web** | ✓ 100% | L 0% | Not started |
 
 **Key Insight**: Shared code is complete and working. Platform-specific UI implementations are at varying stages.
 
@@ -582,7 +582,7 @@ The `shared` module contains all cross-platform business logic.
 - **Framework**: Kotlin Test, JUnit 4
 - **Coverage**: Kover
 - **CI/CD**: GitHub Actions
-- **Status**:  All tests passing
+- **Status**: ✓ All tests passing
 
 ---
 
@@ -592,11 +592,11 @@ The `shared` module contains all cross-platform business logic.
 
 | Category | Status | Completion | Lines |
 |----------|--------|------------|-------|
-| **API Documentation** |  Complete | 100% | 1,000+ |
-| **User Guides** |  Complete | 100% | 10,500+ |
-| **Developer Guides** |  Complete | 100% | 2,800+ |
-| **Format Guides** |  Complete | 100% | 10,400+ |
-| **Total** |  Complete | 100% | 13,200+ |
+| **API Documentation** | ✓ Complete | 100% | 1,000+ |
+| **User Guides** | ✓ Complete | 100% | 10,500+ |
+| **Developer Guides** | ✓ Complete | 100% | 2,800+ |
+| **Format Guides** | ✓ Complete | 100% | 10,400+ |
+| **Total** | ✓ Complete | 100% | 13,200+ |
 
 **Documentation Quality**: Outstanding (professional standard)
 
