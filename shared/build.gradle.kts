@@ -212,6 +212,28 @@ benchmark {
     }
 }
 
+// Custom task to run simple benchmarks (workaround for kotlinx.benchmark KMP issues)
+tasks.register<JavaExec>("runSimpleBenchmarks") {
+    group = "verification"
+    description = "Run simple performance benchmarks (KMP workaround)"
+
+    dependsOn("compileBenchmarkKotlinDesktop", "compileKotlinDesktop")
+
+    doFirst {
+        val desktopTarget = kotlin.targets.getByName("desktop")
+        val benchmarkCompilation = desktopTarget.compilations.getByName("benchmark")
+        val mainCompilation = desktopTarget.compilations.getByName("main")
+
+        classpath = files(
+            mainCompilation.output.allOutputs,
+            benchmarkCompilation.output.allOutputs,
+            benchmarkCompilation.runtimeDependencyFiles
+        )
+    }
+
+    mainClass.set("digital.vasic.yole.format.benchmark.SimpleBenchmarkRunner")
+}
+
 // Workaround for iOS framework export configuration issue - Not needed while iOS is disabled
 // configurations {
 //     create("iosX64DebugFrameworkExport")
