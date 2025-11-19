@@ -60,7 +60,7 @@ class LatexParserBenchmark {
 
             \section{Mathematical Equations}
 
-            Here is a simple inline equation: $E = mc^2$.
+            Here is a simple inline equation: ${'$'}E = mc^2${'$'}.
 
             And a display equation:
             \begin{equation}
@@ -115,8 +115,8 @@ class LatexParserBenchmark {
                     Consider the following theorem:
 
                     \begin{theorem}
-                    Let $f: \mathbb{R} \rightarrow \mathbb{R}$ be a continuous function.
-                    Then for all $x \in \mathbb{R}$, we have:
+                    Let ${'$'}f: \mathbb{R} \rightarrow \mathbb{R}${'$'} be a continuous function.
+                    Then for all ${'$'}x \in \mathbb{R}${'$'}, we have:
                     \begin{equation}
                         f(x + h) - f(x) = \int_{x}^{x+h} f'(t) dt
                     \end{equation}
@@ -180,7 +180,7 @@ class LatexParserBenchmark {
                     """.trimIndent())
 
                     repeat(5) { item ->
-                        append("\n\\item Example ${item + 1} with equations $x_${item + 1} = ${item + 1}$")
+                        append("\n\\item Example ${item + 1} with equations ${'$'}x_{${item + 1}} = ${item + 1}${'$'}")
                     }
 
                     append("""
@@ -206,8 +206,8 @@ class LatexParserBenchmark {
             \section{Complex Mathematical Structures}
 
             \begin{theorem}[Fundamental Theorem]
-            For any measurable space $(\Omega, \mathcal{F}, \mu)$ and integrable function
-            $f: \Omega \rightarrow \mathbb{C}$, we have:
+            For any measurable space ${'$'}(\Omega, \mathcal{F}, \mu)${'$'} and integrable function
+            ${'$'}f: \Omega \rightarrow \mathbb{C}${'$'}, we have:
             \begin{equation}
                 \int_{\Omega} |f| d\mu < \infty \implies \lim_{n \to \infty} \int_{\Omega} f_n d\mu = \int_{\Omega} f d\mu
             \end{equation}
@@ -246,7 +246,7 @@ class LatexParserBenchmark {
             \centering
             \begin{tabular}{|c|c|c|}
                 \hline
-                $x$ & $f(x) = x^2$ & $g(x) = \sqrt{x}$ \\
+                ${'$'}x${'$'} & ${'$'}f(x) = x^2${'$'} & ${'$'}g(x) = \sqrt{x}${'$'} \\
                 \hline
                 1 & 1 & 1.000 \\
                 2 & 4 & 1.414 \\
@@ -257,9 +257,9 @@ class LatexParserBenchmark {
 
             \section{Special Symbols}
 
-            Greek: $\alpha, \beta, \gamma, \Delta, \Theta, \Lambda, \Omega$ \\
-            Operators: $\forall, \exists, \in, \subset, \cup, \cap, \times, \otimes$ \\
-            Arrows: $\rightarrow, \Rightarrow, \leftrightarrow, \mapsto$
+            Greek: ${'$'}\alpha, \beta, \gamma, \Delta, \Theta, \Lambda, \Omega${'$'} \\
+            Operators: ${'$'}\forall, \exists, \in, \subset, \cup, \cap, \times, \otimes${'$'} \\
+            Arrows: ${'$'}\rightarrow, \Rightarrow, \leftrightarrow, \mapsto${'$'}
 
             \end{document}
         """.trimIndent()

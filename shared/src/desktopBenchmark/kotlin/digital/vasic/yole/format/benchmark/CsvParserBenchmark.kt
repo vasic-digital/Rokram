@@ -74,20 +74,18 @@ class CsvParserBenchmark {
         }
 
         // Complex content: CSV with quoted fields, special characters, etc.
-        complexContent = """
-            Name,Description,Price,Category,Stock,Available
-            "Product 1","Simple product",19.99,Electronics,100,Yes
-            "Product 2","Product with ""quotes""",29.99,Home,50,Yes
-            "Product 3","Multi-line
-            description
-            here",39.99,Garden,25,No
-            "Product, with comma","Description, also has, commas",49.99,Kitchen,75,Yes
-            Simple Product,No quotes needed,59.99,Office,200,Yes
-            "Special chars: é, ñ, 中文","Unicode description",69.99,International,30,Yes
-            "Tabs	and	spaces","Mixed	whitespace",79.99,Tools,15,No
-            "Empty fields test",,,,,
-            """Last item""","Contains delimiter: , and quote: """,89.99,Misc,5,Yes
-        """.trimIndent()
+        complexContent = buildString {
+            append("Name,Description,Price,Category,Stock,Available\n")
+            append("\"Product 1\",\"Simple product\",19.99,Electronics,100,Yes\n")
+            append("\"Product 2\",\"Product with \"\"quotes\"\"\",29.99,Home,50,Yes\n")
+            append("\"Product 3\",\"Multi-line description here\",39.99,Garden,25,No\n")
+            append("\"Product, with comma\",\"Description, also has, commas\",49.99,Kitchen,75,Yes\n")
+            append("Simple Product,No quotes needed,59.99,Office,200,Yes\n")
+            append("\"Special chars: é, ñ, 中文\",\"Unicode description\",69.99,International,30,Yes\n")
+            append("\"Tabs and spaces\",\"Mixed whitespace\",79.99,Tools,15,No\n")
+            append("\"Empty fields test\",,,,,\n")
+            append("\"\"\"Last item\"\"\",\"Contains delimiter: , and quote: \"\"\",89.99,Misc,5,Yes")
+        }
     }
 
     /**
