@@ -18,8 +18,7 @@ plugins {
     id("org.jetbrains.compose")
     id("org.jetbrains.kotlinx.benchmark") version "0.4.11"
     id("org.jetbrains.kotlin.plugin.allopen") version "2.1.0"
-    // TODO: Fix dokka plugin - temporarily commented out for testing
-    // id("org.jetbrains.dokka")
+    id("org.jetbrains.dokka") version "2.0.0"
 }
 
 kotlin {
@@ -48,14 +47,21 @@ kotlin {
         }
     }
 
-    // iOS targets - temporarily disabled for build stability
-    // TODO: Re-enable iOS targets once basic compilation is working
-    // listOf(
-    //     iosX64(),
-    //     iosArm64(),
-    //     iosSimulatorArm64()
-    // ).forEach { iosTarget ->
-    //     iosTarget.binaries.framework {
+    // iOS targets - Temporarily disabled due to Kotlin 2.1.0 bug (see IOS_COMPILATION_ISSUE.md)
+    // iosX64 {
+    //     binaries.framework {
+    //         baseName = "shared"
+    //         isStatic = true
+    //     }
+    // }
+    // iosArm64 {
+    //     binaries.framework {
+    //         baseName = "shared"
+    //         isStatic = true
+    //     }
+    // }
+    // iosSimulatorArm64 {
+    //     binaries.framework {
     //         baseName = "shared"
     //         isStatic = true
     //     }
@@ -76,17 +82,17 @@ kotlin {
         // Common code for all platforms
         val commonMain by getting {
             dependencies {
-                // Kotlin Coroutines
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
+                // Kotlin Coroutines - Updated to match version catalog
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0")
 
-                // Kotlinx Serialization
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.2")
+                // Kotlinx Serialization - Updated to match version catalog
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
 
-                // DateTime
-                implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.5.0")
+                // DateTime - Updated to match version catalog
+                implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.1")
 
-                // Okio for file system
-                implementation("com.squareup.okio:okio:3.7.0")
+                // Okio for file system - Updated to match version catalog
+                implementation("com.squareup.okio:okio:3.9.1")
 
                 // Compose runtime (if using Compose Multiplatform)
                 implementation(compose.runtime)
@@ -130,7 +136,7 @@ kotlin {
             }
         }
 
-        // iOS-specific code - temporarily disabled
+        // iOS-specific code - Temporarily disabled due to Kotlin 2.1.0 bug
         // val iosX64Main by getting
         // val iosArm64Main by getting
         // val iosSimulatorArm64Main by getting
@@ -141,7 +147,8 @@ kotlin {
         //     iosSimulatorArm64Main.dependsOn(this)
         //
         //     dependencies {
-        //         implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
+        //         // iOS-specific dependencies (inherited from commonMain)
+        //         implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0")
         //     }
         // }
         //
@@ -160,7 +167,7 @@ kotlin {
             dependencies {
                 implementation(compose.ui)
                 implementation(compose.components.resources)
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0")
             }
         }
 
@@ -204,6 +211,16 @@ benchmark {
         }
     }
 }
+
+// Workaround for iOS framework export configuration issue - Not needed while iOS is disabled
+// configurations {
+//     create("iosX64DebugFrameworkExport")
+//     create("iosX64ReleaseFrameworkExport")
+//     create("iosArm64DebugFrameworkExport")
+//     create("iosArm64ReleaseFrameworkExport")
+//     create("iosSimulatorArm64DebugFrameworkExport")
+//     create("iosSimulatorArm64ReleaseFrameworkExport")
+// }
 
 android {
     namespace = "digital.vasic.yole.shared"

@@ -10,249 +10,183 @@
 
 package digital.vasic.yole.web
 
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.window.Window
-import androidx.compose.ui.window.application
-import digital.vasic.yole.model.Document
-import digital.vasic.yole.format.TextFormat
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.CanvasBasedWindow
 import digital.vasic.yole.format.FormatRegistry
-import org.jetbrains.compose.web.css.*
-import org.jetbrains.compose.web.dom.*
-import org.jetbrains.compose.web.renderComposable
+import kotlinx.datetime.Clock
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 
 /**
  * Main entry point for Yole Web Application
  */
+@OptIn(ExperimentalComposeUiApi::class)
 fun main() {
-    renderComposable(rootElementId = "root") {
-        YoleWebApp()
+    CanvasBasedWindow(canvasElementId = "yoleCanvas", title = "Yole - Web Editor") {
+        MaterialTheme {
+            YoleWebApp()
+        }
     }
 }
 
 /**
  * Yole Web Application UI
  */
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun YoleWebApp() {
-    var currentDocument by remember { mutableStateOf<Document?>(null) }
     var documentContent by remember { mutableStateOf("# Welcome to Yole Web\n\nStart writing your document...") }
+    var currentFormat by remember { mutableStateOf("markdown") }
+    var documentName by remember { mutableStateOf("untitled.md") }
     var isDarkTheme by remember { mutableStateOf(false) }
 
     // Theme colors
-    val headerBg = if (isDarkTheme) Color("#1a1a1a") else Color("#1976d2")
-    val headerText = Color.white
-    val logoBg = if (isDarkTheme) Color("#333") else Color.white
-    val sidebarBg = if (isDarkTheme) Color("#2a2a2a") else Color("#f5f5f5")
-    val sidebarBorder = if (isDarkTheme) Color("#444") else Color("#e0e0e0")
-    val sidebarText = if (isDarkTheme) Color.white else Color("#333")
-    val editorBg = if (isDarkTheme) Color("#1e1e1e") else Color.white
-    val editorBorder = if (isDarkTheme) Color("#444") else Color("#e0e0e0")
-    val previewBg = if (isDarkTheme) Color("#252525") else Color("#fafafa")
+    val colorScheme = if (isDarkTheme) darkColorScheme() else lightColorScheme()
 
-    Div({
-        style {
-            width(100.vw)
-            height(100.vh)
-            display(DisplayStyle.Flex)
-            flexDirection(FlexDirection.Column)
-            fontFamily("'Inter', 'Roboto', sans-serif")
-            backgroundColor(if (isDarkTheme) Color("#121212") else Color.white)
-            color(if (isDarkTheme) Color.white else Color("#333"))
-        }
-    }) {
-        // Header
-        Header({
-            style {
-                backgroundColor(headerBg)
-                color(headerText)
-                padding(16.px)
-                boxShadow(0.px, 2.px, 4.px, if (isDarkTheme) Color("#00000066") else Color("#00000033"))
-                display(DisplayStyle.Flex)
-                alignItems(AlignItems.Center)
-            }
-        }) {
-            // Logo with background
-            Div({
-                style {
-                    backgroundColor(logoBg)
-                    padding(8.px)
-                    borderRadius(8.px)
-                    marginRight(16.px)
-                    boxShadow(0.px, 1.px, 3.px, if (isDarkTheme) Color("#ffffff1a") else Color("#0000001a"))
-                }
-            }) {
-                Img(src = "Logo.png", alt = "Yole Logo", attrs = {
-                    style {
-                        width(32.px)
-                        height(32.px)
-                        display(DisplayStyle.Block)
-                    }
-                })
-            }
-
-            H1({
-                style {
-                    margin(0.px)
-                    fontSize(24.px)
-                    fontWeight("600")
-                    flex(1)
-                }
-            }) {
-                Text("Yole - Web Editor")
-            }
-
-            // Theme toggle button
-            Button(attrs = {
-                onClick { isDarkTheme = !isDarkTheme }
-                style {
-                    backgroundColor(Color.transparent)
-                    border(1.px, LineStyle.Solid, headerText)
-                    color(headerText)
-                    padding(8.px, 12.px)
-                    borderRadius(4.px)
-                    cursor("pointer")
-                    fontSize(14.px)
-                }
-            }) {
-                Text(if (isDarkTheme) "☀️ Light" else "🌙 Dark")
-            }
-        }
-        
-        // Main content area
-        Main({
-            style {
-                flex(1)
-                display(DisplayStyle.Flex)
-                flexDirection(FlexDirection.Row)
-                overflow("hidden")
-            }
-        }) {
-            // Sidebar
-            Aside({
-                style {
-                    width(250.px)
-                    backgroundColor(sidebarBg)
-                    borderRight(1.px, LineStyle.Solid, sidebarBorder)
-                    padding(16.px)
-                    overflowY("auto")
-                }
-            }) {
-                H2({
-                    style {
-                        fontSize(18.px)
-                        marginTop(0.px)
-                        marginBottom(16.px)
-                        color(sidebarText)
-                    }
-                }) {
-                    Text("Document Formats")
-                }
-                
-                // Format selection
-                FormatList(isDarkTheme)
-            }
-            
-            // Editor area
-            Section({
-                style {
-                    flex(1)
-                    display(DisplayStyle.Flex)
-                    flexDirection(FlexDirection.Column)
-                }
-            }) {
-                // Editor toolbar
-                Div({
-                    style {
-                        padding(16.px)
-                        borderBottom(1.px, LineStyle.Solid, editorBorder)
-                        backgroundColor(editorBg)
-                    }
-                }) {
-                    Button(attrs = {
-                        onClick { 
-                            // TODO: Implement new document
-                            documentContent = "# New Document\n\nStart writing..."
+    MaterialTheme(colorScheme = colorScheme) {
+        Scaffold(
+            topBar = {
+                TopAppBar(
+                    title = {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Text("Yole - Web Editor", fontWeight = FontWeight.Bold)
                         }
-                        style {
-                            backgroundColor(Color("#1976d2"))
-                            color(Color.white)
-                            border(0.px)
-                            padding(8.px, 16.px)
-                            borderRadius(4.px)
-                            cursor("pointer")
-                            marginRight(8.px)
+                    },
+                    actions = {
+                        // Theme toggle button
+                        Button(onClick = { isDarkTheme = !isDarkTheme }) {
+                            Text(if (isDarkTheme) "☀️ Light" else "🌙 Dark")
                         }
-                    }) {
-                        Text("New Document")
-                    }
-                    
-                    Button(attrs = {
-                        onClick { 
-                            // TODO: Implement save functionality
-                            println("Save document: $documentContent")
-                        }
-                        style {
-                            backgroundColor(Color("#388e3c"))
-                            color(Color.white)
-                            border(0.px)
-                            padding(8.px, 16.px)
-                            borderRadius(4.px)
-                            cursor("pointer")
-                        }
-                    }) {
-                        Text("Save")
-                    }
-                }
-                
-                // Editor
-                Div({
-                    style {
-                        flex(1)
-                        display(DisplayStyle.Flex)
-                        flexDirection(FlexDirection.Row)
-                        overflow("hidden")
-                    }
-                }) {
-                    // Text editor
-                    Textarea({
-                        value(documentContent)
-                        onInput { event ->
-                            documentContent = event.value
-                        }
-                        attrs {
-                            style {
-                                flex(1)
-                                border(0.px)
-                                padding(16.px)
-                                fontFamily("'JetBrains Mono', 'Courier New', monospace")
-                                fontSize(14.px)
-                                lineHeight("1.5")
-                                resize("none")
-                                outline("none")
-                                backgroundColor(editorBg)
-                                color(if (isDarkTheme) Color.white else Color("#333"))
+                    },
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = if (isDarkTheme) Color(0xFF1a1a1a) else MaterialTheme.colorScheme.primary
+                    )
+                )
+            }
+        ) { paddingValues ->
+            Row(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues)
+            ) {
+                // Sidebar
+                Surface(
+                    modifier = Modifier.width(250.dp).fillMaxHeight(),
+                    color = if (isDarkTheme) Color(0xFF2a2a2a) else Color(0xFFf5f5f5),
+                    tonalElevation = 2.dp
+                ) {
+                    Column(
+                        modifier = Modifier.padding(16.dp)
+                    ) {
+                        Text(
+                            "Document Formats",
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Spacer(modifier = Modifier.height(16.dp))
+                        FormatList(
+                            selectedFormat = currentFormat,
+                            onFormatSelected = { format, extension ->
+                                currentFormat = format.lowercase()
+                                documentName = "untitled$extension"
                             }
-                            placeholder("Start writing your document...")
+                        )
+                    }
+                }
+
+                // Main editor area
+                Column(
+                    modifier = Modifier.weight(1f).fillMaxHeight()
+                ) {
+                    // Toolbar
+                    Surface(
+                        modifier = Modifier.fillMaxWidth(),
+                        tonalElevation = 1.dp
+                    ) {
+                        Row(
+                            modifier = Modifier.padding(16.dp),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            Button(
+                                onClick = {
+                                    // Create new document with format-specific template
+                                    val format = FormatRegistry.formats.find { it.id == currentFormat }
+                                    documentContent = when (currentFormat) {
+                                        "markdown" -> "# New Document\n\nStart writing..."
+                                        "todotxt" -> "(A) New task @context +project due:${getCurrentDate()}"
+                                        "csv" -> "Name,Email,Phone\nJohn Doe,john@example.com,555-1234"
+                                        "latex" -> "\\documentclass{article}\n\\begin{document}\nContent here\n\\end{document}"
+                                        "plaintext" -> "New document"
+                                        else -> "# New ${format?.name ?: "Document"}\n\nContent here..."
+                                    }
+                                    documentName = "untitled${format?.defaultExtension ?: ".txt"}"
+                                }
+                            ) {
+                                Text("New Document")
+                            }
+
+                            Button(
+                                onClick = {
+                                    // Save document - implementation pending JS interop
+                                    // TODO: Implement file download using external JS functions
+                                    println("Save clicked: $documentName")
+                                    println("Content length: ${documentContent.length} chars")
+                                },
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = Color(0xFF388e3c)
+                                )
+                            ) {
+                                Text("Save (TODO)")
+                            }
                         }
-                    })
-                    
-                    // Preview (optional - could be toggle)
-                    Div({
-                        style {
-                            flex(1)
-                            padding(16.px)
-                            borderLeft(1.px, LineStyle.Solid, editorBorder)
-                            overflowY("auto")
-                            backgroundColor(previewBg)
-                            color(if (isDarkTheme) Color.white else Color("#333"))
+                    }
+
+                    // Editor and preview
+                    Row(
+                        modifier = Modifier.weight(1f).fillMaxWidth()
+                    ) {
+                        // Text editor
+                        OutlinedTextField(
+                            value = documentContent,
+                            onValueChange = { documentContent = it },
+                            modifier = Modifier
+                                .weight(1f)
+                                .fillMaxHeight(),
+                            placeholder = { Text("Start writing your document...") },
+                            textStyle = LocalTextStyle.current.copy(
+                                fontFamily = FontFamily.Monospace,
+                                fontSize = 14.sp,
+                                lineHeight = 21.sp
+                            )
+                        )
+
+                        // Preview
+                        Surface(
+                            modifier = Modifier.weight(1f).fillMaxHeight(),
+                            color = if (isDarkTheme) Color(0xFF252525) else Color(0xFFfafafa),
+                            tonalElevation = 1.dp
+                        ) {
+                            Column(
+                                modifier = Modifier
+                                    .padding(16.dp)
+                                    .verticalScroll(rememberScrollState())
+                            ) {
+                                MarkdownPreview(documentContent, currentFormat)
+                            }
                         }
-                    }) {
-                        // TODO: Implement HTML preview
-                        P { Text("Preview will appear here") }
                     }
                 }
             }
@@ -264,10 +198,10 @@ fun YoleWebApp() {
  * Format selection list
  */
 @Composable
-fun FormatList(isDarkTheme: Boolean) {
-    val sidebarText = if (isDarkTheme) Color.white else Color("#333")
-    val hoverBg = if (isDarkTheme) Color("#333") else Color("#e3f2fd")
-
+fun FormatList(
+    selectedFormat: String,
+    onFormatSelected: (String, String) -> Unit
+) {
     val formats = listOf(
         "Markdown" to ".md",
         "Plain Text" to ".txt",
@@ -279,27 +213,97 @@ fun FormatList(isDarkTheme: Boolean) {
         "WikiText" to ".wiki"
     )
 
-    Ul({
-        style {
-            listStyle("none")
-            padding(0.px)
-            margin(0.px)
-        }
-    }) {
+    Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
         formats.forEach { (name, extension) ->
-            Li({
-                style {
-                    padding(8.px, 12.px)
-                    marginBottom(4.px)
-                    borderRadius(4.px)
-                    cursor("pointer")
-                    color(sidebarText)
-                    hover {
-                        backgroundColor(hoverBg)
+            val formatId = name.lowercase().replace(" ", "").replace(".", "")
+            Surface(
+                onClick = { onFormatSelected(formatId, extension) },
+                color = if (selectedFormat == formatId)
+                    MaterialTheme.colorScheme.primaryContainer
+                else
+                    Color.Transparent,
+                shape = MaterialTheme.shapes.small,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(
+                    "$name ($extension)",
+                    modifier = Modifier.padding(8.dp),
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
+        }
+    }
+}
+
+/**
+ * Get current date in YYYY-MM-DD format
+ */
+fun getCurrentDate(): String {
+    val now = Clock.System.now()
+    val localDate = now.toLocalDateTime(TimeZone.currentSystemDefault()).date
+    return localDate.toString() // Returns YYYY-MM-DD format
+}
+
+/**
+ * Simple markdown preview component
+ */
+@Composable
+fun MarkdownPreview(content: String, format: String) {
+    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        when (format) {
+            "markdown" -> {
+                // Basic markdown rendering
+                content.lines().forEach { line ->
+                    when {
+                        line.startsWith("# ") -> {
+                            Text(
+                                line.substring(2),
+                                style = MaterialTheme.typography.headlineLarge,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+                        line.startsWith("## ") -> {
+                            Text(
+                                line.substring(3),
+                                style = MaterialTheme.typography.headlineMedium,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+                        line.startsWith("### ") -> {
+                            Text(
+                                line.substring(4),
+                                style = MaterialTheme.typography.headlineSmall,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+                        line.isNotBlank() -> {
+                            Text(
+                                line,
+                                style = MaterialTheme.typography.bodyLarge,
+                                lineHeight = 24.sp
+                            )
+                        }
+                        else -> {
+                            Spacer(modifier = Modifier.height(4.dp))
+                        }
                     }
                 }
-            }) {
-                Text("$name ($extension)")
+            }
+            else -> {
+                // Generic preview
+                Text(
+                    content,
+                    fontFamily = FontFamily.Monospace,
+                    fontSize = 14.sp,
+                    style = MaterialTheme.typography.bodyMedium
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                Text(
+                    "Preview for ${FormatRegistry.formats.find { it.id == format }?.name ?: format} format",
+                    style = MaterialTheme.typography.bodySmall,
+                    fontStyle = androidx.compose.ui.text.font.FontStyle.Italic,
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                )
             }
         }
     }

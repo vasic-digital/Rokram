@@ -4,132 +4,182 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-**Yole** is a fork of Yole - a versatile Android text editor supporting 18+ markup formats including Markdown, todo.txt, CSV, WikiText, LaTeX, reStructuredText, and more. The app has been refactored from a monolithic structure into a modular architecture with separate modules for each format.
+**Yole** is a cross-platform text editor supporting 17+ text formats including Markdown, todo.txt, CSV, LaTeX, WikiText, reStructuredText, and more. Built with Kotlin Multiplatform (KMP) for maximum code sharing across Android, Desktop, iOS, and Web platforms.
 
 **Key Characteristics:**
-- Android application (Java 11, minSdk 18, targetSdk 35)
-- Modular multi-module Gradle project (20+ modules)
+- Kotlin Multiplatform (KMP) architecture
+- Android (production), Desktop (beta), iOS (disabled), Web (stub)
+- 17 text formats with comprehensive parsing
 - Offline-first, no internet required
-- Format-agnostic text editing with syntax highlighting and HTML preview
 - Package namespace: `digital.vasic.yole.*`
 
 ## Build & Development Commands
 
-### Essential Commands
+### Essential Build Commands
 
-Build the application:
+**Android:**
 ```bash
-./gradlew assembleFlavorDefaultDebug
+./gradlew :androidApp:assembleDebug
 # or
 make build
 ```
 
-Run tests:
+**Desktop:**
 ```bash
-./gradlew testFlavorDefaultDebugUnitTest
+./gradlew :desktopApp:run
 # or
-make test
+make desktop
 ```
 
-Run all tests (comprehensive suite):
+**Web (Wasm):**
 ```bash
+./gradlew :webApp:wasmJsBrowserRun
+# or
+make web
+```
+
+**iOS:**
+```bash
+# Currently disabled - see shared/build.gradle.kts:52
+# Open iosApp/iosApp.xcodeproj in Xcode when re-enabled
+```
+
+### Testing Commands
+
+**Run all tests:**
+```bash
+./gradlew test
+# or
+make test
+# or (comprehensive suite)
 ./run_all_tests.sh
 ```
 
-Run a specific test class:
+**Run specific test class:**
 ```bash
-./gradlew testFlavorDefaultDebugUnitTest --tests "digital.vasic.yole.format.todotxt.TodoTxtQuerySyntaxTests.ParseQuery"
+./gradlew test --tests "digital.vasic.yole.format.todotxt.TodoTxtQuerySyntaxTests.ParseQuery"
 ```
 
-Lint:
+**Test with coverage:**
+```bash
+./gradlew test koverHtmlReport
+open build/reports/kover/html/index.html
+```
+
+### Other Commands
+
+**Lint:**
 ```bash
 ./gradlew lintFlavorDefaultDebug
 # or
 make lint
 ```
 
-Clean:
+**Clean:**
 ```bash
 ./gradlew clean
 # or
 make clean
 ```
 
-Build, install, and run on device:
+**Generate API documentation:**
 ```bash
-make all install run
+./gradlew :shared:dokkaHtml
+open shared/build/dokka/html/index.html
 ```
 
-Verify modular architecture:
+**Verify architecture:**
 ```bash
 ./verify_build.sh
 ```
 
-### Build Variants/Flavors
-
-- **flavorDefault**: Main build variant
-- **flavorAtest**: Testing build with dynamic version codes
-- **flavorGplay**: Google Play Store variant
+**Build, install, and run on Android device:**
+```bash
+make all install run
+```
 
 ## Architecture
 
-### Module Structure
+### Kotlin Multiplatform Structure
 
-**Important:** This is a **Kotlin Multiplatform (KMP)** project. The format system is in the `shared` module, not `core`.
+**CRITICAL:** This is a **Kotlin Multiplatform (KMP)** project. The format system lives in the `shared` module, NOT in `core` or separate format modules.
+
+```
+┌─────────────────────────────────────────┐
+│      Shared Business Logic (KMP)       │
+│     shared/src/commonMain/kotlin/      │
+│                                         │
+│  • FormatRegistry                       │
+│  • Format Parsers (17 formats)          │
+│  • Document Model                       │
+│  • Core Utilities                       │
+└──────────────┬──────────────────────────┘
+               │
+       ┌───────┴────────┐
+       ▼                ▼
+   Android          Desktop
+   (prod)           (beta)
+       ▼                ▼
+     iOS              Web
+  (disabled)         (stub)
+```
+
+### Module Breakdown
 
 **Kotlin Multiplatform Modules:**
 
-1. **shared** - Kotlin Multiplatform shared code (PRIMARY MODULE)
+1. **shared** - PRIMARY MODULE for cross-platform code
    - Location: `shared/src/commonMain/kotlin/digital/vasic/yole/`
-   - **FormatRegistry** - `shared/src/commonMain/kotlin/digital/vasic/yole/format/FormatRegistry.kt`
-   - **Format Parsers** - `shared/src/commonMain/kotlin/digital/vasic/yole/format/[format]/`
-   - **Models** - `shared/src/commonMain/kotlin/digital/vasic/yole/model/Document.kt`
-   - Contains all cross-platform business logic
-   - Platform-specific implementations in androidMain/, desktopMain/, iosMain/, wasmJsMain/
+   - **FormatRegistry**: `shared/src/commonMain/kotlin/digital/vasic/yole/format/FormatRegistry.kt`
+   - **Format Parsers**: `shared/src/commonMain/kotlin/digital/vasic/yole/format/[format]/`
+   - **Models**: `shared/src/commonMain/kotlin/digital/vasic/yole/model/`
+   - Platform implementations: `androidMain/`, `desktopMain/`, `iosMain/`, `wasmJsMain/`
 
-**Platform Applications:**
+**Platform Application Modules:**
 
-2. **androidApp** - Native Android application
-   - Activities: `MainActivity`, etc.
-   - Compose UI components
-   - Android-specific UI code
-   - Uses shared module for business logic
+2. **androidApp** - Native Android app (production ready)
+   - Modern Jetpack Compose UI
+   - Android-specific file system access
+   - Status: ✅ Production
 
-3. **desktopApp** - Desktop application (Windows/macOS/Linux)
+3. **desktopApp** - Desktop app (Windows/macOS/Linux)
    - Compose Desktop UI
-   - Platform: JVM
-   - Status: Beta (30% complete)
+   - Status: ⚠️ Beta (30% complete)
 
-4. **iosApp** - iOS application
-   - SwiftUI + Kotlin Multiplatform
-   - Status: Disabled (compilation issues)
+4. **iosApp** - iOS app
+   - SwiftUI + KMP
+   - Status: 🚧 Disabled (targets commented out in `shared/build.gradle.kts:52`)
 
 5. **webApp** - Progressive Web App
    - Kotlin/Wasm + Compose for Web
-   - Status: Stub (0% complete)
+   - Status: 🚧 Stub (build config only, no source code)
 
 **Legacy Android Modules:**
 
 6. **commons** - Android shared utilities
-   - `GsFileUtils` - File operations
-   - `GsContextUtils` - Android context utilities
-   - `GsCollectionUtils` - Collection helpers
+   - `GsFileUtils`, `GsContextUtils`, `GsCollectionUtils`
    - Location: `commons/src/main/kotlin/net/gsantner/opoc/`
 
 7. **core** - Legacy encryption module
    - **Contains ONLY third-party encryption code**
-   - JavaPasswordbasedCryption.java - AES256 encryption
-   - PasswordStore.java - Password storage
+   - `JavaPasswordbasedCryption.java` - AES256 encryption
+   - `PasswordStore.java` - Password storage
    - Location: `core/thirdparty/java/`
-   - **Note:** Does NOT contain FormatRegistry (that's in shared module)
+   - **Note:** Does NOT contain FormatRegistry (that's in `shared`)
 
-**Format System:**
+8. **app** - Legacy Android app (being phased out)
+   - Legacy UI components
+   - Being replaced by `androidApp`
 
-All formats are now in the `shared` module as parsers, not separate modules:
+### Format System
+
+All 17+ formats are implemented as **parsers in the shared module**, not as separate Gradle modules:
+
 ```
 shared/src/commonMain/kotlin/digital/vasic/yole/format/
-├── FormatRegistry.kt              # Central registry
+├── FormatRegistry.kt              # Central format registry
 ├── TextFormat.kt                  # Format metadata
+├── TextParser.kt                  # Parser interface
 ├── markdown/MarkdownParser.kt     # Markdown parsing
 ├── todotxt/TodoTxtParser.kt       # Todo.txt parsing
 ├── csv/CsvParser.kt               # CSV parsing
@@ -145,152 +195,171 @@ shared/src/commonMain/kotlin/digital/vasic/yole/format/
 ├── jupyter/JupyterParser.kt
 ├── rmarkdown/RMarkdownParser.kt
 ├── plaintext/PlaintextParser.kt
-└── keyvalue/KeyValueParser.kt
+├── keyvalue/KeyValueParser.kt
+└── binary/BinaryParser.kt
 ```
 
-**Supported Formats (16 registered):**
-- markdown, todotxt, csv, wikitext, keyvalue, asciidoc, orgmode, plaintext
-- latex, restructuredtext, taskpaper, textile, creole, tiddlywiki, jupyter, rmarkdown
+**Supported Formats (17 total):**
+- **Core**: Markdown, Plain Text, Todo.txt, CSV, LaTeX, Org Mode
+- **Wiki**: WikiText, Creole, TiddlyWiki
+- **Technical**: AsciiDoc, reStructuredText
+- **Specialized**: Key-Value, TaskPaper, Textile
+- **Data Science**: Jupyter, R Markdown
+- **Other**: Binary Detection
 
 ### Dependency Flow
 
 ```
-commons (Android utils)
-   ↓
-shared (KMP core) ← Contains FormatRegistry and parsers
-   ↓
-androidApp / desktopApp / iosApp / webApp (Platform UIs)
+Platform Apps (androidApp, desktopApp, iosApp, webApp)
+       ↓
+    shared (Kotlin Multiplatform - PRIMARY)
+       ↓
+   commons (Android utilities - legacy)
 ```
 
-- Platform apps depend on shared module for business logic
-- shared module contains all format logic (FormatRegistry, parsers)
-- commons provides Android-specific utilities
-- core provides encryption utilities (independent)
+### Text Parsing Pipeline
 
-### Format Registration
-
-All formats are registered in `shared/src/commonMain/kotlin/digital/vasic/yole/format/FormatRegistry.kt`:
-
-```java
-public static final List<Format> FORMATS = Arrays.asList(
-    new Format(FORMAT_LATEX, R.string.latex, ".tex", CONVERTER_LATEX),
-    // ... other formats
-);
-```
-
-### Text Conversion Pipeline
-
-1. **File Detection** → `TextConverter.isFileOutOfThisFormat()`
-2. **Markup Parsing** → `TextConverter.convertMarkupToHtml()`
-3. **HTML Rendering** → WebView with format-specific CSS
-4. **Syntax Highlighting** → `SyntaxHighlighter.applySyntaxHighlighting()`
-
-## Adding New Formats
-
-When implementing a new format module:
-
-1. Create module directory: `format-[name]/`
-2. Add to `settings.gradle`: `include ':format-[name]'`
-3. Create `build.gradle` with dependencies on `core`
-4. Implement three required classes:
-   - `[Name]TextConverter extends TextConverterBase`
-   - `[Name]SyntaxHighlighter extends SyntaxHighlighterBase`
-   - `[Name]ActionButtons extends ActionButtonBase`
-5. Register in `FormatRegistry.FORMATS`
-6. Add string resources for format name
-7. Write comprehensive unit tests
-8. Reference `format-latex` as a working example
+1. **File Detection** → `TextFormat.detectFormat(content, extension)`
+2. **Markup Parsing** → `TextParser.parse(content)`
+3. **Platform Rendering** → Platform-specific converters
+4. **Syntax Highlighting** → Platform-specific highlighters
 
 ## Code Style & Conventions
 
-- **Language:** Java 11 (source/target compatibility)
+- **Language:** Kotlin (primary), Java (legacy)
 - **Package Structure:**
   - App code: `digital.vasic.yole.*`
-  - Shared utilities: `net.gsantner.opoc.*` (legacy OPOC library)
+  - Legacy utilities: `net.gsantner.opoc.*`
 - **Naming:**
   - Classes: `CamelCase`
   - Methods/variables: `lowerCamelCase`
   - Constants: `UPPER_SNAKE_CASE`
-- **Code Style:** AOSP Java Code Style
-- **File Headers:** Include SPDX license header and maintainer info
-- **Error Handling:** Use try-catch blocks, log errors with `Log.e()`, null-check rigorously
-- **Testing:** JUnit 4 with AssertJ assertions, test classes end with `Tests` or `Test`
+- **Imports:** Group standard libraries, third-party, then project imports
+- **Error Handling:** Use try-catch blocks, log errors, null-check rigorously
+- **Testing:** JUnit 4/5 with AssertJ assertions, test classes end with `Tests` or `Test`
+- **File Headers:** Include SPDX license header (Apache-2.0, CC0-1.0, or Unlicense)
 
 ## Testing Strategy
 
-### Test Types
+### Test Locations
 
-1. **Unit Tests** (`src/test/java/`)
-   - Format detection accuracy
-   - Markup conversion correctness
-   - Syntax highlighting patterns
-   - Action button functionality
+- **Shared Module**: `shared/src/commonTest/kotlin/`
+- **Platform Tests**: `androidApp/src/test/`, `desktopApp/src/test/`, etc.
+- **Legacy Tests**: Individual format module tests (being phased out)
 
-2. **Integration Tests**
-   - Module interaction
-   - Format conversion pipelines
-
-3. **Android Tests** (`src/androidTest/java/`)
-   - UI component integration
-   - Full device/emulator testing
-
-### Running Tests
+### Test Requirements
 
 - All tests must pass (100% success rate required)
 - Use `./run_all_tests.sh` for comprehensive testing
-- Test individual modules: `./gradlew :format-markdown:test`
+- Current coverage: ~15% (goal: >80%)
+- Generate coverage: `./gradlew koverHtmlReport`
+
+### Test Types
+
+1. **Unit Tests** - Format parsing, detection, conversion
+2. **Integration Tests** - Module interaction, full pipelines
+3. **Platform Tests** - UI components, device-specific functionality
 
 ## Key Dependencies
 
-- **Android:** AndroidX, Material Design
-- **Markdown:** Flexmark library (v0.42.14)
-- **CSV:** OpenCSV
-- **Math Rendering:** KaTeX (via WebView)
-- **Testing:** JUnit 4, AssertJ, Espresso
+- **Kotlin Multiplatform**: Core architecture
+- **Android**: AndroidX, Material Design, Jetpack Compose
+- **Desktop**: Compose Desktop, JVM 11
+- **Web**: Kotlin/Wasm, Compose for Web
+- **Markdown**: Flexmark library
+- **CSV**: OpenCSV
+- **Math Rendering**: KaTeX (via WebView)
+- **Testing**: JUnit, AssertJ, Espresso, Kover
+- **Serialization**: kotlinx.serialization
+- **Coroutines**: kotlinx.coroutines
+- **File System**: Okio
 
-## Important Implementation Notes
+## Platform Status (November 2025)
 
-### Format Module Implementation
+| Platform | Status | Notes |
+|----------|--------|-------|
+| **Android** | ✅ Production | Fully functional |
+| **Desktop** | ⚠️ Beta | 30% complete, needs work |
+| **iOS** | 🚧 Disabled | Targets commented out in `shared/build.gradle.kts:52` |
+| **Web** | 🚧 Stub | Build config only, no source implementation |
 
-When working on format modules:
-- Each format must handle file detection via file extension matching
-- HTML conversion should be self-contained within `TextConverter`
-- Syntax highlighting patterns use regex-based matching
-- Action buttons provide quick-insert UI for format-specific syntax
+**Critical Issues:**
+- **iOS**: All targets (`iosX64`, `iosArm64`, `iosSimulatorArm64`) disabled
+- **Web**: `webApp/src/main/` has no source code despite build configuration
 
-### File Locations
+## Adding New Formats
 
-- **App code:** `app/src/main/java/digital/vasic/yole/`
-- **Core code:** `core/src/main/java/digital/vasic/yole/`
-- **Commons:** `commons/src/main/java/net/gsantner/opoc/`
-- **Format implementations:** `format-[name]/src/main/java/digital/vasic/yole/format/[name]/`
-- **Resources:** `app/src/main/res/`
-- **Assets:** `app/src/main/assets/`
+When implementing a new format:
 
-### Build Output
+1. **Create Parser** in `shared/src/commonMain/kotlin/digital/vasic/yole/format/[name]/`
+   - Implement `TextParser` interface
+   - Handle file detection via extensions
+   - Implement `parse()` method
 
-- APKs: `dist/*.apk` (via Makefile) or `app/build/outputs/apk/`
-- Logs: `dist/log/`
-- Test results: `dist/tests/`
-- Lint reports: `dist/lint/`
+2. **Register Format** in `FormatRegistry.kt`
+   - Add to format list
+   - Define extensions
+   - Set metadata
+
+3. **Add Tests** in `shared/src/commonTest/kotlin/digital/vasic/yole/format/[name]/`
+   - Test file detection
+   - Test parsing accuracy
+   - Test edge cases
+
+4. **Update Documentation**
+   - Add user guide in `docs/user-guide/formats/[name].md`
+   - Update README.md
+   - Update ARCHITECTURE.md
+
+5. **Platform Implementations** (if needed)
+   - Add platform-specific code in `androidMain/`, `desktopMain/`, etc.
+   - Implement syntax highlighting per platform
+   - Add platform-specific UI components
 
 ## Special Files & Scripts
 
 - `ARCHITECTURE.md` - Detailed architecture documentation
-- `AGENTS.md` - Build commands and code style quick reference
-- `run_all_tests.sh` - Comprehensive test runner
+- `AGENTS.md` - Build commands and CI/CD quick reference
+- `run_all_tests.sh` - Comprehensive test runner with colored output
 - `verify_build.sh` - Architecture verification script
 - `Makefile` - Build automation with common targets
-- `settings.gradle` - Multi-module project configuration
+- `settings.gradle.kts` - Kotlin Multiplatform configuration
+- `CONTRIBUTING.md` - Contribution guidelines
+- `docs/` - Comprehensive documentation (13,200+ lines)
+
+## CI/CD
+
+### GitHub Actions Workflows
+
+- **Main Build**: `.github/workflows/build-android-project.yml`
+- **Tests & Coverage**: `.github/workflows/test-and-coverage.yml`
+- **Lint & Docs**: `.github/workflows/lint-and-docs.yml`
+- **PR Validation**: `.github/workflows/pr-validation.yml`
+
+### Required Secrets
+
+- `CODECOV_TOKEN` - For coverage reports
+- `GITHUB_TOKEN` - Auto-provided for GitHub Pages
+
+See `AGENTS.md` for complete CI/CD documentation.
+
+## Common Pitfalls & Important Notes
+
+1. **Format System Location**: Formats are in `shared` module, NOT in `core` or separate modules
+2. **iOS Builds**: Currently disabled - check `shared/build.gradle.kts:52` before attempting iOS work
+3. **Legacy Code**: `app`, `core`, and `commons` are legacy modules being phased out
+4. **Test Requirements**: All tests MUST pass - no exceptions
+5. **Build Variants**: Use `flavorDefault` for development, `flavorAtest` for testing
+6. **Documentation**: Always update both code documentation (KDoc) and user guides
 
 ## Application Features
 
 - **Notebook:** Root folder for all documents (user-configurable)
 - **QuickNote:** Fast-access Markdown file
 - **ToDo:** Main todo.txt file for task management
-- **File Encryption:** AES256 encryption support for text files
-- **Syntax Highlighting:** Real-time highlighting for all supported formats
-- **HTML Preview:** WebView-based rendering for supported formats
+- **File Encryption:** AES256 encryption support
+- **Syntax Highlighting:** Real-time highlighting for all formats
+- **HTML Preview:** WebView-based rendering
 - **PDF Export:** Convert documents to PDF
 - **Cross-Platform:** Files are plaintext, compatible with any editor
 
@@ -298,6 +367,6 @@ When working on format modules:
 
 - Use Android Studio's built-in debugger
 - Check `dist/log/gradle.log` for build errors
-- Lint warnings configured to not abort builds (see `app/build.gradle` lint section)
 - Test failures require investigation before proceeding
-- Format-specific issues: Check `[Format]TextConverter` and `[Format]SyntaxHighlighter`
+- Format issues: Check corresponding parser in `shared/src/commonMain/kotlin/digital/vasic/yole/format/`
+- Platform issues: Check platform-specific implementations in `[platform]Main/`
